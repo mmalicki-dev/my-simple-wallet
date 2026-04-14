@@ -18,7 +18,8 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "shared": "workspace:*",
-    "email": "workspace:*"
+    "email": "workspace:*",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
