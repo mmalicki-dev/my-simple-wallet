@@ -13,6 +13,8 @@ export interface IUser extends Document {
   balance: number
   isVerified: boolean
   verificationToken?: string
+  passwordResetToken?: string
+  passwordResetExpires?: Date
   refreshTokens: IRefreshToken[]
   transactions: mongoose.Types.ObjectId[]
   createdAt: Date
@@ -49,6 +51,12 @@ const UserSchema = new Schema<IUser>(
     },
     verificationToken: {
       type: String,
+    },
+    passwordResetToken: {
+      type: String,
+    },
+    passwordResetExpires: {
+      type: Date,
     },
     refreshTokens: [
       {

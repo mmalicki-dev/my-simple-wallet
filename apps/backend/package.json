@@ -17,7 +17,8 @@
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "shared": "workspace:*"
+    "shared": "workspace:*",
+    "email": "workspace:*"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

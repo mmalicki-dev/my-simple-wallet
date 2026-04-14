@@ -23,6 +23,9 @@ importers:
       dotenv:
         specifier: ^16.3.0
         version: 16.6.1
+      email:
+        specifier: workspace:*
+        version: link:../../packages/email
       express:
         specifier: ^4.18.0
         version: 4.22.1
@@ -176,6 +179,12 @@ importers:
       typescript:
         specifier: ^5.2.0
         version: 5.9.3
+
+  packages/email:
+    dependencies:
+      '@emailjs/nodejs':
+        specifier: ^4.0.0
+        version: 4.1.0
 
   packages/shared: {}
 
@@ -906,6 +915,10 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
+  '@emailjs/nodejs@4.1.0':
+    resolution: {integrity: sha512-d97BsKytRhP9Nme66Hmk+S5HO+zQPJ0XZ+FsNERS8uxpSXvj6rEXUeOC49ilH8LAWOdb/eL8xhsM9tfpHrvkcA==}
+    engines: {node: '>=14.0.0'}
+
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
     engines: {node: '>=12'}
@@ -1202,7 +1215,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.18.31':
     resolution: {integrity: sha512-v9llw9fT3Uv+TCM6Xllo54t672CuYtinEQZ2LPJ2EJsCwuTc4Cd2gXQaouuIVD21VoeGQnr5JtJuWbF97sBKzQ==}
@@ -5997,6 +6010,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
+
+  '@emailjs/nodejs@4.1.0': {}
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
