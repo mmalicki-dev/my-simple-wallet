@@ -1,9 +1,20 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
 
+export interface IRefreshToken {
+  token: string
+  expiresAt: Date
+}
+
 export interface IUser extends Document {
   email: string
+  name: string
   password: string
+  balance: number
+  isVerified: boolean
+  verificationToken?: string
+  refreshTokens: IRefreshToken[]
+  transactions: mongoose.Types.ObjectId[]
   createdAt: Date
   updatedAt: Date
   comparePassword(candidate: string): Promise<boolean>
@@ -18,11 +29,39 @@ const UserSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
       minlength: 6,
     },
+    balance: {
+      type: Number,
+      default: 0,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+    },
+    refreshTokens: [
+      {
+        token: { type: String, required: true },
+        expiresAt: { type: Date, required: true },
+      },
+    ],
+    transactions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Transaction',
+      },
+    ],
   },
   { timestamps: true },
 )
