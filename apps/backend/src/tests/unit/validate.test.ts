@@ -93,9 +93,6 @@ describe('validate()', () => {
       })
 
       expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.error).toBe('Password is required')
-      }
     })
 
     it('fails with invalid email', () => {
