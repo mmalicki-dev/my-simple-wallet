@@ -5,22 +5,15 @@ import UserModel from '../../models/User.js'
 import env from '../../config/env.js'
 import { sendVerificationEmail, sendPasswordResetEmail } from '../../config/email.js'
 import { validate } from '../validators/authValidator.js'
+import { asyncHandler } from '../../lib/asyncHandler.js'
+import { AppError } from '../../lib/AppError.js'
 import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from 'shared'
 
-export const register: RequestHandler = async (req, res) => {
+export const register: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(registerSchema, req.body)
-  if (!result.success) {
-    res.status(400).json({ success: false, message: result.error })
-    return
-  }
+  if (!result.success) throw new AppError(result.error, 400)
 
   const { email, name, password } = result.data
-
-  const existing = await UserModel.findOne({ email })
-  if (existing) {
-    res.status(409).json({ success: false, message: 'Email already in use' })
-    return
-  }
 
   const verificationToken = randomBytes(32).toString('hex')
   await UserModel.create({ email, name, password, verificationToken })
@@ -31,48 +24,35 @@ export const register: RequestHandler = async (req, res) => {
     success: true,
     message: 'Registered successfully. Please check your email to verify your account.',
   })
-}
+})
 
-export const verifyEmail: RequestHandler = async (req, res) => {
+export const verifyEmail: RequestHandler = asyncHandler(async (req, res) => {
   const { token } = req.query
 
-  if (!token || typeof token !== 'string') {
-    res.status(400).json({ success: false, message: 'Invalid or missing token' })
-    return
-  }
+  if (!token || typeof token !== 'string') throw new AppError('Invalid or missing token', 400)
 
   const user = await UserModel.findOne({ verificationToken: token })
-  if (!user) {
-    res.status(400).json({ success: false, message: 'Invalid or expired verification token' })
-    return
-  }
+  if (!user) throw new AppError('Invalid or expired verification token', 400)
 
   user.isVerified = true
   user.verificationToken = undefined
   await user.save()
 
   res.status(200).json({ success: true, message: 'Email verified successfully' })
-}
+})
 
-export const login: RequestHandler = async (req, res) => {
+export const login: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(loginSchema, req.body)
-  if (!result.success) {
-    res.status(400).json({ success: false, message: result.error })
-    return
-  }
+  if (!result.success) throw new AppError(result.error, 400)
 
   const { email, password } = result.data
 
   const user = await UserModel.findOne({ email })
   if (!user || !(await user.comparePassword(password))) {
-    res.status(401).json({ success: false, message: 'Invalid credentials' })
-    return
+    throw new AppError('Invalid credentials', 401)
   }
 
-  if (!user.isVerified) {
-    res.status(403).json({ success: false, message: 'Please verify your email before logging in' })
-    return
-  }
+  if (!user.isVerified) throw new AppError('Please verify your email before logging in', 403)
 
   const token = jwt.sign({ userId: user._id, email: user.email }, env.JWT_SECRET, {
     expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'],
@@ -83,14 +63,11 @@ export const login: RequestHandler = async (req, res) => {
     message: 'Logged in successfully',
     data: { token, user: { id: user._id, email: user.email, name: user.name } },
   })
-}
+})
 
-export const forgotPassword: RequestHandler = async (req, res) => {
+export const forgotPassword: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(forgotPasswordSchema, req.body)
-  if (!result.success) {
-    res.status(400).json({ success: false, message: result.error })
-    return
-  }
+  if (!result.success) throw new AppError(result.error, 400)
 
   const user = await UserModel.findOne({ email: result.data.email })
 
@@ -108,31 +85,21 @@ export const forgotPassword: RequestHandler = async (req, res) => {
   await sendPasswordResetEmail(result.data.email, user.name, resetToken)
 
   res.status(200).json({ success: true, message: 'If that email exists, a reset link has been sent' })
-}
+})
 
-export const resetPassword: RequestHandler = async (req, res) => {
+export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
   const { token } = req.query
   const result = validate(resetPasswordSchema, req.body)
 
-  if (!token || typeof token !== 'string') {
-    res.status(400).json({ success: false, message: 'Invalid or missing token' })
-    return
-  }
-
-  if (!result.success) {
-    res.status(400).json({ success: false, message: result.error })
-    return
-  }
+  if (!token || typeof token !== 'string') throw new AppError('Invalid or missing token', 400)
+  if (!result.success) throw new AppError(result.error, 400)
 
   const user = await UserModel.findOne({
     passwordResetToken: token,
     passwordResetExpires: { $gt: new Date() },
   })
 
-  if (!user) {
-    res.status(400).json({ success: false, message: 'Invalid or expired reset token' })
-    return
-  }
+  if (!user) throw new AppError('Invalid or expired reset token', 400)
 
   user.password = result.data.password
   user.passwordResetToken = undefined
@@ -140,7 +107,7 @@ export const resetPassword: RequestHandler = async (req, res) => {
   await user.save()
 
   res.status(200).json({ success: true, message: 'Password reset successfully' })
-}
+})
 
 export const getMe: RequestHandler = (req, res) => {
   res.status(200).json({ success: true, message: 'OK', data: req.user })
