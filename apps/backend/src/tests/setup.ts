@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-import { MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryReplSet } from 'mongodb-memory-server'
 
-let mongod: MongoMemoryServer
+let replset: MongoMemoryReplSet
 
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create()
-  const uri = mongod.getUri()
+  replset = await MongoMemoryReplSet.create({ replSet: { count: 1 } })
+  const uri = replset.getUri()
   await mongoose.connect(uri)
 })
 
@@ -19,5 +19,5 @@ afterEach(async () => {
 afterAll(async () => {
   await mongoose.connection.dropDatabase()
   await mongoose.connection.close()
-  await mongod.stop()
+  await replset.stop()
 })
