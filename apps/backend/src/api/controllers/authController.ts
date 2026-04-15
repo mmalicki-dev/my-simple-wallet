@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 import { randomBytes } from 'node:crypto'
+import mongoose from 'mongoose'
 import UserModel from '../../models/User.js'
 import env from '../../config/env.js'
 import { sendVerificationEmail, sendPasswordResetEmail } from '../../config/email.js'
@@ -16,9 +17,20 @@ export const register: RequestHandler = asyncHandler(async (req, res) => {
   const { email, name, password } = result.data
 
   const verificationToken = randomBytes(32).toString('hex')
-  await UserModel.create({ email, name, password, verificationToken })
 
-  await sendVerificationEmail(email, name, verificationToken)
+  const session = await mongoose.startSession()
+  session.startTransaction()
+
+  try {
+    const [user] = await UserModel.create([{ email, name, password, verificationToken }], { session })
+    await sendVerificationEmail(user.email, user.name, verificationToken)
+    await session.commitTransaction()
+  } catch (err) {
+    await session.abortTransaction()
+    throw err
+  } finally {
+    session.endSession()
+  }
 
   res.status(201).json({
     success: true,
