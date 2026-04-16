@@ -44,6 +44,12 @@ describe("Category endpoints", () => {
 
       expect(res.body.categories).toHaveLength(DEFAULT_CATEGORIES.length);
     });
+    it("return 401 without token", async () => {
+      const res = await request(app).get("/api/category/");
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+    });
   });
 
   describe("POST /api/category/", () => {
@@ -56,6 +62,14 @@ describe("Category endpoints", () => {
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
       expect(res.body.data.name).toBe(validCategory.name);
+    });
+    it("returns 400 with invalid data", async () => {
+      const res = await request(app)
+        .post("/api/category/")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ name: "x", type: "invalid" });
+
+      expect(res.status).toBe(400);
     });
   });
   describe("PUT /api/category/", () => {
@@ -74,6 +88,30 @@ describe("Category endpoints", () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.name).toBe(validCategory.name);
     });
+    it("return 401 without token", async () => {
+      const getRes = await request(app)
+        .get("/api/category/")
+        .set("Authorization", `Bearer ${token}`);
+      const categoryId = getRes.body.categories[0]._id;
+
+      const res = await request(app)
+        .put(`/api/category/${categoryId}`)
+        .send(validCategory);
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+    });
+    it("returns 404 with a non-existent id", async () => {
+      const res = await request(app)
+        .put("/api/category/000000000000000000000000")
+
+        .set("Authorization", `Bearer ${token}`)
+        .send(validCategory);
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toBe("Category not found");
+    });
   });
   describe("DELETE /api/category/", () => {
     it("deletes a category", async () => {
@@ -90,6 +128,30 @@ describe("Category endpoints", () => {
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.message).toBe("Category deleted");
+    });
+    it("return 401 without token", async () => {
+      const getRes = await request(app)
+        .get("/api/category/")
+        .set("Authorization", `Bearer ${token}`);
+      const categoryId = getRes.body.categories[0]._id;
+
+      const res = await request(app)
+        .delete(`/api/category/${categoryId}`)
+        .send(validCategory);
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+    });
+    it("returns 404 with a non-existent id", async () => {
+      const res = await request(app)
+        .delete("/api/category/000000000000000000000000")
+
+        .set("Authorization", `Bearer ${token}`)
+        .send(validCategory);
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toBe("Category not found");
     });
   });
 });
