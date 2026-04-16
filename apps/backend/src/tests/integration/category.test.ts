@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../../app";
-import UserModel from "../../models/User";
+import { UserModel } from "../../models/index";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories";
 
 vi.mock("../../config/email", () => ({
@@ -42,7 +42,7 @@ describe("Category endpoints", () => {
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
 
-      expect(res.body.categories).toHaveLength(DEFAULT_CATEGORIES.length);
+      expect(res.body.data).toHaveLength(DEFAULT_CATEGORIES.length);
     });
     it("return 401 without token", async () => {
       const res = await request(app).get("/api/category/");
@@ -77,7 +77,7 @@ describe("Category endpoints", () => {
       const getRes = await request(app)
         .get("/api/category/")
         .set("Authorization", `Bearer ${token}`);
-      const categoryId = getRes.body.categories[0]._id;
+      const categoryId = getRes.body.data[0]._id;
 
       const res = await request(app)
         .put(`/api/category/${categoryId}`)
@@ -92,7 +92,7 @@ describe("Category endpoints", () => {
       const getRes = await request(app)
         .get("/api/category/")
         .set("Authorization", `Bearer ${token}`);
-      const categoryId = getRes.body.categories[0]._id;
+      const categoryId = getRes.body.data[0]._id;
 
       const res = await request(app)
         .put(`/api/category/${categoryId}`)
@@ -118,7 +118,7 @@ describe("Category endpoints", () => {
       const getRes = await request(app)
         .get("/api/category/")
         .set("Authorization", `Bearer ${token}`);
-      const categoryId = getRes.body.categories[0]._id;
+      const categoryId = getRes.body.data[0]._id;
 
       const res = await request(app)
         .delete(`/api/category/${categoryId}`)
@@ -133,7 +133,7 @@ describe("Category endpoints", () => {
       const getRes = await request(app)
         .get("/api/category/")
         .set("Authorization", `Bearer ${token}`);
-      const categoryId = getRes.body.categories[0]._id;
+      const categoryId = getRes.body.data[0]._id;
 
       const res = await request(app)
         .delete(`/api/category/${categoryId}`)

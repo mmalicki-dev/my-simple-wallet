@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../../app";
-import UserModel from "../../models/User";
+import { UserModel } from "../../models/index";
 
 vi.mock("../../config/email", () => ({
   sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
@@ -32,7 +32,7 @@ describe("Transaction endpoints", () => {
     const categoriesRes = await request(app)
       .get("/api/category/")
       .set("Authorization", `Bearer ${token}`);
-    categoryId = categoriesRes.body.categories[0]._id;
+    categoryId = categoriesRes.body.data[0]._id;
   });
 
   describe("GET /api/transaction/", () => {
@@ -43,7 +43,7 @@ describe("Transaction endpoints", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.transactions).toBeInstanceOf(Array);
+      expect(res.body.data).toBeInstanceOf(Array);
     });
 
     it("fetches transactions with date params", async () => {

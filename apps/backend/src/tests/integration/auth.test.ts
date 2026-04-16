@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
 import app from '../../app'
-import UserModel from '../../models/User'
+import { UserModel } from '../../models/index'
 
 // Mock the email service so no real emails are sent during tests
 vi.mock('../../config/email', () => ({

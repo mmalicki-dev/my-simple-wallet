@@ -2,22 +2,20 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { randomBytes } from "node:crypto";
 import mongoose from "mongoose";
-import UserModel from "../../models/User.js";
+import { UserModel, CategoryModel } from "../../models/index.js";
 import env from "../../config/env.js";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
 } from "../../config/email.js";
 import { validate } from "../validators/authValidator.js";
-import { asyncHandler } from "../../lib/asyncHandler.js";
-import { AppError } from "../../lib/AppError.js";
+import { asyncHandler, AppError, ok, created } from "../../lib/index.js";
 import {
   registerSchema,
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
 } from "shared";
-import Category from "../../models/Category.js";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
 export const register: RequestHandler = asyncHandler(async (req, res) => {
@@ -45,11 +43,7 @@ export const register: RequestHandler = asyncHandler(async (req, res) => {
     session.endSession();
   }
 
-  res.status(201).json({
-    success: true,
-    message:
-      "Registered successfully. Please check your email to verify your account.",
-  });
+  created(res);
 });
 
 export const verifyEmail: RequestHandler = asyncHandler(async (req, res) => {
@@ -65,13 +59,11 @@ export const verifyEmail: RequestHandler = asyncHandler(async (req, res) => {
   user.verificationToken = undefined;
   await user.save();
 
-  await Category.insertMany(
+  await CategoryModel.insertMany(
     DEFAULT_CATEGORIES.map((cat) => ({ ...cat, user: user._id })),
   );
 
-  res
-    .status(200)
-    .json({ success: true, message: "Email verified successfully" });
+  ok(res, undefined, "Email verified successfully");
 });
 
 export const login: RequestHandler = asyncHandler(async (req, res) => {
@@ -96,11 +88,7 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     },
   );
 
-  res.status(200).json({
-    success: true,
-    message: "Logged in successfully",
-    data: { token, user: { id: user._id, email: user.email, name: user.name } },
-  });
+  ok(res, { token, user: { id: user._id, email: user.email, name: user.name } }, "Logged in successfully");
 });
 
 export const forgotPassword: RequestHandler = asyncHandler(async (req, res) => {
@@ -111,12 +99,7 @@ export const forgotPassword: RequestHandler = asyncHandler(async (req, res) => {
 
   // Always respond the same way to prevent email enumeration
   if (!user) {
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "If that email exists, a reset link has been sent",
-      });
+    ok(res, undefined, "If that email exists, a reset link has been sent");
     return;
   }
 
@@ -127,12 +110,7 @@ export const forgotPassword: RequestHandler = asyncHandler(async (req, res) => {
 
   await sendPasswordResetEmail(result.data.email, user.name, resetToken);
 
-  res
-    .status(200)
-    .json({
-      success: true,
-      message: "If that email exists, a reset link has been sent",
-    });
+  ok(res, undefined, "If that email exists, a reset link has been sent");
 });
 
 export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
@@ -155,11 +133,9 @@ export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  res
-    .status(200)
-    .json({ success: true, message: "Password reset successfully" });
+  ok(res, undefined, "Password reset successfully");
 });
 
 export const getMe: RequestHandler = (req, res) => {
-  res.status(200).json({ success: true, message: "OK", data: req.user });
+  ok(res, req.user);
 };

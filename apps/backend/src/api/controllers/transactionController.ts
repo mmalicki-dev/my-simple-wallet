@@ -1,11 +1,8 @@
 import { RequestHandler } from "express";
-import { asyncHandler } from "../../lib/asyncHandler.js";
-import { AppError } from "../../lib/AppError.js";
-import TransactionModel from "../../models/Transaction.js";
+import { asyncHandler, AppError, ok, created, deleted } from "../../lib/index.js";
+import { TransactionModel, CategoryModel, UserModel } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
 import { transactionSchema } from "shared";
-import CategoryModel from "../../models/Category.js";
-import UserModel from "../../models/User.js";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   let from: Date;
@@ -26,12 +23,9 @@ export const get: RequestHandler = asyncHandler(async (req, res) => {
 
   const transactions = await TransactionModel.find({
     user: userId,
-    date: {
-      $gte: from,
-      $lte: to,
-    },
+    date: { $gte: from, $lte: to },
   });
-  res.status(200).json({ success: true, transactions });
+  ok(res, transactions);
 });
 
 export const create: RequestHandler = asyncHandler(async (req, res) => {
@@ -48,7 +42,7 @@ export const create: RequestHandler = asyncHandler(async (req, res) => {
     ...result.data,
     user: req.user!._id,
   });
-  res.status(201).json({ success: true, data: transaction });
+  created(res, transaction);
 });
 
 export const update: RequestHandler = asyncHandler(async (req, res) => {
@@ -70,7 +64,7 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   Object.assign(transaction, result.data);
   await transaction.save();
 
-  res.status(200).json({ success: true, data: transaction });
+  ok(res, transaction);
 });
 
 export const remove: RequestHandler = asyncHandler(async (req, res) => {
@@ -86,5 +80,5 @@ export const remove: RequestHandler = asyncHandler(async (req, res) => {
     $inc: { balance: delta },
   });
 
-  res.status(200).json({ success: true });
+  deleted(res, "Transaction deleted");
 });
