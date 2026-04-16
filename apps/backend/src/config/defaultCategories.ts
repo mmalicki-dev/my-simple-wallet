@@ -1,9 +1,10 @@
+import { CategoryIconName } from 'shared'
 import { CategoryType } from '../models/Category.js'
 
 interface DefaultCategory {
   name: string
   type: CategoryType
-  icon: string
+  icon: CategoryIconName
   colour: string
   isDefault: true
 }
