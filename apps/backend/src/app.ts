@@ -5,6 +5,7 @@ import env from './config/env'
 import './config/passport'
 import routes from './api/routes'
 import { errorHandler } from './api/middlewares/errorMiddleware'
+import docRoutes from './docs/docRoutes'
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
 app.use('/api', routes)
+app.use('/api/docs', docRoutes)
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' })
