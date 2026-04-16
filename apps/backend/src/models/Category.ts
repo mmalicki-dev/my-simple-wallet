@@ -1,16 +1,16 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import mongoose, { Document, Schema } from "mongoose";
 
-export type CategoryType = 'income' | 'expense'
+export type CategoryType = "income" | "expense";
 
 export interface ICategory extends Document {
-  name: string
-  type: CategoryType
-  icon: string
-  color: string
-  user: mongoose.Types.ObjectId | null
-  isDefault: boolean
-  createdAt: Date
-  updatedAt: Date
+  name: string;
+  type: CategoryType;
+  icon: string;
+  colour: string;
+  user: mongoose.Types.ObjectId | null;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const CategorySchema = new Schema<ICategory>(
@@ -22,20 +22,20 @@ const CategorySchema = new Schema<ICategory>(
     },
     type: {
       type: String,
-      enum: ['income', 'expense'],
+      enum: ["income", "expense"],
       required: true,
     },
     icon: {
       type: String,
-      required: true,
+      default: "default",
     },
-    color: {
+    colour: {
       type: String,
-      required: true,
+      default: "#808080",
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       default: null,
     },
     isDefault: {
@@ -44,6 +44,6 @@ const CategorySchema = new Schema<ICategory>(
     },
   },
   { timestamps: true },
-)
+);
 
-export default mongoose.model<ICategory>('Category', CategorySchema)
+export default mongoose.model<ICategory>("Category", CategorySchema);
