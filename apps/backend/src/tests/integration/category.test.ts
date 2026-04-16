@@ -1,9 +1,13 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../../app";
 import UserModel from "../../models/User";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories";
-import Category from "../../models/Category";
+
+vi.mock("../../config/email", () => ({
+  sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
+  sendPasswordResetEmail: vi.fn().mockResolvedValue(undefined),
+}));
 
 const validCategory = {
   name: "Car Loan",
