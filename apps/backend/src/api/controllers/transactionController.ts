@@ -1,0 +1,90 @@
+import { RequestHandler } from "express";
+import { asyncHandler } from "../../lib/asyncHandler.js";
+import { AppError } from "../../lib/AppError.js";
+import TransactionModel from "../../models/Transaction.js";
+import { validate } from "../validators/authValidator.js";
+import { transactionSchema } from "shared";
+import CategoryModel from "../../models/Category.js";
+import UserModel from "../../models/User.js";
+
+export const get: RequestHandler = asyncHandler(async (req, res) => {
+  let from: Date;
+  let to: Date;
+  const userId = req.user!._id;
+  const query = req.query;
+  if (!query.from || !query.to) {
+    const now = new Date();
+    from = new Date(now.getFullYear(), now.getMonth(), 1);
+    to = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  } else {
+    from = new Date(query.from as string);
+    to = new Date(query.to as string);
+  }
+
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime()))
+    throw new AppError("Invalid date format", 400);
+
+  const transactions = await TransactionModel.find({
+    user: userId,
+    date: {
+      $gte: from,
+      $lte: to,
+    },
+  });
+  res.status(200).json({ success: true, transactions });
+});
+
+export const create: RequestHandler = asyncHandler(async (req, res) => {
+  const result = validate(transactionSchema, req.body);
+  if (!result.success) throw new AppError(result.error, 400);
+
+  const category = await CategoryModel.findOne({
+    _id: result.data.category,
+    user: req.user!._id,
+  });
+  if (!category) throw new AppError("Category not found", 404);
+
+  const transaction = await TransactionModel.create({
+    ...result.data,
+    user: req.user!._id,
+  });
+  res.status(201).json({ success: true, data: transaction });
+});
+
+export const update: RequestHandler = asyncHandler(async (req, res) => {
+  const result = validate(transactionSchema, req.body);
+  if (!result.success) throw new AppError(result.error, 400);
+
+  const category = await CategoryModel.findOne({
+    _id: result.data.category,
+    user: req.user!._id,
+  });
+  if (!category) throw new AppError("Category not found", 404);
+
+  const transaction = await TransactionModel.findOne({
+    _id: req.params.id,
+    user: req.user!._id,
+  });
+  if (!transaction) throw new AppError("Transaction not found", 404);
+
+  Object.assign(transaction, result.data);
+  await transaction.save();
+
+  res.status(200).json({ success: true, data: transaction });
+});
+
+export const remove: RequestHandler = asyncHandler(async (req, res) => {
+  const transaction = await TransactionModel.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user!._id,
+  });
+  if (!transaction) throw new AppError("Transaction not found", 404);
+
+  const delta =
+    transaction.type === "income" ? -transaction.amount : transaction.amount;
+  await UserModel.findByIdAndUpdate(req.user!._id, {
+    $inc: { balance: delta },
+  });
+
+  res.status(200).json({ success: true });
+});
