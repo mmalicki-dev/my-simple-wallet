@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#3730A3"/>
+    </linearGradient>
+    <clipPath id="lc">
+      <path d="M 16,3 H 6 Q 2,3 2,7 V 25 Q 2,29 6,29 H 16 Z"/>
+    </clipPath>
+    <clipPath id="rc">
+      <path d="M 16,3 H 26 Q 30,3 30,7 V 25 Q 30,29 26,29 H 16 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Wallet body -->
+  <rect x="2" y="3" width="28" height="26" rx="4" fill="#6366F1"/>
+  <rect x="2" y="3" width="28" height="26" rx="4" fill="url(#lg)" clip-path="url(#lc)"/>
+  <rect x="2" y="3" width="28" height="26" rx="4" fill="url(#rg)" clip-path="url(#rc)"/>
+
+  <!-- Top highlight -->
+  <rect x="2" y="3" width="28" height="5" rx="4" fill="white" opacity="0.12"/>
+
+  <!-- Center divider -->
+  <line x1="16" y1="4" x2="16" y2="28" stroke="white" stroke-width="0.75" opacity="0.25"/>
+
+  <!-- Left: 3 card hints -->
+  <rect x="4" y="9"  width="10" height="3" rx="1" fill="#D4A57A"/>
+  <rect x="4" y="14" width="10" height="3" rx="1" fill="#C49060"/>
+  <rect x="4" y="19" width="10" height="3" rx="1" fill="#B47B48"/>
+
+  <!-- Right: coin -->
+  <circle cx="23" cy="16" r="5.5" fill="#B45309"/>
+  <circle cx="22.5" cy="15.5" r="4.5" fill="#FCD34D"/>
+</svg>
