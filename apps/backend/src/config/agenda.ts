@@ -1,8 +1,9 @@
-import Agenda from "agenda";
+import { Agenda } from "agenda";
+import { MongoBackend } from "@agendajs/mongo-backend";
 import env from "./env.js";
 
 const agenda = new Agenda({
-  db: { address: env.MONGO_URI, collection: "jobs" },
+  backend: new MongoBackend({ address: env.MONGO_URI, collection: "jobs" }),
   processEvery: "1 minute",
 });
 

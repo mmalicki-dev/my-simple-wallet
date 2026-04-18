@@ -11,6 +11,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@agendajs/mongo-backend": "^4.0.1",
     "agenda": "^6.2.4",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
