@@ -3,6 +3,8 @@ import z from "zod";
 export const createRecurringPaymentSchema = z.object({
   name: z.string().min(1),
   type: z.enum(["subscription", "loan"]),
+  amount: z.number().positive(),
+  account: z.string(),
   billingCycle: z.enum(["weekly", "monthly", "yearly"]),
   nextDueDate: z.date(),
   description: z.string().optional(),
@@ -16,6 +18,8 @@ export const updateRecurringPaymentSchema = z.object({
   nextDueDate: z.date().optional(),
   description: z.string().optional(),
   isActive: z.boolean().optional(),
+  amount: z.number().positive().optional(),
+  account: z.string().optional(),
 });
 
 export type CreateRecurringPaymentBody = z.infer<
