@@ -18,6 +18,18 @@ import {
 } from "shared";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
+function parseDuration(duration: string): number {
+  const units: Record<string, number> = {
+    s: 1000,
+    m: 60000,
+    h: 3600000,
+    d: 86400000,
+  };
+  const match = /^(\d+)([smhd])$/.exec(duration);
+  if (!match) throw new Error(`Invalid duration: ${duration}`);
+  return Number(match[1]) * units[match[2]];
+}
+
 export const register: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(registerSchema, req.body);
   if (!result.success) throw new AppError(result.error, 400);
@@ -80,15 +92,25 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  const refreshToken = jwt.sign(
-    { userId: user._id, email: user.email },
-    env.JWT_REFRESH_SECRET,
-    {
-      expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
-    },
-  );
+  let refreshToken: string | undefined;
+  if (result.data.rememberMe) {
+    refreshToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+      },
+    );
 
-  user.refreshTokens = [{ token: refreshToken, expiresAt: new Date() }];
+    const expiresAt = new Date(
+      Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
+    );
+    user.refreshTokens = [
+      ...user.refreshTokens.filter((t) => t.expiresAt > new Date()),
+      { token: refreshToken, expiresAt },
+    ];
+    await user.save();
+  }
 
   const accessToken = jwt.sign(
     { userId: user._id, email: user.email },
@@ -100,7 +122,11 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
 
   ok(
     res,
-    { accessToken, user: { id: user._id, email: user.email, name: user.name } },
+    {
+      accessToken,
+      refreshToken,
+      user: { id: user._id, email: user.email, name: user.name },
+    },
     "Logged in successfully",
   );
 });
@@ -153,3 +179,53 @@ export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
 export const getMe: RequestHandler = (req, res) => {
   ok(res, req.user);
 };
+
+export const refresh: RequestHandler = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken || typeof refreshToken !== "string")
+    throw new AppError("Refresh token required", 400);
+
+  let payload: { userId: string };
+  try {
+    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { userId: string };
+  } catch {
+    throw new AppError("Invalid or expired refresh token", 401);
+  }
+
+  const user = await UserModel.findById(payload.userId);
+  if (!user) throw new AppError("User not found", 404);
+
+  const stored = user.refreshTokens.find(
+    (t) => t.token === refreshToken && t.expiresAt > new Date(),
+  );
+  if (!stored) throw new AppError("Invalid or expired refresh token", 401);
+
+  const accessToken = jwt.sign(
+    { userId: user._id, email: user.email },
+    env.JWT_ACCESS_SECRET,
+    { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"] },
+  );
+
+  ok(res, { accessToken, user: { id: user._id, email: user.email, name: user.name } }, "Access token refreshed");
+});
+
+export const logout: RequestHandler = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken || typeof refreshToken !== "string")
+    throw new AppError("Refresh token required", 400);
+
+  let payload: { userId: string };
+  try {
+    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { userId: string };
+  } catch {
+    throw new AppError("Invalid or expired refresh token", 401);
+  }
+
+  const user = await UserModel.findById(payload.userId);
+  if (!user) throw new AppError("User not found", 404);
+
+  user.refreshTokens = user.refreshTokens.filter((t) => t.token !== refreshToken);
+  await user.save();
+
+  ok(res, undefined, "Logged out successfully");
+});
