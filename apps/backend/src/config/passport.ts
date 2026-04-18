@@ -5,7 +5,7 @@ import env from './env'
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: env.JWT_SECRET,
+  secretOrKey: env.JWT_ACCESS_SECRET,
 }
 
 passport.use(

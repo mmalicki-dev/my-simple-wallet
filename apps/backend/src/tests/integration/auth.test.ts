@@ -131,7 +131,7 @@ describe('Auth endpoints', () => {
 
       expect(res.status).toBe(200)
       expect(res.body.success).toBe(true)
-      expect(res.body.data.token).toBeDefined()
+      expect(res.body.data.accessToken).toBeDefined()
       expect(res.body.data.user.email).toBe(validUser.email)
     })
 
@@ -262,6 +262,87 @@ describe('Auth endpoints', () => {
       const res = await request(app)
         .post(`/api/auth/reset-password?token=${resetToken}`)
         .send({ password: '123' })
+
+      expect(res.status).toBe(400)
+    })
+  })
+
+  describe('POST /api/auth/refresh', () => {
+    let refreshToken: string
+
+    beforeEach(async () => {
+      await request(app).post('/api/auth/register').send(validUser)
+      const user = await UserModel.findOne({ email: validUser.email })
+      await request(app).get(`/api/auth/verify-email?token=${user?.verificationToken}`)
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ ...validUser, rememberMe: true })
+      refreshToken = loginRes.body.data.refreshToken
+    })
+
+    it('returns a new access token with valid refresh token', async () => {
+      const res = await request(app)
+        .post('/api/auth/refresh')
+        .send({ refreshToken })
+
+      expect(res.status).toBe(200)
+      expect(res.body.data.accessToken).toBeDefined()
+    })
+
+    it('returns 401 with invalid refresh token', async () => {
+      const res = await request(app)
+        .post('/api/auth/refresh')
+        .send({ refreshToken: 'invalid.token.here' })
+
+      expect(res.status).toBe(401)
+    })
+
+    it('returns 400 with missing refresh token', async () => {
+      const res = await request(app).post('/api/auth/refresh').send({})
+
+      expect(res.status).toBe(400)
+    })
+  })
+
+  describe('POST /api/auth/logout', () => {
+    let refreshToken: string
+
+    beforeEach(async () => {
+      await request(app).post('/api/auth/register').send(validUser)
+      const user = await UserModel.findOne({ email: validUser.email })
+      await request(app).get(`/api/auth/verify-email?token=${user?.verificationToken}`)
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ ...validUser, rememberMe: true })
+      refreshToken = loginRes.body.data.refreshToken
+    })
+
+    it('logs out and returns 200', async () => {
+      const res = await request(app)
+        .post('/api/auth/logout')
+        .send({ refreshToken })
+
+      expect(res.status).toBe(200)
+      expect(res.body.success).toBe(true)
+    })
+
+    it('removes the refresh token from the database', async () => {
+      await request(app).post('/api/auth/logout').send({ refreshToken })
+
+      const user = await UserModel.findOne({ email: validUser.email })
+      expect(user?.refreshTokens).toHaveLength(0)
+    })
+
+    it('returns 401 with invalid refresh token', async () => {
+      const res = await request(app)
+        .post('/api/auth/logout')
+        .send({ refreshToken: 'invalid.token.here' })
+
+      expect(res.status).toBe(401)
+    })
+
+    it('returns 400 with missing refresh token', async () => {
+      const res = await request(app).post('/api/auth/logout').send({})
 
       expect(res.status).toBe(400)
     })
