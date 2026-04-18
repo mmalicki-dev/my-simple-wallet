@@ -80,15 +80,29 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  const token = jwt.sign(
+  const refreshToken = jwt.sign(
     { userId: user._id, email: user.email },
-    env.JWT_SECRET,
+    env.JWT_REFRESH_SECRET,
     {
-      expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+      expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
     },
   );
 
-  ok(res, { token, user: { id: user._id, email: user.email, name: user.name } }, "Logged in successfully");
+  user.refreshTokens = [{ token: refreshToken, expiresAt: new Date() }];
+
+  const accessToken = jwt.sign(
+    { userId: user._id, email: user.email },
+    env.JWT_ACCESS_SECRET,
+    {
+      expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+    },
+  );
+
+  ok(
+    res,
+    { accessToken, user: { id: user._id, email: user.email, name: user.name } },
+    "Logged in successfully",
+  );
 });
 
 export const forgotPassword: RequestHandler = asyncHandler(async (req, res) => {
