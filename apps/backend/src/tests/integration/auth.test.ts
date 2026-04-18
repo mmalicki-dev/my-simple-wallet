@@ -341,10 +341,11 @@ describe('Auth endpoints', () => {
       expect(res.status).toBe(401)
     })
 
-    it('returns 400 with missing refresh token', async () => {
+    it('returns 200 with missing refresh token', async () => {
       const res = await request(app).post('/api/auth/logout').send({})
 
-      expect(res.status).toBe(400)
+      expect(res.status).toBe(200)
+      expect(res.body.success).toBe(true)
     })
   })
 })

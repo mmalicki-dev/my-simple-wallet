@@ -211,8 +211,11 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
 
 export const logout: RequestHandler = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
-  if (!refreshToken || typeof refreshToken !== "string")
-    throw new AppError("Refresh token required", 400);
+
+  if (!refreshToken || typeof refreshToken !== "string") {
+    ok(res, undefined, "Logged out successfully");
+    return;
+  }
 
   let payload: { userId: string };
   try {
