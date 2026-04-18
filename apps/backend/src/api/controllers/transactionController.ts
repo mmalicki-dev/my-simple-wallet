@@ -1,6 +1,16 @@
 import { RequestHandler } from "express";
-import { asyncHandler, AppError, ok, created, deleted } from "../../lib/index.js";
-import { TransactionModel, CategoryModel, AccountModel } from "../../models/index.js";
+import {
+  asyncHandler,
+  AppError,
+  ok,
+  created,
+  deleted,
+} from "../../lib/index.js";
+import {
+  TransactionModel,
+  CategoryModel,
+  AccountModel,
+} from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
 import { transactionSchema } from "shared";
 
@@ -32,11 +42,12 @@ export const create: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(transactionSchema, req.body);
   if (!result.success) throw new AppError(result.error, 400);
 
-  const category = await CategoryModel.findOne({
-    _id: result.data.category,
-    user: req.user!._id,
-  });
+  const [category, account] = await Promise.all([
+    CategoryModel.findOne({ _id: result.data.category, user: req.user!._id }),
+    AccountModel.findOne({ _id: result.data.account, user: req.user!._id }),
+  ]);
   if (!category) throw new AppError("Category not found", 404);
+  if (!account) throw new AppError("Account not found", 404);
 
   const transaction = await TransactionModel.create({
     ...result.data,
@@ -49,11 +60,12 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(transactionSchema, req.body);
   if (!result.success) throw new AppError(result.error, 400);
 
-  const category = await CategoryModel.findOne({
-    _id: result.data.category,
-    user: req.user!._id,
-  });
+  const [category, account] = await Promise.all([
+    CategoryModel.findOne({ _id: result.data.category, user: req.user!._id }),
+    AccountModel.findOne({ _id: result.data.account, user: req.user!._id }),
+  ]);
   if (!category) throw new AppError("Category not found", 404);
+  if (!account) throw new AppError("Account not found", 404);
 
   const transaction = await TransactionModel.findOne({
     _id: req.params.id,
