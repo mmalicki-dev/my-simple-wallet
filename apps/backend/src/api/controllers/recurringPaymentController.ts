@@ -6,7 +6,11 @@ import {
   created,
   deleted,
 } from "../../lib/index.js";
-import { RecurringPaymentModel } from "../../models/index.js";
+import {
+  AccountModel,
+  CategoryModel,
+  RecurringPaymentModel,
+} from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
 import {
   createRecurringPaymentSchema,
@@ -24,10 +28,16 @@ export const create: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(createRecurringPaymentSchema, req.body);
   if (!result.success) throw new AppError(result.error, 400);
 
+  const [category, account] = await Promise.all([
+    CategoryModel.findOne({ _id: result.data.category, user: req.user!._id }),
+    AccountModel.findOne({ _id: result.data.account, user: req.user!._id }),
+  ]);
+  if (!category) throw new AppError("Category not found", 404);
+  if (!account) throw new AppError("Account not found", 404);
+
   const recurringPayment = await RecurringPaymentModel.create({
     ...result.data,
     user: req.user!._id,
-    account: req.body.account,
   });
 
   created(res, recurringPayment);
@@ -40,7 +50,6 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   const recurringPayment = await RecurringPaymentModel.findOne({
     _id: req.params.id,
     user: req.user!._id,
-    account: req.query.account,
   });
   if (!recurringPayment) throw new AppError("Recurring Payment not found", 404);
 
@@ -54,7 +63,6 @@ export const remove: RequestHandler = asyncHandler(async (req, res) => {
   const recurringPayment = await RecurringPaymentModel.findOne({
     _id: req.params.id,
     user: req.user!._id,
-    account: req.query.account,
   });
   if (!recurringPayment) throw new AppError("Recurring Payment not found", 404);
 
