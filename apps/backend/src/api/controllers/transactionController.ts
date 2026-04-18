@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { asyncHandler, AppError, ok, created, deleted } from "../../lib/index.js";
-import { TransactionModel, CategoryModel, UserModel } from "../../models/index.js";
+import { TransactionModel, CategoryModel, AccountModel } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
 import { transactionSchema } from "shared";
 
@@ -76,7 +76,7 @@ export const remove: RequestHandler = asyncHandler(async (req, res) => {
 
   const delta =
     transaction.type === "income" ? -transaction.amount : transaction.amount;
-  await UserModel.findByIdAndUpdate(req.user!._id, {
+  await AccountModel.findByIdAndUpdate(transaction.account, {
     $inc: { balance: delta },
   });
 

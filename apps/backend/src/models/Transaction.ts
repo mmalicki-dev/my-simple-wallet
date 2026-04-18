@@ -3,6 +3,7 @@ import { CategoryType } from "./Category.js";
 
 export interface ITransaction extends Document {
   user: mongoose.Types.ObjectId;
+  account: mongoose.Types.ObjectId;
   amount: number;
   type: CategoryType;
   category: mongoose.Types.ObjectId;
@@ -17,6 +18,11 @@ const TransactionSchema = new Schema<ITransaction>(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    account: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
       required: true,
     },
     amount: {
@@ -50,12 +56,12 @@ TransactionSchema.pre("save", async function (next) {
   if (!this.isNew && !this.isModified("amount") && !this.isModified("type"))
     return next();
 
-  const User = mongoose.model("User");
-  const user = await User.findById(this.user);
-  if (!user) return next();
+  const Account = mongoose.model("Account");
+  const account = await Account.findById(this.account);
+  if (!account) return next();
 
   const delta = this.type === "income" ? this.amount : -this.amount;
-  await User.findByIdAndUpdate(this.user, { $inc: { balance: delta } });
+  await Account.findByIdAndUpdate(this.account, { $inc: { balance: delta } });
 
   next();
 });
