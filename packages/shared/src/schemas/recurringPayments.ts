@@ -9,6 +9,7 @@ export const createRecurringPaymentSchema = z.object({
   nextDueDate: z.date(),
   description: z.string().optional(),
   isActive: z.boolean().optional(),
+  category: z.string(),
 });
 
 export const updateRecurringPaymentSchema = z.object({
@@ -20,6 +21,7 @@ export const updateRecurringPaymentSchema = z.object({
   isActive: z.boolean().optional(),
   amount: z.number().positive().optional(),
   account: z.string().optional(),
+  category: z.string().optional(),
 });
 
 export type CreateRecurringPaymentBody = z.infer<
