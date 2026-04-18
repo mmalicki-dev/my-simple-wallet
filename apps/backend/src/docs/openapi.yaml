@@ -18,8 +18,11 @@ components:
   schemas:
     TransactionBody:
       type: object
-      required: [amount, type, category]
+      required: [account, amount, type, category]
       properties:
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
         amount:
           type: number
           example: 100
@@ -37,6 +40,96 @@ components:
           type: string
           format: date
           example: 2025-01-15
+
+    CreateAccountBody:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Main Account
+        currency:
+          type: string
+          example: NOK
+
+    UpdateAccountBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Savings
+        currency:
+          type: string
+          example: EUR
+        isDefault:
+          type: boolean
+          example: true
+
+    CreateRecurringPaymentBody:
+      type: object
+      required: [name, type, amount, account, category, billingCycle, nextDueDate]
+      properties:
+        name:
+          type: string
+          example: Netflix
+        type:
+          type: string
+          enum: [subscription, loan]
+          example: subscription
+        amount:
+          type: number
+          example: 99
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        category:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        billingCycle:
+          type: string
+          enum: [weekly, monthly, yearly]
+          example: monthly
+        nextDueDate:
+          type: string
+          format: date
+          example: 2026-05-01
+        description:
+          type: string
+          example: Streaming service
+
+    UpdateRecurringPaymentBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Disney+
+        type:
+          type: string
+          enum: [subscription, loan]
+          example: subscription
+        amount:
+          type: number
+          example: 59
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        category:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        billingCycle:
+          type: string
+          enum: [weekly, monthly, yearly]
+          example: monthly
+        nextDueDate:
+          type: string
+          format: date
+          example: 2026-06-01
+        description:
+          type: string
+          example: Streaming service
+        isActive:
+          type: boolean
+          example: false
 
     RegisterBody:
       type: object

@@ -71,7 +71,7 @@ describe("RecurringPayment endpoints", () => {
       const res = await request(app)
         .post("/api/recurringPayment/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
 
       expect(res.status).toBe(201);
       expect(res.body.data.name).toBe("Netflix");
@@ -82,7 +82,7 @@ describe("RecurringPayment endpoints", () => {
       const res = await request(app)
         .post("/api/recurringPayment/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
 
       expect(res.body.data.isActive).toBe(true);
     });
@@ -106,6 +106,7 @@ describe("RecurringPayment endpoints", () => {
         .set("Authorization", `Bearer ${token}`)
         .send({
           ...validPayment,
+          account: accountId,
           category: "000000000000000000000000",
         });
 
@@ -124,7 +125,7 @@ describe("RecurringPayment endpoints", () => {
     it("returns 401 without token", async () => {
       const res = await request(app)
         .post("/api/recurringPayment/")
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
 
       expect(res.status).toBe(401);
     });
@@ -135,7 +136,7 @@ describe("RecurringPayment endpoints", () => {
       const createRes = await request(app)
         .post("/api/recurringPayment/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
       const paymentId = createRes.body.data._id;
 
       const res = await request(app)
@@ -152,7 +153,7 @@ describe("RecurringPayment endpoints", () => {
       const createRes = await request(app)
         .post("/api/recurringPayment/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
       const paymentId = createRes.body.data._id;
 
       const res = await request(app)
@@ -187,7 +188,7 @@ describe("RecurringPayment endpoints", () => {
       const createRes = await request(app)
         .post("/api/recurringPayment/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ ...validPayment, category: categoryId });
+        .send({ ...validPayment, account: accountId, category: categoryId });
       const paymentId = createRes.body.data._id;
 
       const res = await request(app)
