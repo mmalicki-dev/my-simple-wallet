@@ -3,13 +3,15 @@ import type { User } from 'shared'
 
 interface AuthState {
   user: User | null
-  token: string | null
+  accessToken: string | null
+  refreshToken: string | null
   isAuthenticated: boolean
 }
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  accessToken: null,
+  refreshToken: null,
   isAuthenticated: false,
 }
 
@@ -17,14 +19,19 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: User; token: string }>) => {
+    setCredentials: (
+      state,
+      action: PayloadAction<{ user: User; accessToken: string; refreshToken?: string }>,
+    ) => {
       state.user = action.payload.user
-      state.token = action.payload.token
+      state.accessToken = action.payload.accessToken
+      state.refreshToken = action.payload.refreshToken ?? null
       state.isAuthenticated = true
     },
     logout: (state) => {
       state.user = null
-      state.token = null
+      state.accessToken = null
+      state.refreshToken = null
       state.isAuthenticated = false
     },
   },
