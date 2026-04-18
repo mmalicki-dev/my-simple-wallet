@@ -10,13 +10,12 @@ export interface IUser extends Document {
   email: string
   name: string
   password: string
-  balance: number
+  accounts: mongoose.Types.ObjectId[]
   isVerified: boolean
   verificationToken?: string
   passwordResetToken?: string
   passwordResetExpires?: Date
   refreshTokens: IRefreshToken[]
-  transactions: mongoose.Types.ObjectId[]
   createdAt: Date
   updatedAt: Date
   comparePassword(candidate: string): Promise<boolean>
@@ -41,10 +40,12 @@ const UserSchema = new Schema<IUser>(
       required: true,
       minlength: 6,
     },
-    balance: {
-      type: Number,
-      default: 0,
-    },
+    accounts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Account',
+      },
+    ],
     isVerified: {
       type: Boolean,
       default: false,
@@ -62,12 +63,6 @@ const UserSchema = new Schema<IUser>(
       {
         token: { type: String, required: true },
         expiresAt: { type: Date, required: true },
-      },
-    ],
-    transactions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Transaction',
       },
     ],
   },

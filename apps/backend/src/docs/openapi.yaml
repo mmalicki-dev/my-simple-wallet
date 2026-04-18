@@ -18,8 +18,11 @@ components:
   schemas:
     TransactionBody:
       type: object
-      required: [amount, type, category]
+      required: [account, amount, type, category]
       properties:
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
         amount:
           type: number
           example: 100
@@ -37,6 +40,96 @@ components:
           type: string
           format: date
           example: 2025-01-15
+
+    CreateAccountBody:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Main Account
+        currency:
+          type: string
+          example: NOK
+
+    UpdateAccountBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Savings
+        currency:
+          type: string
+          example: EUR
+        isDefault:
+          type: boolean
+          example: true
+
+    CreateRecurringPaymentBody:
+      type: object
+      required: [name, type, amount, account, category, billingCycle, nextDueDate]
+      properties:
+        name:
+          type: string
+          example: Netflix
+        type:
+          type: string
+          enum: [subscription, loan]
+          example: subscription
+        amount:
+          type: number
+          example: 99
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        category:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        billingCycle:
+          type: string
+          enum: [weekly, monthly, yearly]
+          example: monthly
+        nextDueDate:
+          type: string
+          format: date
+          example: 2026-05-01
+        description:
+          type: string
+          example: Streaming service
+
+    UpdateRecurringPaymentBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Disney+
+        type:
+          type: string
+          enum: [subscription, loan]
+          example: subscription
+        amount:
+          type: number
+          example: 59
+        account:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        category:
+          type: string
+          example: 64b1f2c3e4d5a6b7c8d9e0f1
+        billingCycle:
+          type: string
+          enum: [weekly, monthly, yearly]
+          example: monthly
+        nextDueDate:
+          type: string
+          format: date
+          example: 2026-06-01
+        description:
+          type: string
+          example: Streaming service
+        isActive:
+          type: boolean
+          example: false
 
     RegisterBody:
       type: object
@@ -65,6 +158,25 @@ components:
         password:
           type: string
           example: password123
+        rememberMe:
+          type: boolean
+          example: true
+
+    RefreshBody:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    LogoutBody:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
     ForgotPasswordBody:
       type: object
@@ -150,7 +262,7 @@ paths:
         "401":
           description: Unauthorized
         "404":
-          description: Category not found
+          description: Account or category not found
 
   /api/transaction/{id}:
     put:
@@ -310,6 +422,7 @@ paths:
   /api/auth/login:
     post:
       summary: Log in and receive a JWT token
+      description: Returns an access token always. If `rememberMe` is true, also returns a refresh token.
       tags: [Auth]
       security: []
       requestBody:
@@ -367,6 +480,46 @@ paths:
         "400":
           description: Invalid or expired token
 
+  /api/auth/refresh:
+    post:
+      summary: Refresh access token
+      description: Exchange a valid refresh token for a new access token. Does not require Authorization header.
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshBody"
+      responses:
+        "200":
+          description: New access token returned
+        "400":
+          description: Refresh token missing
+        "401":
+          description: Invalid or expired refresh token
+
+  /api/auth/logout:
+    post:
+      summary: Log out
+      description: Invalidates the provided refresh token. Does not require Authorization header.
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogoutBody"
+      responses:
+        "200":
+          description: Logged out successfully
+        "400":
+          description: Refresh token missing
+        "401":
+          description: Invalid or expired refresh token
+
   /api/auth/me:
     get:
       summary: Get the current authenticated user
@@ -376,3 +529,154 @@ paths:
           description: Current user data
         "401":
           description: Unauthorized
+
+  /api/account:
+    get:
+      summary: Get all accounts
+      tags: [Accounts]
+      responses:
+        "200":
+          description: List of accounts
+        "401":
+          description: Unauthorized
+
+    post:
+      summary: Create an account
+      description: The first account created is automatically set as default.
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountBody"
+      responses:
+        "201":
+          description: Account created
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+
+  /api/account/{id}:
+    put:
+      summary: Update an account
+      description: Setting isDefault to true will unset the previous default account.
+      tags: [Accounts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Account ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccountBody"
+      responses:
+        "200":
+          description: Account updated
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+        "404":
+          description: Account not found
+
+    delete:
+      summary: Delete an account
+      description: Deletes the account and all associated transactions. Cannot delete the default account.
+      tags: [Accounts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Account ID
+      responses:
+        "200":
+          description: Account deleted
+        "400":
+          description: Cannot delete the default account
+        "401":
+          description: Unauthorized
+        "404":
+          description: Account not found
+
+  /api/recurringPayment:
+    get:
+      summary: Get all recurring payments
+      tags: [Recurring Payments]
+      responses:
+        "200":
+          description: List of recurring payments
+        "401":
+          description: Unauthorized
+
+    post:
+      summary: Create a recurring payment
+      tags: [Recurring Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecurringPaymentBody"
+      responses:
+        "201":
+          description: Recurring payment created
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+        "404":
+          description: Account or category not found
+
+  /api/recurringPayment/{id}:
+    put:
+      summary: Update a recurring payment
+      tags: [Recurring Payments]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Recurring payment ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRecurringPaymentBody"
+      responses:
+        "200":
+          description: Recurring payment updated
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+        "404":
+          description: Recurring payment not found
+
+    delete:
+      summary: Delete a recurring payment
+      tags: [Recurring Payments]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Recurring payment ID
+      responses:
+        "200":
+          description: Recurring payment deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Recurring payment not found

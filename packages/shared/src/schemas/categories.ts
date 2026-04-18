@@ -1,4 +1,5 @@
 import z from "zod";
+import { CATEGORY_ICON_NAMES } from "../types/icons.js";
 
 export const categorySchema = z.object({
   name: z
@@ -6,7 +7,7 @@ export const categorySchema = z.object({
     .min(2, "Name of the category must have at least 2 characters.")
     .trim(),
   type: z.enum(["income", "expense"]),
-  icon: z.string().optional(),
+  icon: z.enum(CATEGORY_ICON_NAMES).optional(),
   colour: z.string().optional(),
 });
 

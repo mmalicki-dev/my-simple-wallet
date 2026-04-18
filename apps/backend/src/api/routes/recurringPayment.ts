@@ -1,0 +1,17 @@
+import { Router } from "express";
+import {
+  get,
+  create,
+  update,
+  remove,
+} from "../controllers/recurringPaymentController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+
+const router = Router();
+
+router.get("/", protect, get);
+router.post("/", protect, create);
+router.put("/:id", protect, update);
+router.delete("/:id", protect, remove);
+
+export default router;
