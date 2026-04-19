@@ -1,11 +1,11 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { CategoryType } from "./Category.js";
+import { TransactionType } from "shared";
 
 export interface ITransaction extends Document {
   user: mongoose.Types.ObjectId;
   account: mongoose.Types.ObjectId;
   amount: number;
-  type: CategoryType;
+  type: TransactionType;
   category: mongoose.Types.ObjectId;
   description?: string;
   date: Date;
