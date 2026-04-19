@@ -2,6 +2,8 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
 import Layout from '@/components/templates/Layout/Layout'
 import HomePage from '@/pages/HomePage/HomePage'
+import AccountPage from '@/pages/AccountPage/AccountPage'
+import UserPage from '@/pages/UserPage/UserPage'
 import AuthPage from '@/pages/AuthPage/AuthPage'
 import { LanguageProvider, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '@/context/Language'
 import type { Language } from '@/context/Language'
@@ -40,6 +42,8 @@ const AppRouter = () => {
           }
         >
           <Route path="home" element={<HomePage />} />
+          <Route path="accounts/:id" element={<AccountPage />} />
+          <Route path="user" element={<UserPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to={`/${lang}/home`} replace />} />

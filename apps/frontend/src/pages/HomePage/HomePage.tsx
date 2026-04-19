@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet'
+import RecurringPayments from '@/components/organisms/RecurringPayments/RecurringPayments'
 
 const HomePage = () => {
   return (
@@ -6,9 +7,7 @@ const HomePage = () => {
       <Helmet>
         <title>Home</title>
       </Helmet>
-      <main>
-        <h1>Home Page</h1>
-      </main>
+      <RecurringPayments />
     </>
   )
 }

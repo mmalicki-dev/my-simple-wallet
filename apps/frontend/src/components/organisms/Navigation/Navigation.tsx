@@ -17,20 +17,7 @@ const Navigation = () => {
           <NavItem to={`${base}/home`} icon="home" label="Home" />
         </li>
         <li>
-          <NavItem to={`${base}/accounts`} icon="briefcase" label="Accounts" />
-        </li>
-        <li>
-          <NavItem
-            to={`${base}/categories`}
-            icon="shopping-bag"
-            label="Categories"
-          />
-        </li>
-        <li>
-          <NavItem to={`${base}/recurring`} icon="repeat" label="Recurring" />
-        </li>
-        <li>
-          <NavItem to={`${base}/options`} icon="utensils" label="Options" />
+          <NavItem to={`${base}/user`} icon="briefcase" label="User" />
         </li>
       </ul>
     </nav>
