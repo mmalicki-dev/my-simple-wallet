@@ -1,6 +1,7 @@
 export * from "./types/api";
 export * from "./types/user";
 export * from "./types/icons";
+export * from "./types/transaction";
 export * from "./schemas/auth";
 export * from "./schemas/accounts";
 export * from "./schemas/categories";
