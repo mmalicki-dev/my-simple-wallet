@@ -1,12 +1,11 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import Navigation from '@/components/organisms/Navigation/Navigation'
 import styles from './Layout.module.css'
 
 const Layout = () => {
   return (
     <div className={styles.layout}>
-      <nav className={styles.nav}>
-        <NavLink to="/">Home</NavLink>
-      </nav>
+      <Navigation />
       <main className={styles.main}>
         <Outlet />
       </main>

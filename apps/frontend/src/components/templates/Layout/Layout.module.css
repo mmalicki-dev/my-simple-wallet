@@ -4,58 +4,19 @@
   min-height: 100vh;
 }
 
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0 1.5rem;
-  height: 60px;
-  background: #1e1e2e;
-  color: #fff;
-}
-
 .main {
   flex: 1;
   padding: 1.5rem;
+  padding-bottom: 80px;
 }
 
-/* Tablet — sidebar */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) {
   .layout {
     flex-direction: row;
   }
 
-  .nav {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 200px;
-    height: 100vh;
-    padding: 1.5rem 1rem;
-    position: sticky;
-    top: 0;
-  }
-}
-
-/* Mobile — bottom bar */
-@media (max-width: 767px) {
-  .layout {
-    flex-direction: column;
-  }
-
-  .nav {
-    order: 1;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    justify-content: space-around;
-    padding: 0;
-  }
-
   .main {
-    order: 0;
-    padding-bottom: 80px;
+    padding-bottom: 1.5rem;
+    overflow-y: auto;
   }
 }

@@ -1,12 +1,10 @@
+import type { User } from "shared";
+
+export type { User as UserResponse };
+
 export interface LoginResponse {
   accessToken: string;
-  user: UserResponse;
-}
-
-export interface UserResponse {
-  id: string;
-  email: string;
-  name: string;
+  user: User;
 }
 
 export interface RegisterRequest {
