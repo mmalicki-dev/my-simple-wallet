@@ -1,32 +1,43 @@
-import { Helmet } from 'react-helmet'
-import AccountBlock from '@/components/organisms/AccountBlock/AccountBlock'
-import RecurringPayments from '@/components/organisms/RecurringPayments/RecurringPayments'
-import TotalBalance from '@/components/molecules/TotalBalance/TotalBalance'
-import type { Account } from '@/types'
-import styles from './HomePage.module.css'
-
-// TODO: replace with real accounts from API
-const MOCK_ACCOUNTS: Account[] = [
-  { _id: 'acc1', user: 'user1', name: 'Main account', balance: 3240.5, currency: 'PLN', isDefault: true, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
-  { _id: 'acc2', user: 'user1', name: 'Savings', balance: 12800, currency: 'EUR', isDefault: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
-  { _id: 'acc3', user: 'user1', name: 'Travel fund', balance: 540, currency: 'NOK', isDefault: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
-]
-
-const baseCurrency = MOCK_ACCOUNTS.find((a) => a.isDefault)?.currency ?? 'PLN'
+import { Helmet } from "react-helmet";
+import { useGetAccountsQuery } from "@/services/accountApi";
+import AccountBlock from "@/components/organisms/AccountBlock/AccountBlock";
+import RecurringPayments from "@/components/organisms/RecurringPayments/RecurringPayments";
+import TotalBalance from "@/components/molecules/TotalBalance/TotalBalance";
+import Spinner from "@/components/atoms/Spinner/Spinner";
+import styles from "./HomePage.module.css";
+import { ReactNode } from "react";
 
 const HomePage = () => {
+  const { data: accounts = [], isLoading } = useGetAccountsQuery();
+  const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
+
+  function whatToLoad(): ReactNode {
+    if (isLoading) {
+      return <Spinner />;
+    } else if (defaultAccount) {
+      return (
+        <TotalBalance
+          accounts={accounts}
+          baseCurrency={defaultAccount.currency}
+        />
+      );
+    } else {
+      return <></>;
+    }
+  }
+
   return (
     <>
       <Helmet>
         <title>Home</title>
       </Helmet>
       <div className={styles.page}>
-        <TotalBalance accounts={MOCK_ACCOUNTS} baseCurrency={baseCurrency} />
+        {whatToLoad()}
         <AccountBlock />
         <RecurringPayments />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

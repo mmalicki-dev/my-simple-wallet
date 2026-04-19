@@ -14,7 +14,7 @@ const NavItem = ({ to, icon, label }: NavItemProps) => {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `${styles.item}${isActive ? ` ${styles.active}` : ""}`
+        isActive ? `${styles.item} ${styles.active}` : `${styles.item}`
       }
     >
       <Icon name={icon} className={styles.logo} />

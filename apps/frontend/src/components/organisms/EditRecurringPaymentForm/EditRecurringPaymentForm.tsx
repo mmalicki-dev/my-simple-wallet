@@ -1,39 +1,65 @@
-import { useState } from 'react'
-import type { RecurringPayment, RecurringPaymentType, BillingCycle } from '@/types'
-import { RECURRING_PAYMENT_TYPES } from 'shared'
-import Input from '@/components/atoms/Input/Input'
-import SelectOption from '@/components/atoms/SelectOption/SelectOption'
-import Checkbox from '@/components/atoms/Checkbox/Checkbox'
-import Button from '@/components/atoms/Button/Button'
-import styles from './EditRecurringPaymentForm.module.css'
+import { useState } from "react";
+import type {
+  RecurringPayment,
+  RecurringPaymentType,
+  BillingCycle,
+} from "@/types";
+import { RECURRING_PAYMENT_TYPES } from "shared";
+import Input from "@/components/atoms/Input/Input";
+import SelectOption from "@/components/atoms/SelectOption/SelectOption";
+import Checkbox from "@/components/atoms/Checkbox/Checkbox";
+import Button from "@/components/atoms/Button/Button";
+import styles from "./EditRecurringPaymentForm.module.css";
+import { useUpdateRecurringPaymentMutation } from "@/services";
 
 interface EditRecurringPaymentFormProps {
-  payment: RecurringPayment
-  onClose: () => void
-  onDelete: () => void
+  payment: RecurringPayment;
+  onClose: () => void;
+  onDelete: () => void;
 }
 
 const BILLING_CYCLE_OPTIONS: { value: BillingCycle; label: string }[] = [
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'yearly', label: 'Yearly' },
-]
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+  { value: "yearly", label: "Yearly" },
+];
 
-const EditRecurringPaymentForm = ({ payment, onClose, onDelete }: EditRecurringPaymentFormProps) => {
-  const [type, setType] = useState<RecurringPaymentType>(payment.type)
-  const [name, setName] = useState(payment.name)
-  const [amount, setAmount] = useState(String(payment.amount))
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>(payment.billingCycle)
-  const [nextDueDate, setNextDueDate] = useState(payment.nextDueDate.slice(0, 10))
-  const [description, setDescription] = useState(payment.description ?? '')
-  const [isActive, setIsActive] = useState(payment.isActive)
+const EditRecurringPaymentForm = ({
+  payment,
+  onClose,
+  onDelete,
+}: EditRecurringPaymentFormProps) => {
+  const [type, setType] = useState<RecurringPaymentType>(payment.type);
+  const [name, setName] = useState(payment.name);
+  const [amount, setAmount] = useState(String(payment.amount));
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>(
+    payment.billingCycle,
+  );
+  const [nextDueDate, setNextDueDate] = useState(
+    payment.nextDueDate.slice(0, 10),
+  );
+  const [description, setDescription] = useState(payment.description ?? "");
+  const [isActive, setIsActive] = useState(payment.isActive);
+  const [updateRecurringPayment] = useUpdateRecurringPaymentMutation();
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // TODO: call updateRecurringPayment mutation
-    console.log('Update recurring payment', { type, name, amount: Number(amount), billingCycle, nextDueDate, description, isActive })
-    onClose()
-  }
+    e.preventDefault();
+    updateRecurringPayment({
+      id: payment._id,
+      body: {
+        name: payment.name,
+        type: payment.type,
+        amount: payment.amount,
+        account: payment.account,
+        category: payment.category,
+        billingCycle: payment.billingCycle,
+        nextDueDate: payment.nextDueDate,
+        description: payment.description,
+        isActive: payment.isActive,
+      },
+    });
+    onClose();
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -42,7 +68,9 @@ const EditRecurringPaymentForm = ({ payment, onClose, onDelete }: EditRecurringP
           <button
             key={t}
             type="button"
-            className={[styles.typeBtn, type === t ? styles.active : ''].join(' ')}
+            className={[styles.typeBtn, type === t ? styles.active : ""].join(
+              " ",
+            )}
             onClick={() => setType(t)}
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -88,14 +116,18 @@ const EditRecurringPaymentForm = ({ payment, onClose, onDelete }: EditRecurringP
         onChange={(e) => setIsActive(e.target.checked)}
       />
       <div className={styles.actions}>
-        <Button type="button" variant="danger" onClick={onDelete}>Delete</Button>
+        <Button type="button" variant="danger" onClick={onDelete}>
+          Delete
+        </Button>
         <div className={styles.right}>
-          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="button" variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
           <Button type="submit">Save</Button>
         </div>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default EditRecurringPaymentForm
+export default EditRecurringPaymentForm;

@@ -7,7 +7,9 @@ interface SpinnerProps {
 const Spinner = ({ className }: SpinnerProps) => {
   return (
     <output
-      className={`${styles.spinner}${className ? ` ${className}` : ""}`}
+      className={
+        className ? `${styles.amount} ${className}` : `${styles.amount}`
+      }
       aria-label="Loading"
     />
   );
