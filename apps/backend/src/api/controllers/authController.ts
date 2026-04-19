@@ -115,6 +115,7 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
       sameSite: "strict",
     });
   }
+  const sss = "saa";
 
   const accessToken = jwt.sign(
     { userId: user._id, email: user.email },
