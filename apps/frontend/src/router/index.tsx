@@ -28,7 +28,10 @@ const AppRouter = () => {
         }
       >
         <Route index element={<Navigate to="home" replace />} />
-        <Route path="auth" element={<AuthPage />} />
+        <Route path="auth">
+          <Route index element={<Navigate to="login" replace />} />
+          <Route path=":mode" element={<AuthPage />} />
+        </Route>
         <Route
           element={
             <ProtectedRoute>
