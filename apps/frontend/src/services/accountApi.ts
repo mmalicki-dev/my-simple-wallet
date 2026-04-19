@@ -6,11 +6,11 @@ import type {
   DeleteAccountRequest,
 } from "@/types";
 
-export const transactionApi = api.injectEndpoints({
+export const accountApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getAccounts: builder.query<void, void>({
+    getAccounts: builder.query<Account[], void>({
       query: () => ({
-        url: "/transaction",
+        url: "/account",
         method: "GET",
       }),
       providesTags: ["Account"],
@@ -46,4 +46,4 @@ export const {
   useCreateAccountMutation,
   useUpdateAccountMutation,
   useDeleteAccountMutation,
-} = transactionApi;
+} = accountApi;
