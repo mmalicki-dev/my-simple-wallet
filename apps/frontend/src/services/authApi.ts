@@ -7,17 +7,18 @@ import type {
   ForgotPassRequest,
   LoginRequest,
 } from "@/types";
+import { ApiResponse } from "shared";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (body) => ({
         url: "/auth/login",
         method: "POST",
         body,
       }),
     }),
-    getMe: builder.query<UserResponse, void>({
+    getMe: builder.query<ApiResponse<UserResponse>, void>({
       query: () => "/auth/me",
     }),
     register: builder.mutation<void, RegisterRequest>({
