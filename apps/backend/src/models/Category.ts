@@ -1,10 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
-
-export type CategoryType = "income" | "expense";
+import { TransactionType } from "shared";
 
 export interface ICategory extends Document {
   name: string;
-  type: CategoryType;
+  type: TransactionType;
   icon: string;
   colour: string;
   user: mongoose.Types.ObjectId | null;
@@ -22,7 +21,7 @@ const CategorySchema = new Schema<ICategory>(
     },
     type: {
       type: String,
-      enum: ["income", "expense"],
+      enum: ["income", "expense"] satisfies TransactionType[],
       required: true,
     },
     icon: {

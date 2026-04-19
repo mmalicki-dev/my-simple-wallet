@@ -1,9 +1,8 @@
-import { CategoryIconName } from 'shared'
-import { CategoryType } from '../models/Category.js'
+import { CategoryIconName, TransactionType } from 'shared'
 
 interface DefaultCategory {
   name: string
-  type: CategoryType
+  type: TransactionType
   icon: CategoryIconName
   colour: string
   isDefault: true
