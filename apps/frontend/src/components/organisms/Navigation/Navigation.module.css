@@ -1,4 +1,5 @@
 .nav {
+  max-height: fit-content;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -25,6 +26,7 @@
 
 @media (min-width: 768px) {
   .nav {
+    max-height: none;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
