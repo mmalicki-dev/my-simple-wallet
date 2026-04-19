@@ -1,29 +1,29 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import type { Account, Transaction } from "@/types";
+import type { Transaction } from "@/types";
 import TransactionList from "@/components/organisms/TransactionList/TransactionList";
 import BackButton from "@/components/molecules/BackButton/BackButton";
 import Modal from "@/components/templates/Modal/Modal";
 import EditTransactionForm from "@/components/organisms/EditTransactionForm/EditTransactionForm";
+import Spinner from "@/components/atoms/Spinner/Spinner";
+import { useGetAccountsQuery } from "@/services/accountApi";
+import { useGetTransactionsQuery, useDeleteTransactionMutation } from "@/services/transactionApi";
 import styles from "./AccountPage.module.css";
-import {
-  useGetTransactionsQuery,
-  useDeleteTransactionMutation,
-  useGetAccountsQuery,
-} from "@/services";
 
 const AccountPage = () => {
-  const { id } = useParams<{ id: any }>();
-  const { data: accounts } = useGetAccountsQuery<{ data: Account[] }>();
-  const { data: transactions } = useGetTransactionsQuery<{
-    data: Transaction[];
-  }>(id);
-  const account = accounts.find((a) => a._id === id) ?? accounts[0];
+  const { id } = useParams<{ id: string }>();
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+
+  const { data: accounts = [], isLoading: accountsLoading } = useGetAccountsQuery();
+  const { data: transactions = [], isLoading: txLoading } = useGetTransactionsQuery({ accountId: id });
   const [deleteTransaction] = useDeleteTransactionMutation();
 
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+  const account = accounts.find((a) => a._id === id) ?? accounts[0];
+  const isLoading = accountsLoading || txLoading;
+
+  if (isLoading) return <Spinner />;
+  if (!account) return null;
 
   return (
     <>

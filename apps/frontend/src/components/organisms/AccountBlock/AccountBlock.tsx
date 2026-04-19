@@ -1,15 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetAccountsQuery } from '@/services/accountApi'
+import type { Account } from '@/types'
 import AccountItem from '@/components/molecules/AccountItem/AccountItem'
-import Spinner from '@/components/atoms/Spinner/Spinner'
 import styles from './AccountBlock.module.css'
 
-const AccountBlock = () => {
+interface AccountBlockProps {
+  accounts: Account[]
+}
+
+const AccountBlock = ({ accounts }: AccountBlockProps) => {
   const { lang = 'en' } = useParams()
   const navigate = useNavigate()
-  const { data: accounts = [], isLoading } = useGetAccountsQuery()
 
-  if (isLoading) return <Spinner />
   if (accounts.length === 0) return null
 
   return (

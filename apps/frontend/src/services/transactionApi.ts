@@ -6,14 +6,10 @@ import type {
   UpdateTransactionRequest,
   DeleteTransactionRequest,
 } from "@/types";
-import { ApiResponse } from "shared";
 
 export const transactionApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTransactions: builder.query<
-      ApiResponse<Transaction[]>,
-      GetTransactionsRequest
-    >({
+    getTransactions: builder.query<Transaction[], GetTransactionsRequest>({
       query: ({ accountId, from, to } = {}) => {
         const params = new URLSearchParams();
         if (accountId) params.set("accountId", accountId);
@@ -24,33 +20,16 @@ export const transactionApi = api.injectEndpoints({
       },
       providesTags: ["Transaction"],
     }),
-    createTransaction: builder.mutation<
-      ApiResponse<Transaction>,
-      CreateTransactionRequest
-    >({
-      query: (body) => ({
-        url: "/transaction",
-        method: "POST",
-        body,
-      }),
+    createTransaction: builder.mutation<Transaction, CreateTransactionRequest>({
+      query: (body) => ({ url: "/transaction", method: "POST", body }),
       invalidatesTags: ["Transaction"],
     }),
-    updateTransaction: builder.mutation<
-      ApiResponse<Transaction>,
-      UpdateTransactionRequest
-    >({
-      query: ({ id, body }) => ({
-        url: `/transaction/${id}`,
-        method: "PUT",
-        body,
-      }),
+    updateTransaction: builder.mutation<Transaction, UpdateTransactionRequest>({
+      query: ({ id, body }) => ({ url: `/transaction/${id}`, method: "PUT", body }),
       invalidatesTags: ["Transaction"],
     }),
     deleteTransaction: builder.mutation<void, DeleteTransactionRequest>({
-      query: ({ id }) => ({
-        url: `/transaction/${id}`,
-        method: "DELETE",
-      }),
+      query: ({ id }) => ({ url: `/transaction/${id}`, method: "DELETE" }),
       invalidatesTags: ["Transaction"],
     }),
   }),

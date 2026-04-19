@@ -5,27 +5,10 @@ import RecurringPayments from "@/components/organisms/RecurringPayments/Recurrin
 import TotalBalance from "@/components/molecules/TotalBalance/TotalBalance";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./HomePage.module.css";
-import { ReactNode } from "react";
 
 const HomePage = () => {
-  const { data, isLoading } = useGetAccountsQuery();
-  const accounts = data!.data;
-  const defaultAccount = accounts?.find((a) => a.isDefault) ?? accounts[0];
-
-  function whatToLoad(): ReactNode {
-    if (isLoading) {
-      return <Spinner />;
-    } else if (defaultAccount) {
-      return (
-        <TotalBalance
-          accounts={accounts}
-          baseCurrency={defaultAccount.currency}
-        />
-      );
-    } else {
-      return <></>;
-    }
-  }
+  const { data: accounts = [], isLoading } = useGetAccountsQuery();
+  const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
 
   return (
     <>
@@ -33,9 +16,20 @@ const HomePage = () => {
         <title>Home</title>
       </Helmet>
       <div className={styles.page}>
-        {whatToLoad()}
-        <AccountBlock />
-        <RecurringPayments />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            {defaultAccount && (
+              <TotalBalance
+                accounts={accounts}
+                baseCurrency={defaultAccount.currency}
+              />
+            )}
+            <AccountBlock accounts={accounts} />
+            <RecurringPayments />
+          </>
+        )}
       </div>
     </>
   );

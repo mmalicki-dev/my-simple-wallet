@@ -5,41 +5,23 @@ import type {
   UpdateCategoryRequest,
   DeleteCategoryRequest,
 } from "@/types";
-import { ApiResponse } from "shared";
 
 export const categoryApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query<ApiResponse<Category[]>, void>({
+    getCategories: builder.query<Category[], void>({
       query: () => "/category",
       providesTags: ["Category"],
     }),
-    createCategory: builder.mutation<
-      ApiResponse<Category>,
-      CreateCategoryRequest
-    >({
-      query: (body) => ({
-        url: "/category",
-        method: "POST",
-        body,
-      }),
+    createCategory: builder.mutation<Category, CreateCategoryRequest>({
+      query: (body) => ({ url: "/category", method: "POST", body }),
       invalidatesTags: ["Category"],
     }),
-    updateCategory: builder.mutation<
-      ApiResponse<Category>,
-      UpdateCategoryRequest
-    >({
-      query: ({ id, body }) => ({
-        url: `/category/${id}`,
-        method: "PUT",
-        body,
-      }),
+    updateCategory: builder.mutation<Category, UpdateCategoryRequest>({
+      query: ({ id, body }) => ({ url: `/category/${id}`, method: "PUT", body }),
       invalidatesTags: ["Category"],
     }),
     deleteCategory: builder.mutation<void, DeleteCategoryRequest>({
-      query: ({ id }) => ({
-        url: `/category/${id}`,
-        method: "DELETE",
-      }),
+      query: ({ id }) => ({ url: `/category/${id}`, method: "DELETE" }),
       invalidatesTags: ["Category"],
     }),
   }),

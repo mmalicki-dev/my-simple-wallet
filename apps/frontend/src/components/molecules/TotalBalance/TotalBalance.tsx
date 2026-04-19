@@ -14,13 +14,12 @@ interface TotalBalanceProps {
 const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
   const { total, isLoading, isError } = useTotalBalance(accounts, baseCurrency);
 
-  function whatToLoad(): ReactNode {
-    if (isLoading) {
-      return <Spinner />;
-    } else if (isError) {
-      return <span className={styles.error}>Could not load rates</span>;
-    } else {
-      return (
+  return (
+    <div className={styles.wrapper}>
+      <span className={styles.label}>Total balance</span>
+      {isLoading && <Spinner />}
+      {isError && <span className={styles.error}>Could not load rates</span>}
+      {!isError && !isLoading && (
         <div className={styles.amountWrapper}>
           <Amount
             value={total!}
@@ -29,14 +28,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
           />
           <span className={styles.disclaimer}>approximate</span>
         </div>
-      );
-    }
-  }
-
-  return (
-    <div className={styles.wrapper}>
-      <span className={styles.label}>Total balance</span>
-      {whatToLoad()}
+      )}
     </div>
   );
 };

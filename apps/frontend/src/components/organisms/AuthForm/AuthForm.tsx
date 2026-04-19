@@ -37,8 +37,8 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         const result = await login({ email, password, rememberMe }).unwrap();
         dispatch(
           setCredentials({
-            user: result.data.user,
-            accessToken: result.data.accessToken,
+            user: result.user,
+            accessToken: result.accessToken,
           }),
         );
         navigate(`/${lang}/home`, { replace: true });
