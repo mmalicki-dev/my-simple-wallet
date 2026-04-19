@@ -17,6 +17,9 @@ const Navigation = () => {
           <NavItem to={`${base}/home`} icon="home" label="Home" />
         </li>
         <li>
+          <NavItem to={`${base}/charts`} icon="trending-up" label="Charts" />
+        </li>
+        <li>
           <NavItem to={`${base}/user`} icon="briefcase" label="User" />
         </li>
       </ul>

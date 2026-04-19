@@ -38,6 +38,7 @@ export interface DeleteTransactionRequest {
 }
 
 export interface GetTransactionsRequest {
+  accountId?: string;
   from?: string;
   to?: string;
 }
