@@ -5,14 +5,18 @@ import type {
   UpdateRecurringPaymentRequest,
   DeleteRecurringPaymentRequest,
 } from "@/types";
+import { ApiResponse } from "shared";
 
 export const recurringPaymentApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getRecurringPayments: builder.query<RecurringPayment[], void>({
+    getRecurringPayments: builder.query<ApiResponse<RecurringPayment[]>, void>({
       query: () => "/recurringPayment",
       providesTags: ["RecurringPayment"],
     }),
-    createRecurringPayment: builder.mutation<RecurringPayment, CreateRecurringPaymentRequest>({
+    createRecurringPayment: builder.mutation<
+      ApiResponse<RecurringPayment>,
+      CreateRecurringPaymentRequest
+    >({
       query: (body) => ({
         url: "/recurringPayment",
         method: "POST",
@@ -20,7 +24,10 @@ export const recurringPaymentApi = api.injectEndpoints({
       }),
       invalidatesTags: ["RecurringPayment"],
     }),
-    updateRecurringPayment: builder.mutation<RecurringPayment, UpdateRecurringPaymentRequest>({
+    updateRecurringPayment: builder.mutation<
+      ApiResponse<RecurringPayment>,
+      UpdateRecurringPaymentRequest
+    >({
       query: ({ id, body }) => ({
         url: `/recurringPayment/${id}`,
         method: "PUT",
@@ -28,7 +35,10 @@ export const recurringPaymentApi = api.injectEndpoints({
       }),
       invalidatesTags: ["RecurringPayment"],
     }),
-    deleteRecurringPayment: builder.mutation<void, DeleteRecurringPaymentRequest>({
+    deleteRecurringPayment: builder.mutation<
+      void,
+      DeleteRecurringPaymentRequest
+    >({
       query: ({ id }) => ({
         url: `/recurringPayment/${id}`,
         method: "DELETE",

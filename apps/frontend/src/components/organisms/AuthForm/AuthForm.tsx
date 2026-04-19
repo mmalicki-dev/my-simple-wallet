@@ -1,54 +1,63 @@
-import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import Input from '@/components/atoms/Input/Input'
-import Button from '@/components/atoms/Button/Button'
-import Checkbox from '@/components/atoms/Checkbox/Checkbox'
-import { useLoginMutation, useRegisterMutation } from '@/services/authApi'
-import { setCredentials } from '@/redux/slices/authSlice'
-import styles from './AuthForm.module.css'
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import Input from "@/components/atoms/Input/Input";
+import Button from "@/components/atoms/Button/Button";
+import Checkbox from "@/components/atoms/Checkbox/Checkbox";
+import { useLoginMutation, useRegisterMutation } from "@/services/authApi";
+import { setCredentials } from "@/redux/slices/authSlice";
+import styles from "./AuthForm.module.css";
 
-type Mode = 'login' | 'register'
+type Mode = "login" | "register";
 
 interface AuthFormProps {
-  mode: Mode
+  mode: Mode;
 }
 
 const AuthForm = ({ mode }: AuthFormProps) => {
-  const { lang = 'en' } = useParams()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { lang = "en" } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const [login, { isLoading: isLoginLoading }] = useLoginMutation()
-  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation()
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setServerError(null)
+    e.preventDefault();
+    setServerError(null);
 
     try {
-      if (mode === 'login') {
-        const result = await login({ email, password, rememberMe }).unwrap()
-        dispatch(setCredentials({ user: result.user, accessToken: result.accessToken }))
-        navigate(`/${lang}/home`, { replace: true })
+      if (mode === "login") {
+        const result = await login({ email, password, rememberMe }).unwrap();
+        dispatch(
+          setCredentials({
+            user: result.data.user,
+            accessToken: result.data.accessToken,
+          }),
+        );
+        navigate(`/${lang}/home`, { replace: true });
       } else {
-        await register({ email, password, name }).unwrap()
-        navigate(`/${lang}/auth/login`)
+        await register({ email, password, name }).unwrap();
+        navigate(`/${lang}/auth/login`);
       }
     } catch {
-      setServerError(mode === 'login' ? 'Invalid email or password.' : 'Registration failed. Try again.')
+      setServerError(
+        mode === "login"
+          ? "Invalid email or password."
+          : "Registration failed. Try again.",
+      );
     }
-  }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      {mode === 'register' && (
+      {mode === "register" && (
         <Input
           type="text"
           placeholder="Name"
@@ -73,9 +82,9 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         onChange={(e) => setPassword(e.target.value)}
         required
         minLength={8}
-        autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+        autoComplete={mode === "login" ? "current-password" : "new-password"}
       />
-      {mode === 'login' && (
+      {mode === "login" && (
         <Checkbox
           id="rememberMe"
           label="Remember me"
@@ -85,10 +94,10 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       )}
       {serverError && <p className={styles.error}>{serverError}</p>}
       <Button type="submit" isLoading={isLoginLoading || isRegisterLoading}>
-        {mode === 'login' ? 'Sign in' : 'Create account'}
+        {mode === "login" ? "Sign in" : "Create account"}
       </Button>
     </form>
-  )
-}
+  );
+};
 
-export default AuthForm
+export default AuthForm;

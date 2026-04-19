@@ -5,14 +5,18 @@ import type {
   UpdateCategoryRequest,
   DeleteCategoryRequest,
 } from "@/types";
+import { ApiResponse } from "shared";
 
 export const categoryApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query<Category[], void>({
+    getCategories: builder.query<ApiResponse<Category[]>, void>({
       query: () => "/category",
       providesTags: ["Category"],
     }),
-    createCategory: builder.mutation<Category, CreateCategoryRequest>({
+    createCategory: builder.mutation<
+      ApiResponse<Category>,
+      CreateCategoryRequest
+    >({
       query: (body) => ({
         url: "/category",
         method: "POST",
@@ -20,7 +24,10 @@ export const categoryApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
-    updateCategory: builder.mutation<Category, UpdateCategoryRequest>({
+    updateCategory: builder.mutation<
+      ApiResponse<Category>,
+      UpdateCategoryRequest
+    >({
       query: ({ id, body }) => ({
         url: `/category/${id}`,
         method: "PUT",

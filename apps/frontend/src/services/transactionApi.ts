@@ -6,10 +6,14 @@ import type {
   UpdateTransactionRequest,
   DeleteTransactionRequest,
 } from "@/types";
+import { ApiResponse } from "shared";
 
 export const transactionApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTransactions: builder.query<Transaction[], GetTransactionsRequest>({
+    getTransactions: builder.query<
+      ApiResponse<Transaction[]>,
+      GetTransactionsRequest
+    >({
       query: ({ accountId, from, to } = {}) => {
         const params = new URLSearchParams();
         if (accountId) params.set("accountId", accountId);
@@ -20,7 +24,10 @@ export const transactionApi = api.injectEndpoints({
       },
       providesTags: ["Transaction"],
     }),
-    createTransaction: builder.mutation<Transaction, CreateTransactionRequest>({
+    createTransaction: builder.mutation<
+      ApiResponse<Transaction>,
+      CreateTransactionRequest
+    >({
       query: (body) => ({
         url: "/transaction",
         method: "POST",
@@ -28,7 +35,10 @@ export const transactionApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Transaction"],
     }),
-    updateTransaction: builder.mutation<Transaction, UpdateTransactionRequest>({
+    updateTransaction: builder.mutation<
+      ApiResponse<Transaction>,
+      UpdateTransactionRequest
+    >({
       query: ({ id, body }) => ({
         url: `/transaction/${id}`,
         method: "PUT",

@@ -8,8 +8,9 @@ import styles from "./HomePage.module.css";
 import { ReactNode } from "react";
 
 const HomePage = () => {
-  const { data: accounts = [], isLoading } = useGetAccountsQuery();
-  const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
+  const { data, isLoading } = useGetAccountsQuery();
+  const accounts = data!.data;
+  const defaultAccount = accounts?.find((a) => a.isDefault) ?? accounts[0];
 
   function whatToLoad(): ReactNode {
     if (isLoading) {
