@@ -8,6 +8,7 @@ const PREVIEW_COUNT = 2
 interface RecurringPaymentBlockProps {
   type: RecurringPaymentType
   payments: RecurringPayment[]
+  onItemClick: (payment: RecurringPayment) => void
 }
 
 const LABELS: Record<RecurringPaymentType, string> = {
@@ -15,7 +16,7 @@ const LABELS: Record<RecurringPaymentType, string> = {
   subscription: 'Your subscriptions',
 }
 
-const RecurringPaymentBlock = ({ type, payments }: RecurringPaymentBlockProps) => {
+const RecurringPaymentBlock = ({ type, payments, onItemClick }: RecurringPaymentBlockProps) => {
   const [expanded, setExpanded] = useState(false)
 
   const hasMore = payments.length > PREVIEW_COUNT
@@ -26,7 +27,7 @@ const RecurringPaymentBlock = ({ type, payments }: RecurringPaymentBlockProps) =
       <h2 className={styles.label}>{LABELS[type]}</h2>
       <ul className={styles.list}>
         {visible.map((payment) => (
-          <RecurringPaymentItem key={payment._id} payment={payment} />
+          <RecurringPaymentItem key={payment._id} payment={payment} onClick={() => onItemClick(payment)} />
         ))}
       </ul>
       {hasMore && (
