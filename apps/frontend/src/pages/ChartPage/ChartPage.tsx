@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet'
+import ChartViewer from '@/components/organisms/ChartViewer/ChartViewer'
 
 const ChartPage = () => {
   return (
@@ -6,7 +7,7 @@ const ChartPage = () => {
       <Helmet>
         <title>Charts</title>
       </Helmet>
-      <p>Chart Page</p>
+      <ChartViewer />
     </>
   )
 }
