@@ -12,6 +12,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     : DEFAULT_LANGUAGE
 
   useEffect(() => {
+    localStorage.setItem('lang', language)
     if (lang !== language) {
       const newPath = location.pathname.replace(`/${lang}`, `/${language}`)
       navigate(newPath, { replace: true })
