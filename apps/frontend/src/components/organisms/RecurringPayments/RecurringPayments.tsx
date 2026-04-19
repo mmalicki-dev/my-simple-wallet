@@ -1,0 +1,47 @@
+import { useState } from 'react'
+import type { RecurringPayment } from '@/types'
+import { useGetRecurringPaymentsQuery, useDeleteRecurringPaymentMutation } from '@/services/recurringPaymentApi'
+import RecurringPaymentBlock from '@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock'
+import Modal from '@/components/templates/Modal/Modal'
+import EditRecurringPaymentForm from '@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm'
+import Spinner from '@/components/atoms/Spinner/Spinner'
+import styles from './RecurringPayments.module.css'
+
+const RecurringPayments = () => {
+  const { data = [], isLoading } = useGetRecurringPaymentsQuery()
+  const [deleteRecurringPayment] = useDeleteRecurringPaymentMutation()
+  const [selected, setSelected] = useState<RecurringPayment | null>(null)
+
+  const loans = data.filter((p) => p.type === 'loan')
+  const subscriptions = data.filter((p) => p.type === 'subscription')
+
+  if (isLoading) return <Spinner />
+  if (loans.length === 0 && subscriptions.length === 0) return null
+
+  return (
+    <>
+      <Modal
+        isOpen={!!selected}
+        onClose={() => setSelected(null)}
+        title="Edit payment"
+      >
+        {selected && (
+          <EditRecurringPaymentForm
+            payment={selected}
+            onClose={() => setSelected(null)}
+            onDelete={() => {
+              deleteRecurringPayment({ id: selected._id })
+              setSelected(null)
+            }}
+          />
+        )}
+      </Modal>
+      <div className={styles.wrapper}>
+        {loans.length > 0 && <RecurringPaymentBlock type="loan" payments={loans} onItemClick={setSelected} />}
+        {subscriptions.length > 0 && <RecurringPaymentBlock type="subscription" payments={subscriptions} onItemClick={setSelected} />}
+      </div>
+    </>
+  )
+}
+
+export default RecurringPayments

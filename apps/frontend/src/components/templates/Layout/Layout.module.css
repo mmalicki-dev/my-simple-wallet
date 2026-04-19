@@ -12,7 +12,7 @@
 
 @media (min-width: 768px) {
   .layout {
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
 
   .main {

@@ -1,9 +1,11 @@
+import type { Currency } from 'shared'
+
 export interface Account {
   _id: string;
   user: string;
   name: string;
   balance: number;
-  currency: string;
+  currency: Currency;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;
@@ -11,7 +13,7 @@ export interface Account {
 
 export interface CreateAccountRequest {
   name: string;
-  currency: string;
+  currency: Currency;
 }
 
 export interface UpdateAccountRequest {

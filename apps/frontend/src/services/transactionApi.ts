@@ -10,8 +10,9 @@ import type {
 export const transactionApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getTransactions: builder.query<Transaction[], GetTransactionsRequest>({
-      query: ({ from, to } = {}) => {
+      query: ({ accountId, from, to } = {}) => {
         const params = new URLSearchParams();
+        if (accountId) params.set("accountId", accountId);
         if (from) params.set("from", from);
         if (to) params.set("to", to);
         const qs = params.toString();

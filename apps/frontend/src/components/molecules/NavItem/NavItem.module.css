@@ -7,7 +7,14 @@
   border-radius: 0.5rem;
   color: var(--color-text-muted);
   text-decoration: none;
-  transition: color 0.15s, background-color 0.15s;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.logo {
+  width: 18px;
+  height: 18px;
 }
 
 .item:hover {
@@ -20,6 +27,7 @@
 }
 
 .label {
+  display: none;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -29,6 +37,11 @@
     flex-direction: row;
     gap: 0.75rem;
     padding: 0.625rem 0.75rem;
+  }
+
+  .logo {
+    width: 24px;
+    height: 24px;
   }
 
   .label {
