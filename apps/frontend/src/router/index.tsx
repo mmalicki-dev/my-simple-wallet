@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
-import Layout from '@/components/templates/Layout'
-import HomePage from '@/pages/HomePage'
-import AuthPage from '@/pages/AuthPage'
+import Layout from '@/components/templates/Layout/Layout'
+import HomePage from '@/pages/HomePage/HomePage'
+import AuthPage from '@/pages/AuthPage/AuthPage'
 import { LanguageProvider } from '@/context/Language'
 
 const AppRouter = () => {
