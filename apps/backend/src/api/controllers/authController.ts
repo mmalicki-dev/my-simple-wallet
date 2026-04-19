@@ -92,9 +92,8 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  let refreshToken: string | undefined;
   if (result.data.rememberMe) {
-    refreshToken = jwt.sign(
+    const refreshToken = jwt.sign(
       { userId: user._id, email: user.email },
       env.JWT_REFRESH_SECRET,
       {
@@ -110,6 +109,11 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
       { token: refreshToken, expiresAt },
     ];
     await user.save();
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
   }
 
   const accessToken = jwt.sign(
@@ -124,7 +128,6 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     res,
     {
       accessToken,
-      refreshToken,
       user: { id: user._id, email: user.email, name: user.name },
     },
     "Logged in successfully",
@@ -181,13 +184,15 @@ export const getMe: RequestHandler = (req, res) => {
 };
 
 export const refresh: RequestHandler = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken || typeof refreshToken !== "string")
     throw new AppError("Refresh token required", 400);
 
   let payload: { userId: string };
   try {
-    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { userId: string };
+    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as {
+      userId: string;
+    };
   } catch {
     throw new AppError("Invalid or expired refresh token", 401);
   }
@@ -206,11 +211,15 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
     { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"] },
   );
 
-  ok(res, { accessToken, user: { id: user._id, email: user.email, name: user.name } }, "Access token refreshed");
+  ok(
+    res,
+    { accessToken, user: { id: user._id, email: user.email, name: user.name } },
+    "Access token refreshed",
+  );
 });
 
 export const logout: RequestHandler = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken || typeof refreshToken !== "string") {
     ok(res, undefined, "Logged out successfully");
@@ -219,7 +228,9 @@ export const logout: RequestHandler = asyncHandler(async (req, res) => {
 
   let payload: { userId: string };
   try {
-    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { userId: string };
+    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as {
+      userId: string;
+    };
   } catch {
     throw new AppError("Invalid or expired refresh token", 401);
   }
@@ -227,8 +238,11 @@ export const logout: RequestHandler = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(payload.userId);
   if (!user) throw new AppError("User not found", 404);
 
-  user.refreshTokens = user.refreshTokens.filter((t) => t.token !== refreshToken);
+  user.refreshTokens = user.refreshTokens.filter(
+    (t) => t.token !== refreshToken,
+  );
   await user.save();
 
+  res.clearCookie("refreshToken");
   ok(res, undefined, "Logged out successfully");
 });
