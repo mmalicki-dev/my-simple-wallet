@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
+import Tabs from '@/components/molecules/Tabs/Tabs'
 import styles from './AuthTabs.module.css'
 
 type Mode = 'login' | 'register'
@@ -7,27 +8,26 @@ interface AuthTabsProps {
   mode: Mode
 }
 
+const TABS = ['sign in', 'register']
+
 const AuthTabs = ({ mode }: AuthTabsProps) => {
   const { lang = 'en' } = useParams()
   const navigate = useNavigate()
 
+  const handleTabChange = (tab: string) => {
+    if (tab === 'sign in') navigate(`/${lang}/auth/login`)
+    else navigate(`/${lang}/auth/register`)
+  }
+
   return (
-    <div className={styles.tabs}>
-      <button
-        type="button"
-        className={[styles.tab, mode === 'login' ? styles.active : ''].join(' ')}
-        onClick={() => navigate(`/${lang}/auth/login`)}
-      >
-        Sign in
-      </button>
-      <button
-        type="button"
-        className={[styles.tab, mode === 'register' ? styles.active : ''].join(' ')}
-        onClick={() => navigate(`/${lang}/auth/register`)}
-      >
-        Register
-      </button>
-    </div>
+    <Tabs
+      tabs={TABS}
+      activeTab={mode === 'login' ? 'sign in' : 'register'}
+      onTabChange={handleTabChange}
+      containerClass={styles.tabs}
+      itemClass={styles.tab}
+      activeTabClass={styles.active}
+    />
   )
 }
 
