@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { RecurringPayment } from '@/types'
-import { useGetRecurringPaymentsQuery, useDeleteRecurringPaymentMutation } from '@/services/recurringPaymentApi'
+import { useGetRecurringPaymentsQuery } from '@/services/recurringPaymentApi'
 import RecurringPaymentBlock from '@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock'
 import Modal from '@/components/templates/Modal/Modal'
 import EditRecurringPaymentForm from '@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm'
@@ -9,7 +9,6 @@ import styles from './RecurringPayments.module.css'
 
 const RecurringPayments = () => {
   const { data = [], isLoading } = useGetRecurringPaymentsQuery()
-  const [deleteRecurringPayment] = useDeleteRecurringPaymentMutation()
   const [selected, setSelected] = useState<RecurringPayment | null>(null)
 
   const loans = data.filter((p) => p.type === 'loan')
@@ -29,10 +28,6 @@ const RecurringPayments = () => {
           <EditRecurringPaymentForm
             payment={selected}
             onClose={() => setSelected(null)}
-            onDelete={() => {
-              deleteRecurringPayment({ id: selected._id })
-              setSelected(null)
-            }}
           />
         )}
       </Modal>

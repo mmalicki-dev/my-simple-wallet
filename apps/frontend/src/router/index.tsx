@@ -45,7 +45,10 @@ const AppRouter = () => {
           <Route path="home" element={<HomePage />} />
           <Route path="accounts/:id" element={<AccountPage />} />
           <Route path="charts" element={<ChartPage />} />
-          <Route path="user" element={<UserPage />} />
+          <Route path="user">
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path=":tab" element={<UserPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to={`/${lang}/home`} replace />} />
