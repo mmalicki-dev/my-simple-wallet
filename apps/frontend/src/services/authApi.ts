@@ -32,6 +32,9 @@ export const authApi = api.injectEndpoints({
     logout: builder.mutation<void, void>({
       query: () => ({ url: "/auth/logout", method: "POST" }),
     }),
+    updateProfile: builder.mutation<UserResponse, { name?: string; totalBalanceCurrency?: string }>({
+      query: (body) => ({ url: "/auth/profile", method: "PUT", body }),
+    }),
     requestEmailChange: builder.mutation<void, { email: string }>({
       query: (body) => ({ url: "/auth/change-email", method: "POST", body }),
     }),
@@ -51,6 +54,7 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useLogoutMutation,
+  useUpdateProfileMutation,
   useRequestEmailChangeMutation,
   useVerifyEmailMutation,
   useConfirmEmailChangeMutation,

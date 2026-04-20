@@ -1,4 +1,6 @@
 import { Helmet } from "react-helmet";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import AccountBlock from "@/components/organisms/AccountBlock/AccountBlock";
 import RecurringPayments from "@/components/organisms/RecurringPayments/RecurringPayments";
@@ -8,7 +10,8 @@ import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
-  const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
+  const totalBalanceCurrency = useSelector((state: RootState) => state.auth.user?.totalBalanceCurrency);
+
 
   return (
     <>
@@ -20,10 +23,10 @@ const HomePage = () => {
           <Spinner />
         ) : (
           <>
-            {defaultAccount && (
+            {totalBalanceCurrency && (
               <TotalBalance
                 accounts={accounts}
-                baseCurrency={defaultAccount.currency}
+                baseCurrency={totalBalanceCurrency}
               />
             )}
             <AccountBlock accounts={accounts} />

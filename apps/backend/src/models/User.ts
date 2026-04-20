@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { CURRENCIES } from 'shared'
 
 export interface IRefreshToken {
   token: string
@@ -11,6 +12,7 @@ export interface IUser extends Document {
   name: string
   password: string
   accounts: mongoose.Types.ObjectId[]
+  totalBalanceCurrency: string
   isVerified: boolean
   verificationToken?: string
   passwordResetToken?: string
@@ -49,6 +51,11 @@ const UserSchema = new Schema<IUser>(
         ref: 'Account',
       },
     ],
+    totalBalanceCurrency: {
+      type: String,
+      enum: CURRENCIES,
+      default: 'PLN',
+    },
     isVerified: {
       type: Boolean,
       default: false,

@@ -129,7 +129,7 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     res,
     {
       accessToken,
-      user: { id: user._id, email: user.email, name: user.name },
+      user: { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency },
     },
     "Logged in successfully",
   );
@@ -183,6 +183,21 @@ export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
 export const getMe: RequestHandler = (req, res) => {
   ok(res, req.user);
 };
+
+export const updateProfile: RequestHandler = asyncHandler(async (req, res) => {
+  const { name, totalBalanceCurrency } = req.body;
+
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new AppError("User not found", 404);
+
+  if (name && typeof name === "string") user.name = name.trim();
+  if (totalBalanceCurrency && typeof totalBalanceCurrency === "string")
+    user.totalBalanceCurrency = totalBalanceCurrency;
+
+  await user.save();
+
+  ok(res, { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency }, "Profile updated");
+});
 
 export const requestEmailChange: RequestHandler = asyncHandler(
   async (req, res) => {
@@ -265,7 +280,7 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
 
   ok(
     res,
-    { accessToken, user: { id: user._id, email: user.email, name: user.name } },
+    { accessToken, user: { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency } },
     "Access token refreshed",
   );
 });
