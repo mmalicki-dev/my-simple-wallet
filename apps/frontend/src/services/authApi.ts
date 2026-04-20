@@ -35,6 +35,12 @@ export const authApi = api.injectEndpoints({
     requestEmailChange: builder.mutation<void, { email: string }>({
       query: (body) => ({ url: "/auth/change-email", method: "POST", body }),
     }),
+    verifyEmail: builder.mutation<void, { token: string }>({
+      query: ({ token }) => ({ url: `/auth/verify-email?token=${token}`, method: "GET" }),
+    }),
+    confirmEmailChange: builder.mutation<void, { token: string }>({
+      query: ({ token }) => ({ url: `/auth/confirm-email-change?token=${token}`, method: "GET" }),
+    }),
   }),
 });
 
@@ -46,4 +52,6 @@ export const {
   useResetPasswordMutation,
   useLogoutMutation,
   useRequestEmailChangeMutation,
+  useVerifyEmailMutation,
+  useConfirmEmailChangeMutation,
 } = authApi;

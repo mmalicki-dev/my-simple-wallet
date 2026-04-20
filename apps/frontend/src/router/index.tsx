@@ -6,6 +6,8 @@ import AccountPage from '@/pages/AccountPage/AccountPage'
 import UserPage from '@/pages/UserPage/UserPage'
 import ChartPage from '@/pages/ChartPage/ChartPage'
 import AuthPage from '@/pages/AuthPage/AuthPage'
+import VerifyEmailPage from '@/pages/VerifyEmailPage/VerifyEmailPage'
+import ConfirmEmailChangePage from '@/pages/ConfirmEmailChangePage/ConfirmEmailChangePage'
 import { LanguageProvider, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '@/context/Language'
 import type { Language } from '@/context/Language'
 
@@ -51,6 +53,8 @@ const AppRouter = () => {
           </Route>
         </Route>
       </Route>
+      <Route path="verify-email" element={<VerifyEmailPage />} />
+      <Route path="confirm-email-change" element={<ConfirmEmailChangePage />} />
       <Route path="*" element={<Navigate to={`/${lang}/home`} replace />} />
     </Routes>
   )
