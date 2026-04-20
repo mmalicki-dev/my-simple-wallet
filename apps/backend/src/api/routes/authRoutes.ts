@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { register, login, getMe, verifyEmail, forgotPassword, resetPassword, refresh, logout } from '../controllers/authController.js'
+import { register, login, getMe, verifyEmail, forgotPassword, resetPassword, refresh, logout, requestEmailChange, confirmEmailChange } from '../controllers/authController.js'
 import { protect } from '../middlewares/authMiddleware.js'
 
 const router = Router()
@@ -12,5 +12,7 @@ router.post('/reset-password', resetPassword)
 router.get('/me', protect, getMe)
 router.post('/refresh', refresh)
 router.post('/logout', logout)
+router.post('/change-email', protect, requestEmailChange)
+router.get('/confirm-email-change', confirmEmailChange)
 
 export default router

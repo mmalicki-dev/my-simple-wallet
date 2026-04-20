@@ -6,6 +6,7 @@ import { UserModel, CategoryModel } from "../../models/index.js";
 import env from "../../config/env.js";
 import {
   sendVerificationEmail,
+  sendChangeEmailVerification,
   sendPasswordResetEmail,
 } from "../../config/email.js";
 import { validate } from "../validators/authValidator.js";
@@ -182,6 +183,57 @@ export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
 export const getMe: RequestHandler = (req, res) => {
   ok(res, req.user);
 };
+
+export const requestEmailChange: RequestHandler = asyncHandler(
+  async (req, res) => {
+    const { email } = req.body;
+    if (!email || typeof email !== "string")
+      throw new AppError("New email is required", 400);
+
+    const user = await UserModel.findById(req.user!.id);
+    if (!user) throw new AppError("User not found", 404);
+
+    if (email.toLowerCase() === user.email)
+      throw new AppError("New email must be different from current email", 400);
+
+    const existing = await UserModel.findOne({ email: email.toLowerCase() });
+    if (existing) throw new AppError("Email already in use", 409);
+
+    const token = randomBytes(32).toString("hex");
+    user.pendingEmail = email.toLowerCase();
+    user.emailChangeToken = token;
+    user.emailChangeExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    await sendChangeEmailVerification(email, user.name, token);
+
+    ok(res, undefined, "Verification email sent to your new address");
+  },
+);
+
+export const confirmEmailChange: RequestHandler = asyncHandler(
+  async (req, res) => {
+    const { token } = req.query;
+    if (!token || typeof token !== "string")
+      throw new AppError("Invalid or missing token", 400);
+
+    const user = await UserModel.findOne({
+      emailChangeToken: token,
+      emailChangeExpires: { $gt: new Date() },
+    });
+
+    if (!user?.pendingEmail)
+      throw new AppError("Invalid or expired token", 400);
+
+    user.email = user.pendingEmail;
+    user.pendingEmail = undefined;
+    user.emailChangeToken = undefined;
+    user.emailChangeExpires = undefined;
+    await user.save();
+
+    ok(res, undefined, "Email updated successfully");
+  },
+);
 
 export const refresh: RequestHandler = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;

@@ -15,6 +15,9 @@ export interface IUser extends Document {
   verificationToken?: string
   passwordResetToken?: string
   passwordResetExpires?: Date
+  pendingEmail?: string
+  emailChangeToken?: string
+  emailChangeExpires?: Date
   refreshTokens: IRefreshToken[]
   createdAt: Date
   updatedAt: Date
@@ -57,6 +60,17 @@ const UserSchema = new Schema<IUser>(
       type: String,
     },
     passwordResetExpires: {
+      type: Date,
+    },
+    pendingEmail: {
+      type: String,
+      lowercase: true,
+      trim: true,
+    },
+    emailChangeToken: {
+      type: String,
+    },
+    emailChangeExpires: {
       type: Date,
     },
     refreshTokens: [

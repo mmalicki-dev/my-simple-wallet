@@ -9,6 +9,7 @@ export interface EmailConfig {
 export interface VerificationEmailParams {
   to: string;
   name: string;
+  description: string;
   verificationUrl: string;
   appName: string;
   templateId: string;
@@ -35,6 +36,7 @@ export function createEmailService(config: EmailConfig) {
       send(params.templateId, {
         to_email: params.to,
         name: params.name,
+        description: params.description,
         verification_url: params.verificationUrl,
         app_name: params.appName,
       }),
