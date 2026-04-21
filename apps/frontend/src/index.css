@@ -1,17 +1,32 @@
 :root {
-  --dark: #0f1923;
-  --brand: #2c6d96;
-  --accent: #e07b39;
-  --light: #f4f3f1;
-  --white: #ffffff;
-  --text: #1c1c1c;
-  --muted: rgba(255, 255, 255, 0.65);
-  --header-height: clamp(4rem, calc(4vw + 2rem), 6rem);
-  --page-header: #d3dae1;
   --font-heading: "Playfair Display", serif;
   --font-body:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --project-gap: 1.5rem;
+  --color-neon: #bc13fe;
+}
+
+[data-theme="light"] {
+  --color-bg: #f4f4f5;
+  --color-surface: #e8e8f3;
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-border: #e4e4e7;
+  --color-primary: #3949ab;
+  --color-primary-subtle: #ede7f6;
+  --color-success: #2e7d32;
+  --color-danger: #c62828;
+}
+
+[data-theme="dark"] {
+  --color-bg: #09090b;
+  --color-surface: #18181b;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-border: #27272a;
+  --color-primary: #7986cb;
+  --color-primary-subtle: #1e1b4b;
+  --color-success: #66bb6a;
+  --color-danger: #ef5350;
 }
 
 * {
@@ -29,8 +44,8 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--white);
-  color: var(--text);
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 ul,
