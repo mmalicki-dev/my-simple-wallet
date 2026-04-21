@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useTranslations } from "@/i18n";
 import Input from "@/components/atoms/Input/Input";
 import Button from "@/components/atoms/Button/Button";
 import Checkbox from "@/components/atoms/Checkbox/Checkbox";
@@ -18,6 +19,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const { lang = "en" } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { common, auth } = useTranslations();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,23 +37,14 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     try {
       if (mode === "login") {
         const result = await login({ email, password, rememberMe }).unwrap();
-        dispatch(
-          setCredentials({
-            user: result.user,
-            accessToken: result.accessToken,
-          }),
-        );
+        dispatch(setCredentials({ user: result.user, accessToken: result.accessToken }));
         navigate(`/${lang}/home`, { replace: true });
       } else {
         await register({ email, password, name }).unwrap();
         navigate(`/${lang}/auth/login`);
       }
     } catch {
-      setServerError(
-        mode === "login"
-          ? "Invalid email or password."
-          : "Registration failed. Try again.",
-      );
+      setServerError(mode === "login" ? auth.loginError : auth.registerError);
     }
   };
 
@@ -60,7 +53,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       {mode === "register" && (
         <Input
           type="text"
-          placeholder="Name"
+          placeholder={common.name}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -69,7 +62,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       )}
       <Input
         type="email"
-        placeholder="Email"
+        placeholder={common.email}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -77,7 +70,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       />
       <Input
         type="password"
-        placeholder="Password"
+        placeholder={common.password}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
@@ -87,14 +80,14 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       {mode === "login" && (
         <Checkbox
           id="rememberMe"
-          label="Remember me"
+          label={auth.rememberMe}
           checked={rememberMe}
           onChange={(e) => setRememberMe(e.target.checked)}
         />
       )}
       {serverError && <p className={styles.error}>{serverError}</p>}
       <Button type="submit" isLoading={isLoginLoading || isRegisterLoading}>
-        {mode === "login" ? "Sign in" : "Create account"}
+        {mode === "login" ? auth.signIn : auth.createAccount}
       </Button>
     </form>
   );

@@ -6,4 +6,5 @@
     inset 0 0 1rem var(--color-neon),
     inset 0 0 2rem var(--color-neon);
   background-color: var(--color-surface);
+  padding: 1rem;
 }

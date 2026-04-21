@@ -1,4 +1,4 @@
-import { useEffect, useMemo, ReactNode } from 'react'
+import { useEffect, useCallback, useMemo, ReactNode } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { LanguageContext, Language, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from './LanguageContext'
 
@@ -19,12 +19,12 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [lang])
 
-  const setLanguage = (newLang: Language) => {
+  const setLanguage = useCallback((newLang: Language) => {
     const newPath = location.pathname.replace(`/${language}`, `/${newLang}`)
     navigate(newPath)
-  }
+  }, [language, location.pathname, navigate])
 
-  const value = useMemo(() => ({ language, setLanguage }), [language])
+  const value = useMemo(() => ({ language, setLanguage }), [language, setLanguage])
 
   return (
     <LanguageContext.Provider value={value}>
