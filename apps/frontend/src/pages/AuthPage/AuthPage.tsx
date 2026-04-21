@@ -26,8 +26,6 @@ const AuthPage = () => {
             <ThemeToggle />
             <LanguageSwitcher />
           </div>
-        </BlockWrapper>
-        <BlockWrapper extraClass={styles.neon}>
           <div className={styles.card}>
             <div className={styles.logoWrapper}>
               <Logo isFull />

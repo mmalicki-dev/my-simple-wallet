@@ -2,10 +2,11 @@
   --font-heading: "Playfair Display", serif;
   --font-body:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --neon-shadow: 0 0 1rem var(--color-neon), inset 0 0 1rem var(--color-neon);
 }
 
 [data-theme="light"] {
-  --color-neon: #ce4fff;
+  --color-neon: #328cff;
   --color-bg: #ececec;
   --color-surface: #e4e4ff;
   --color-text: #18181b;

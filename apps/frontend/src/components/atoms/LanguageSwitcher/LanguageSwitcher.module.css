@@ -1,9 +1,6 @@
 .switcher {
   display: flex;
   gap: 0.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 0.2rem;
 }
 
 .option {
@@ -13,7 +10,9 @@
   font-weight: 600;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .option:hover {
@@ -21,6 +20,6 @@
 }
 
 .active {
-  background: var(--color-primary);
+  background: var(--color-neon);
   color: #fff;
 }
