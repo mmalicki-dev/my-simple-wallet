@@ -47,6 +47,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-bg);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-neon) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-neon) 6%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
   color: var(--color-text);
 }
 

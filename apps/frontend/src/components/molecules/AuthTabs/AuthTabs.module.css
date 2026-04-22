@@ -14,7 +14,9 @@
   font-weight: 500;
   color: var(--color-text-muted);
   margin-bottom: -1px;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .tab:hover {
@@ -22,6 +24,6 @@
 }
 
 .active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  color: var(--color-neon);
+  border-bottom-color: var(--color-neon);
 }

@@ -3,10 +3,10 @@ import { Helmet } from "react-helmet";
 import Logo from "@/components/atoms/Logo/Logo";
 import AuthTabs from "@/components/molecules/AuthTabs/AuthTabs";
 import AuthForm from "@/components/organisms/AuthForm/AuthForm";
-import styles from "./AuthPage.module.css";
-import BlockWrapper from "@/components/templates/BlockWrapper/BlockWrapper";
 import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
 import LanguageSwitcher from "@/components/atoms/LanguageSwitcher/LanguageSwitcher";
+import GlassWrapper from "@/components/templates/GlassWrapper/GlassWrapper";
+import styles from "./AuthPage.module.css";
 
 type Mode = "login" | "register";
 
@@ -21,19 +21,17 @@ const AuthPage = () => {
       </Helmet>
 
       <div className={styles.page}>
-        <BlockWrapper extraClass={styles.neon}>
-          <div className={styles.controlls}>
-            <ThemeToggle />
-            <LanguageSwitcher />
+        <div className={styles.controlsBar}>
+          <ThemeToggle />
+          <LanguageSwitcher />
+        </div>
+        <GlassWrapper className={styles.card}>
+          <div className={styles.logoWrapper}>
+            <Logo isFull />
           </div>
-          <div className={styles.card}>
-            <div className={styles.logoWrapper}>
-              <Logo isFull />
-            </div>
-            <AuthTabs mode={authMode} />
-            <AuthForm mode={authMode} />
-          </div>
-        </BlockWrapper>
+          <AuthTabs mode={authMode} />
+          <AuthForm mode={authMode} />
+        </GlassWrapper>
       </div>
     </>
   );
