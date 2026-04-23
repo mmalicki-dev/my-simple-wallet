@@ -1,7 +1,7 @@
 .panel {
   position: relative;
   padding: 0.5rem 0;
-  border-right: 2px solid var(--color-primary);
+  overflow: hidden;
 }
 
 .panel::after {
@@ -12,4 +12,42 @@
   right: 0;
   height: 2px;
   background: linear-gradient(to left, var(--color-primary), transparent);
+}
+.border {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2px;
+  background-image: linear-gradient(to top, var(--color-primary), transparent);
+}
+
+.shimmer .border {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-primary) 30%, transparent),
+    transparent
+  );
+  animation: shimmer 1.4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(250%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }

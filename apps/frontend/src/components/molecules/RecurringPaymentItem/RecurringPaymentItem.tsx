@@ -18,14 +18,18 @@ const RecurringPaymentItem = ({
   const dueDate = new Date(payment.nextDueDate).toLocaleDateString();
 
   const content = (
-    <AccentPanel className={styles.payment}>
+    <AccentPanel className={styles.payment} isLoading>
       <div className={styles.info}>
         <span className={styles.name}>{payment.name}</span>
         <span className={styles.meta}>
           {payment.billingCycle} · due {dueDate}
         </span>
       </div>
-      <Amount value={payment.amount} currency={currency} className={styles.amount} />
+      <Amount
+        value={payment.amount}
+        currency={currency}
+        className={styles.amount}
+      />
     </AccentPanel>
   );
 
