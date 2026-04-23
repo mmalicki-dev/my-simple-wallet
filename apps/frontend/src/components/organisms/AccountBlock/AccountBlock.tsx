@@ -1,21 +1,22 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import type { Account } from '@/types'
-import AccountItem from '@/components/molecules/AccountItem/AccountItem'
-import styles from './AccountBlock.module.css'
+import { useNavigate, useParams } from "react-router-dom";
+import type { Account } from "@/types";
+import AccountItem from "@/components/molecules/AccountItem/AccountItem";
+import styles from "./AccountBlock.module.css";
+import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 
 interface AccountBlockProps {
-  accounts: Account[]
+  accounts: Account[];
 }
 
 const AccountBlock = ({ accounts }: AccountBlockProps) => {
-  const { lang = 'en' } = useParams()
-  const navigate = useNavigate()
+  const { lang = "en" } = useParams();
+  const navigate = useNavigate();
 
-  if (accounts.length === 0) return null
+  if (accounts.length === 0) return null;
 
   return (
     <section className={styles.block}>
-      <h2 className={styles.label}>Your accounts</h2>
+      <PanelLabel label="Your accounts" />
       <ul className={styles.list}>
         {accounts.map((account) => (
           <AccountItem
@@ -26,7 +27,7 @@ const AccountBlock = ({ accounts }: AccountBlockProps) => {
         ))}
       </ul>
     </section>
-  )
-}
+  );
+};
 
-export default AccountBlock
+export default AccountBlock;

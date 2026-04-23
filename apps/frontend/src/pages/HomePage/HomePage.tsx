@@ -7,7 +7,7 @@ import RecurringPayments from "@/components/organisms/RecurringPayments/Recurrin
 import TotalBalance from "@/components/molecules/TotalBalance/TotalBalance";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./HomePage.module.css";
-import GlassWrapper from "@/components/templates/GlassWrapper/GlassWrapper";
+import HudPanel from "@/components/templates/HudPanel/HudPanel";
 
 const HomePage = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
@@ -26,19 +26,17 @@ const HomePage = () => {
         ) : (
           <>
             {totalBalanceCurrency && (
-              <GlassWrapper className={styles.glassWrapper}>
+              <HudPanel>
                 <TotalBalance
                   accounts={accounts}
                   baseCurrency={totalBalanceCurrency}
                 />
-              </GlassWrapper>
+              </HudPanel>
             )}
-            <GlassWrapper className={styles.glassWrapper}>
+            <HudPanel>
               <AccountBlock accounts={accounts} />
-            </GlassWrapper>
-            <GlassWrapper className={styles.glassWrapper}>
-              <RecurringPayments />
-            </GlassWrapper>
+            </HudPanel>
+            <RecurringPayments />
           </>
         )}
       </div>

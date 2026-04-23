@@ -1,35 +1,44 @@
-import { useState, useContext } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import type { RootState } from '@/redux/store'
-import { setCredentials } from '@/redux/slices/authSlice'
-import { LanguageContext, SUPPORTED_LANGUAGES } from '@/context/Language/LanguageContext'
-import type { Language } from '@/context/Language/LanguageContext'
-import { CURRENCIES } from 'shared'
-import UserBlockWrapper from '@/components/molecules/UserBlockWrapper/UserBlockWrapper'
-import Button from '@/components/atoms/Button/Button'
-import { useUpdateProfileMutation } from '@/services/authApi'
-import styles from './UserPreferencesBlock.module.css'
+import { useState, useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { setCredentials } from "@/redux/slices/authSlice";
+import {
+  LanguageContext,
+  SUPPORTED_LANGUAGES,
+} from "@/context/Language/LanguageContext";
+import type { Language } from "@/context/Language/LanguageContext";
+import { CURRENCIES } from "shared";
+import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
+import Button from "@/components/atoms/Button/Button";
+import { useUpdateProfileMutation } from "@/services/authApi";
+import styles from "./UserPreferencesBlock.module.css";
+import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
 
-const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, label: c }))
+const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, label: c }));
 
 const UserPreferencesBlock = () => {
-  const user = useSelector((state: RootState) => state.auth.user)
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
-  const dispatch = useDispatch()
-  const langCtx = useContext(LanguageContext)
-  const [totalBalanceCurrency, setTotalBalanceCurrency] = useState(user?.totalBalanceCurrency ?? 'PLN')
-  const [updateProfile, { isLoading }] = useUpdateProfileMutation()
+  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const dispatch = useDispatch();
+  const langCtx = useContext(LanguageContext);
+  const [totalBalanceCurrency, setTotalBalanceCurrency] = useState(
+    user?.totalBalanceCurrency ?? "PLN",
+  );
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
   const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const updated = await updateProfile({ totalBalanceCurrency }).unwrap()
-    dispatch(setCredentials({ user: updated, accessToken: accessToken! }))
-  }
+    e.preventDefault();
+    const updated = await updateProfile({ totalBalanceCurrency }).unwrap();
+    dispatch(setCredentials({ user: updated, accessToken: accessToken! }));
+  };
 
   return (
     <UserBlockWrapper title="Preferences">
+      <ThemeToggle />
       <div className={styles.field}>
-        <label htmlFor="language" className={styles.label}>Language</label>
+        <label htmlFor="language" className={styles.label}>
+          Language
+        </label>
         <select
           id="language"
           className={styles.select}
@@ -37,13 +46,17 @@ const UserPreferencesBlock = () => {
           onChange={(e) => langCtx?.setLanguage(e.target.value as Language)}
         >
           {[...SUPPORTED_LANGUAGES].map((lang) => (
-            <option key={lang} value={lang}>{lang.toUpperCase()}</option>
+            <option key={lang} value={lang}>
+              {lang.toUpperCase()}
+            </option>
           ))}
         </select>
       </div>
       <form onSubmit={handleSave}>
         <div className={styles.field}>
-          <label htmlFor="totalBalanceCurrency" className={styles.label}>Total Balance Currency</label>
+          <label htmlFor="totalBalanceCurrency" className={styles.label}>
+            Total Balance Currency
+          </label>
           <select
             id="totalBalanceCurrency"
             className={styles.select}
@@ -51,14 +64,18 @@ const UserPreferencesBlock = () => {
             onChange={(e) => setTotalBalanceCurrency(e.target.value)}
           >
             {CURRENCY_OPTIONS.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
             ))}
           </select>
         </div>
-        <Button type="submit" isLoading={isLoading}>Save</Button>
+        <Button type="submit" isLoading={isLoading}>
+          Save
+        </Button>
       </form>
     </UserBlockWrapper>
-  )
-}
+  );
+};
 
-export default UserPreferencesBlock
+export default UserPreferencesBlock;

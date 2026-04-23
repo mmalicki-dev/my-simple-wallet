@@ -4,6 +4,7 @@ import { useTotalBalance } from "@/hooks";
 import Amount from "@/components/atoms/Amount/Amount";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./TotalBalance.module.css";
+import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 
 interface TotalBalanceProps {
   accounts: Account[];
@@ -15,7 +16,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
 
   return (
     <>
-      <span className={styles.label}>Total balance</span>
+      <PanelLabel label="Total balance" />
       {isLoading && <Spinner />}
       {isError && <span className={styles.error}>Could not load rates</span>}
       {!isError && !isLoading && (
