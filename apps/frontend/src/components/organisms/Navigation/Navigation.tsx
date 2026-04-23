@@ -30,13 +30,13 @@ const Navigation = () => {
       </div>
       <ul className={styles.list}>
         <li>
-          <NavItem to={`${base}/home`} icon="home" label="Home" />
+          <NavItem to={`${base}/home`} icon="dashboard" label="Home" />
         </li>
         <li>
-          <NavItem to={`${base}/charts`} icon="trending-up" label="Charts" />
+          <NavItem to={`${base}/charts`} icon="chart" label="Charts" />
         </li>
         <li>
-          <NavItem to={`${base}/user`} icon="briefcase" label="User" />
+          <NavItem to={`${base}/user`} icon="user-edit" label="User" />
         </li>
         <li>
           <button
@@ -44,7 +44,7 @@ const Navigation = () => {
             className={styles.logoutBtn}
             onClick={handleLogout}
           >
-            <Icon name="minus-circle" className={styles.logoutIcon} />
+            <Icon name="logout" className={styles.logoutIcon} />
             <span className={styles.logoutLabel}>Logout</span>
           </button>
         </li>
