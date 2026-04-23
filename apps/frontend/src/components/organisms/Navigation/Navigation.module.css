@@ -5,8 +5,10 @@
   align-items: center;
   justify-content: space-around;
   padding: 0.5rem;
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-neon);
+  box-shadow: 0 -6px 20px color-mix(in srgb, var(--color-neon) 35%, transparent);
+  background: color-mix(in srgb, var(--color-neon) 30%, transparent);
+  backdrop-filter: blur(2px);
   position: sticky;
   bottom: 0;
 }
@@ -67,7 +69,8 @@
     justify-content: flex-start;
     padding: 1.5rem 1rem;
     border-top: none;
-    border-right: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-neon);
+    box-shadow: 6px 0 20px color-mix(in srgb, var(--color-neon) 35%, transparent);
     height: 100%;
     gap: 2rem;
   }
