@@ -32,7 +32,7 @@ const Amount = ({
   return (
     <span
       className={
-        className ? `${styles.amount}${className}` : `${styles.amount}`
+        className ? `${styles.amount} ${className}` : `${styles.amount}`
       }
     >
       {isApproximate && "~"}

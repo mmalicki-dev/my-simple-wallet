@@ -7,15 +7,16 @@
   flex-direction: column;
   gap: 0.5rem;
   text-align: left;
-  color: var(--color-primary);
 }
 
 .name {
   font-size: 0.9375rem;
   font-weight: 500;
+  color: var(--color-text);
 }
 
 .balance {
   font-size: 0.9375rem;
   font-weight: 600;
+  color: var(--color-primary);
 }

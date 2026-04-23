@@ -1,24 +1,7 @@
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.amountWrapper {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
 .amount {
-  font-size: 1.75rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text);
-}
-
-.disclaimer {
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
 }
 
 .error {
