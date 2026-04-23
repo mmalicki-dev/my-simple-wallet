@@ -20,14 +20,12 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
       {isLoading && <Spinner />}
       {isError && <span className={styles.error}>Could not load rates</span>}
       {!isError && !isLoading && (
-        <div className={styles.amountWrapper}>
-          <Amount
-            value={total!}
-            currency={baseCurrency}
-            className={styles.amount}
-          />
-          <span className={styles.disclaimer}>approximate</span>
-        </div>
+        <Amount
+          value={total!}
+          currency={baseCurrency}
+          className={styles.amount}
+          isApproximate
+        />
       )}
     </>
   );

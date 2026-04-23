@@ -5,7 +5,6 @@ import RecurringPaymentBlock from "@/components/organisms/RecurringPaymentBlock/
 import Modal from "@/components/templates/Modal/Modal";
 import EditRecurringPaymentForm from "@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm";
 import Spinner from "@/components/atoms/Spinner/Spinner";
-import styles from "./RecurringPayments.module.css";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
 
 const RecurringPayments = () => {

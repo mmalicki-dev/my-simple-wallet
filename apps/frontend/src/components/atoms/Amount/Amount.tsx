@@ -12,9 +12,15 @@ interface AmountProps {
   value: number;
   currency: Currency;
   className?: string;
+  isApproximate?: boolean;
 }
 
-const Amount = ({ value, currency, className }: AmountProps) => {
+const Amount = ({
+  value,
+  currency,
+  className,
+  isApproximate = false,
+}: AmountProps) => {
   const { language } = useLanguage();
 
   const formatted = new Intl.NumberFormat(LOCALE_MAP[language], {
@@ -29,6 +35,7 @@ const Amount = ({ value, currency, className }: AmountProps) => {
         className ? `${styles.amount}${className}` : `${styles.amount}`
       }
     >
+      {isApproximate && "~"}
       {formatted}
     </span>
   );

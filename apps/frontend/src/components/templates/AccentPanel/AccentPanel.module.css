@@ -1,0 +1,15 @@
+.panel {
+  position: relative;
+  padding: 0.5rem 0;
+  border-right: 2px solid var(--color-primary);
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to left, var(--color-primary), transparent);
+}
