@@ -1,23 +1,29 @@
-import type { RecurringPayment } from '@/types'
-import styles from './RecurringPaymentItem.module.css'
+import type { RecurringPayment } from "@/types";
+import styles from "./RecurringPaymentItem.module.css";
+import AccentPanel from "@/components/templates/AccentPanel/AccentPanel";
 
 interface RecurringPaymentItemProps {
-  payment: RecurringPayment
-  onClick?: () => void
+  payment: RecurringPayment;
+  onClick?: () => void;
 }
 
-const RecurringPaymentItem = ({ payment, onClick }: RecurringPaymentItemProps) => {
-  const dueDate = new Date(payment.nextDueDate).toLocaleDateString()
+const RecurringPaymentItem = ({
+  payment,
+  onClick,
+}: RecurringPaymentItemProps) => {
+  const dueDate = new Date(payment.nextDueDate).toLocaleDateString();
 
   const content = (
-    <>
+    <AccentPanel className={styles.payment}>
       <div className={styles.info}>
         <span className={styles.name}>{payment.name}</span>
-        <span className={styles.meta}>{payment.billingCycle} · due {dueDate}</span>
+        <span className={styles.meta}>
+          {payment.billingCycle} · due {dueDate}
+        </span>
       </div>
       <span className={styles.amount}>{payment.amount}</span>
-    </>
-  )
+    </AccentPanel>
+  );
 
   return (
     <li className={styles.item}>
@@ -25,9 +31,11 @@ const RecurringPaymentItem = ({ payment, onClick }: RecurringPaymentItemProps) =
         <button type="button" className={styles.button} onClick={onClick}>
           {content}
         </button>
-      ) : content}
+      ) : (
+        content
+      )}
     </li>
-  )
-}
+  );
+};
 
-export default RecurringPaymentItem
+export default RecurringPaymentItem;
