@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/atoms/Logo/Logo";
 import NavItem from "@/components/molecules/NavItem/NavItem";
-import Icon from "@/components/atoms/Icon/Icon";
 import { useLanguage } from "@/hooks";
 import { logout } from "@/redux/slices/authSlice";
 import { useLogoutMutation } from "@/services/authApi";
@@ -29,24 +28,37 @@ const Navigation = () => {
         <Logo isFull />
       </div>
       <ul className={styles.list}>
-        <li>
-          <NavItem to={`${base}/home`} icon="dashboard" label="Home" />
+        <li className={styles.listItem}>
+          <NavItem
+            as="link"
+            to={`${base}/home`}
+            icon="dashboard"
+            label="Home"
+          />
         </li>
-        <li>
-          <NavItem to={`${base}/charts`} icon="chart" label="Charts" />
+        <li className={styles.listItem}>
+          <NavItem
+            as="link"
+            to={`${base}/charts`}
+            icon="chart"
+            label="Charts"
+          />
         </li>
-        <li>
-          <NavItem to={`${base}/user`} icon="user-edit" label="User" />
+        <li className={styles.listItem}>
+          <NavItem
+            as="link"
+            to={`${base}/user`}
+            icon="user-edit"
+            label="User"
+          />
         </li>
-        <li>
-          <button
-            type="button"
-            className={styles.logoutBtn}
+        <li className={styles.listItem}>
+          <NavItem
+            as="button"
             onClick={handleLogout}
-          >
-            <Icon name="logout" className={styles.logoutIcon} />
-            <span className={styles.logoutLabel}>Logout</span>
-          </button>
+            icon="logout"
+            label="Logout"
+          />
         </li>
       </ul>
     </nav>

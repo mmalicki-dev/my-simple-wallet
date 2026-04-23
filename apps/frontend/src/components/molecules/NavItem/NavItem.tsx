@@ -3,22 +3,33 @@ import type { IconName } from "shared";
 import Icon from "@/components/atoms/Icon/Icon";
 import styles from "./NavItem.module.css";
 
-interface NavItemProps {
-  to: string;
-  icon: IconName;
-  label: string;
-}
+type NavItemProps =
+  | {
+      as: "link";
+      to: string;
+      icon: IconName;
+      label: string;
+    }
+  | { as: "button"; onClick: () => void; icon: IconName; label: string };
 
-const NavItem = ({ to, icon, label }: NavItemProps) => {
+const NavItem = (props: NavItemProps) => {
+  if (props.as === "button") {
+    return (
+      <button type="button" className={styles.item} onClick={props.onClick}>
+        <Icon name={props.icon} className={styles.icon} />
+        <span className={styles.label}>{props.label}</span>
+      </button>
+    );
+  }
   return (
     <NavLink
-      to={to}
+      to={props.to}
       className={({ isActive }) =>
         isActive ? `${styles.item} ${styles.active}` : `${styles.item}`
       }
     >
-      <Icon name={icon} className={styles.logo} />
-      <span className={styles.label}>{label}</span>
+      <Icon name={props.icon} className={styles.icon} />
+      <span className={styles.label}>{props.label}</span>
     </NavLink>
   );
 };

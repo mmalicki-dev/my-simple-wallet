@@ -8,13 +8,13 @@ interface IconProps {
 
 const Icon = ({ name, className }: IconProps) => {
   return (
-    <span
-      className={className ? `${styles.icon} ${className}` : `${styles.icon}`}
+    <svg
+      className={className ? `${styles.svg} ${className}` : `${styles.svg}`}
+      aria-hidden="true"
+      focusable="false"
     >
-      <svg className={styles.svg} aria-hidden="true" focusable="false">
-        <use href={`/icons.svg#${name}`} />
-      </svg>
-    </span>
+      <use href={`/icons.svg#${name}`} />
+    </svg>
   );
 };
 
