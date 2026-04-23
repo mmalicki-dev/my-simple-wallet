@@ -4,7 +4,6 @@ import { useTotalBalance } from "@/hooks";
 import Amount from "@/components/atoms/Amount/Amount";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./TotalBalance.module.css";
-import GlassWrapper from "@/components/templates/GlassWrapper/GlassWrapper";
 
 interface TotalBalanceProps {
   accounts: Account[];
