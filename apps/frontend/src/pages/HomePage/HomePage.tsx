@@ -7,11 +7,13 @@ import RecurringPayments from "@/components/organisms/RecurringPayments/Recurrin
 import TotalBalance from "@/components/molecules/TotalBalance/TotalBalance";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./HomePage.module.css";
+import GlassWrapper from "@/components/templates/GlassWrapper/GlassWrapper";
 
 const HomePage = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
-  const totalBalanceCurrency = useSelector((state: RootState) => state.auth.user?.totalBalanceCurrency);
-
+  const totalBalanceCurrency = useSelector(
+    (state: RootState) => state.auth.user?.totalBalanceCurrency,
+  );
 
   return (
     <>
@@ -24,13 +26,19 @@ const HomePage = () => {
         ) : (
           <>
             {totalBalanceCurrency && (
-              <TotalBalance
-                accounts={accounts}
-                baseCurrency={totalBalanceCurrency}
-              />
+              <GlassWrapper className={styles.glassWrapper}>
+                <TotalBalance
+                  accounts={accounts}
+                  baseCurrency={totalBalanceCurrency}
+                />
+              </GlassWrapper>
             )}
-            <AccountBlock accounts={accounts} />
-            <RecurringPayments />
+            <GlassWrapper className={styles.glassWrapper}>
+              <AccountBlock accounts={accounts} />
+            </GlassWrapper>
+            <GlassWrapper className={styles.glassWrapper}>
+              <RecurringPayments />
+            </GlassWrapper>
           </>
         )}
       </div>

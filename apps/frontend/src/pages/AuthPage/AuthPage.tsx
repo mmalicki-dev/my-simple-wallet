@@ -25,7 +25,7 @@ const AuthPage = () => {
           <ThemeToggle />
           <LanguageSwitcher />
         </div>
-        <GlassWrapper className={styles.card}>
+        <GlassWrapper className={styles.card} animated>
           <div className={styles.logoWrapper}>
             <Logo isFull />
           </div>

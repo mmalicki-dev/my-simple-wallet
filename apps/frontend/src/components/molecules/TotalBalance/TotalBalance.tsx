@@ -4,6 +4,7 @@ import { useTotalBalance } from "@/hooks";
 import Amount from "@/components/atoms/Amount/Amount";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./TotalBalance.module.css";
+import GlassWrapper from "@/components/templates/GlassWrapper/GlassWrapper";
 
 interface TotalBalanceProps {
   accounts: Account[];
@@ -14,7 +15,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
   const { total, isLoading, isError } = useTotalBalance(accounts, baseCurrency);
 
   return (
-    <div className={styles.wrapper}>
+    <>
       <span className={styles.label}>Total balance</span>
       {isLoading && <Spinner />}
       {isError && <span className={styles.error}>Could not load rates</span>}
@@ -28,7 +29,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
           <span className={styles.disclaimer}>approximate</span>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

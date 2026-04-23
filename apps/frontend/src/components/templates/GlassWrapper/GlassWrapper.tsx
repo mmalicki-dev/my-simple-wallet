@@ -2,13 +2,18 @@ import { ReactNode, useRef } from "react";
 import styles from "./GlassWrapper.module.css";
 
 interface GlassWrapperProps {
+  animated?: boolean;
   children: ReactNode;
   className?: string;
 }
 
 const MAX_TILT = 8;
 
-const GlassWrapper = ({ children, className }: GlassWrapperProps) => {
+const GlassWrapper = ({
+  animated = false,
+  children,
+  className,
+}: GlassWrapperProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = () => {
@@ -34,14 +39,25 @@ const GlassWrapper = ({ children, className }: GlassWrapperProps) => {
     el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
   };
 
+  if (animated)
+    return (
+      <div
+        ref={ref}
+        role="none"
+        className={[styles.wrapper, className].join(" ")}
+        onMouseEnter={handleMouseEnter}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {children}
+      </div>
+    );
+
   return (
     <div
       ref={ref}
       role="none"
-      className={[styles.wrapper, className].filter(Boolean).join(" ")}
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      className={[styles.wrapper, className].join(" ")}
     >
       {children}
     </div>
