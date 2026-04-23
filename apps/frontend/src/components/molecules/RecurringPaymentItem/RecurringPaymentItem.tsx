@@ -1,14 +1,18 @@
+import type { Currency } from "shared";
 import type { RecurringPayment } from "@/types";
-import styles from "./RecurringPaymentItem.module.css";
+import Amount from "@/components/atoms/Amount/Amount";
 import AccentPanel from "@/components/templates/AccentPanel/AccentPanel";
+import styles from "./RecurringPaymentItem.module.css";
 
 interface RecurringPaymentItemProps {
   payment: RecurringPayment;
+  currency: Currency;
   onClick?: () => void;
 }
 
 const RecurringPaymentItem = ({
   payment,
+  currency,
   onClick,
 }: RecurringPaymentItemProps) => {
   const dueDate = new Date(payment.nextDueDate).toLocaleDateString();
@@ -21,7 +25,7 @@ const RecurringPaymentItem = ({
           {payment.billingCycle} · due {dueDate}
         </span>
       </div>
-      <span className={styles.amount}>{payment.amount}</span>
+      <Amount value={payment.amount} currency={currency} className={styles.amount} />
     </AccentPanel>
   );
 
