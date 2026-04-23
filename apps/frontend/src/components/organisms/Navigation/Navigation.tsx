@@ -16,7 +16,9 @@ const Navigation = () => {
   const [logoutMutation] = useLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutMutation().unwrap().catch(() => {});
+    await logoutMutation()
+      .unwrap()
+      .catch(() => {});
     dispatch(logout());
     navigate(`/${language}/auth/login`, { replace: true });
   };
@@ -37,7 +39,11 @@ const Navigation = () => {
           <NavItem to={`${base}/user`} icon="briefcase" label="User" />
         </li>
         <li>
-          <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
+          <button
+            type="button"
+            className={styles.logoutBtn}
+            onClick={handleLogout}
+          >
             <Icon name="minus-circle" className={styles.logoutIcon} />
             <span className={styles.logoutLabel}>Logout</span>
           </button>

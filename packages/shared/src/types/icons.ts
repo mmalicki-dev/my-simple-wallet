@@ -13,6 +13,10 @@ export const ICON_NAMES = [
   'book',
   'repeat',
   'minus-circle',
+  'dashboard',
+  'chart',
+  'user-edit',
+  'logout',
 ] as const
 
 export type IconName = (typeof ICON_NAMES)[number]

@@ -9,9 +9,7 @@ interface IconProps {
 const Icon = ({ name, className }: IconProps) => {
   return (
     <span
-      className={
-        className ? `${styles.amount}${className}` : `${styles.amount}`
-      }
+      className={className ? `${styles.icon} ${className}` : `${styles.icon}`}
     >
       <svg className={styles.svg} aria-hidden="true" focusable="false">
         <use href={`/icons.svg#${name}`} />
