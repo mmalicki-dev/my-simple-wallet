@@ -4,6 +4,7 @@ import { useGetAccountsQuery } from "@/services/accountApi";
 import RecurringPaymentItem from "@/components/molecules/RecurringPaymentItem/RecurringPaymentItem";
 import styles from "./RecurringPaymentBlock.module.css";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import { useGetRecurringPaymentsQuery } from "@/services";
 
 const PREVIEW_COUNT = 2;
 
@@ -23,7 +24,9 @@ const RecurringPaymentBlock = ({
   payments,
   onItemClick,
 }: RecurringPaymentBlockProps) => {
-  const { data: accounts = [] } = useGetAccountsQuery();
+  const { isLoading: paymentsLoading } = useGetRecurringPaymentsQuery();
+  const { data: accounts = [], isLoading: accountsLoading } =
+    useGetAccountsQuery();
   const [expanded, setExpanded] = useState(false);
 
   const hasMore = payments.length > PREVIEW_COUNT;
@@ -37,8 +40,11 @@ const RecurringPaymentBlock = ({
           <RecurringPaymentItem
             key={payment._id}
             payment={payment}
-            currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
+            currency={
+              accounts.find((a) => a._id === payment.account)?.currency ?? "USD"
+            }
             onClick={() => onItemClick(payment)}
+            isLoading={accountsLoading && paymentsLoading}
           />
         ))}
       </ul>

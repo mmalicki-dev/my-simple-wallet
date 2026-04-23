@@ -34,7 +34,7 @@ const HomePage = () => {
               </HudPanel>
             )}
             <HudPanel>
-              <AccountBlock accounts={accounts} />
+              <AccountBlock />
             </HudPanel>
             <RecurringPayments />
           </>

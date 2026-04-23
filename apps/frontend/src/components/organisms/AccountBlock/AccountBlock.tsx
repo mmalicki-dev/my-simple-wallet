@@ -1,14 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import type { Account } from "@/types";
 import AccountItem from "@/components/molecules/AccountItem/AccountItem";
 import styles from "./AccountBlock.module.css";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import { useGetAccountsQuery } from "@/services";
 
-interface AccountBlockProps {
-  accounts: Account[];
-}
-
-const AccountBlock = ({ accounts }: AccountBlockProps) => {
+const AccountBlock = () => {
+  const { data: accounts = [], isLoading } = useGetAccountsQuery();
   const { lang = "en" } = useParams();
   const navigate = useNavigate();
 
@@ -20,6 +17,7 @@ const AccountBlock = ({ accounts }: AccountBlockProps) => {
       <ul className={styles.list}>
         {accounts.map((account) => (
           <AccountItem
+            isLoading={isLoading}
             key={account._id}
             account={account}
             onClick={() => navigate(`/${lang}/accounts/${account._id}`)}

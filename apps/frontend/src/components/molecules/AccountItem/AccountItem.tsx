@@ -4,11 +4,16 @@ import styles from "./AccountItem.module.css";
 import AccentPanel from "@/components/templates/AccentPanel/AccentPanel";
 
 interface AccountItemProps {
+  isLoading: boolean;
   account: Account;
   onClick?: () => void;
 }
 
-const AccountItem = ({ account, onClick }: AccountItemProps) => {
+const AccountItem = ({
+  account,
+  isLoading = false,
+  onClick,
+}: AccountItemProps) => {
   return (
     <li>
       <button
@@ -16,7 +21,7 @@ const AccountItem = ({ account, onClick }: AccountItemProps) => {
         onClick={onClick}
         role={onClick ? "button" : undefined}
       >
-        <AccentPanel className={styles.account}>
+        <AccentPanel className={styles.account} isLoading={isLoading}>
           <span className={styles.name}>{account.name}</span>
           <Amount
             value={account.balance}
