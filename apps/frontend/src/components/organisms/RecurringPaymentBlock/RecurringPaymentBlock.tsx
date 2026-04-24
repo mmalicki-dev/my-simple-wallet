@@ -5,6 +5,7 @@ import RecurringPaymentItem from "@/components/molecules/RecurringPaymentItem/Re
 import styles from "./RecurringPaymentBlock.module.css";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetRecurringPaymentsQuery } from "@/services";
+import Icon from "@/components/atoms/Icon/Icon";
 
 const PREVIEW_COUNT = 2;
 
@@ -54,7 +55,11 @@ const RecurringPaymentBlock = ({
           className={styles.expandButton}
           onClick={() => setExpanded((prev) => !prev)}
         >
-          {expanded ? "Show less" : "···"}
+          {expanded ? (
+            <Icon name="arrow-down" className={styles.arrowUp} />
+          ) : (
+            <Icon name="arrow-down" className={styles.arrowDown} />
+          )}
         </button>
       )}
     </section>

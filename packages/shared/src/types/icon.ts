@@ -17,6 +17,7 @@ export const ICON_NAMES = [
   "chart",
   "user-edit",
   "logout",
+  "arrow-down",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
