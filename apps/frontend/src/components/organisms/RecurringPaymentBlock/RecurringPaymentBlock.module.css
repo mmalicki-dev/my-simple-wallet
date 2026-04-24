@@ -45,8 +45,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 18px;
-  margin-top: 0.5rem;
+  height: 14px;
   cursor: pointer;
   color: var(--color-text-muted);
   transition:
@@ -60,13 +59,13 @@
 }
 
 .arrowUp {
-  width: 18px;
+  width: 14px;
   transform: rotate(180deg);
   transition: transform 0.5s;
 }
 
 .arrowDown {
-  width: 18px;
+  width: 14px;
   transform: rotate(0);
   transition: transform 0.5s;
 }
