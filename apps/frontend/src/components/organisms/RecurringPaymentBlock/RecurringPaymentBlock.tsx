@@ -31,24 +31,35 @@ const RecurringPaymentBlock = ({
   const [expanded, setExpanded] = useState(false);
 
   const hasMore = payments.length > PREVIEW_COUNT;
-  const visible = expanded ? payments : payments.slice(0, PREVIEW_COUNT);
+  const preview = payments.slice(0, PREVIEW_COUNT);
+  const extra = payments.slice(PREVIEW_COUNT);
+
+  const renderItem = (payment: RecurringPayment) => (
+    <RecurringPaymentItem
+      key={payment._id}
+      payment={payment}
+      currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
+      onClick={() => onItemClick(payment)}
+      isLoading={accountsLoading && paymentsLoading}
+    />
+  );
 
   return (
     <section className={styles.block}>
       <PanelLabel label={LABELS[type]} />
       <ul className={styles.list}>
-        {visible.map((payment) => (
-          <RecurringPaymentItem
-            key={payment._id}
-            payment={payment}
-            currency={
-              accounts.find((a) => a._id === payment.account)?.currency ?? "USD"
-            }
-            onClick={() => onItemClick(payment)}
-            isLoading={accountsLoading && paymentsLoading}
-          />
-        ))}
+        {preview.map(renderItem)}
       </ul>
+      {hasMore && (
+        <div
+          className={styles.extraWrapper}
+          style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+        >
+          <ul className={styles.extraList}>
+            {extra.map(renderItem)}
+          </ul>
+        </div>
+      )}
       {hasMore && (
         <button
           type="button"
