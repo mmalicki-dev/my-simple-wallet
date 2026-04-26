@@ -40,17 +40,12 @@ const Navigation = () => {
           <NavItem
             as="link"
             to={`${base}/charts`}
-            icon="chart"
+            icon="chart-bar-2"
             label="Charts"
           />
         </li>
         <li className={styles.listItem}>
-          <NavItem
-            as="link"
-            to={`${base}/user`}
-            icon="user-edit"
-            label="User"
-          />
+          <NavItem as="link" to={`${base}/user`} icon="user-id" label="User" />
         </li>
         <li className={styles.listItem}>
           <NavItem
