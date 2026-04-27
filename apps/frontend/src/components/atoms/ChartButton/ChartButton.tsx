@@ -21,22 +21,31 @@ const ChartButton = ({
   title,
   children,
 }: ChartButtonProps) => (
-  <button
-    type="button"
-    role="radio"
-    aria-checked={active}
-    aria-label={ariaLabel}
-    disabled={disabled}
-    title={title}
-    onClick={onClick}
-    className={cx(
-      styles.button,
-      active && styles.active,
-      disabled && styles.disabled,
-    )}
-  >
-    {children}
-  </button>
+  <div className={styles.outer}>
+    <button
+      type="button"
+      role="radio"
+      aria-checked={active}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      title={title}
+      onClick={onClick}
+      className={cx(
+        styles["btn-sci-holo"],
+        active && styles.active,
+        disabled && styles.disabled,
+      )}
+    >
+      {children}
+    </button>
+    <span className={`${styles.corner} ${styles.tl}`} aria-hidden="true" />
+    <span className={`${styles.corner} ${styles.tr}`} aria-hidden="true" />
+    <span className={`${styles.corner} ${styles.bl}`} aria-hidden="true" />
+    <span className={`${styles.corner} ${styles.br}`} aria-hidden="true" />
+    <div className={styles.lines}>
+      <span aria-hidden="true" />
+    </div>
+  </div>
 );
 
 export default ChartButton;
