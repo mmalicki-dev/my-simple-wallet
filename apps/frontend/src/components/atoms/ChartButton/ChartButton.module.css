@@ -124,6 +124,59 @@
   clip-path: polygon(100% 0, 100% 100%, 0 0);
 }
 
+.tm {
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  top: 0;
+  background-color: var(--color-neon);
+  clip-path: polygon(20% 0%, 22% 10%, 78% 10%, 80% 0%);
+}
+
+.br {
+  bottom: 20%;
+  right: 0;
+  border-right: 3px solid var(--color-neon);
+  border-bottom: 3px solid var(--color-neon);
+  clip-path: polygon(100% 100%, 0 100%, 100% 0);
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-neon);
+  border-left: 3px solid var(--color-neon);
+  border-bottom: 3px solid var(--color-neon);
+  clip-path: polygon(
+    0 0,
+    3px 3px,
+    3px calc(100% - 8px),
+    calc(100% - 6px) calc(100% - 3px),
+    calc(100% - 3px) calc(100% - 3px),
+    100% 100%,
+    7px 100%,
+    0 calc(100% - 7px)
+  );
+}
+
+.lines {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 34%;
+  height: 18%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-neon) 0px,
+    var(--color-neon) 5px,
+    transparent 3px,
+    transparent 8px
+  );
+  opacity: 0.85;
+  transform: skewX(-40deg);
+  transform-origin: right bottom;
+  mask-image: linear-gradient(to right, black, transparent 70%);
+}
+
 /* ------------------------------------------------------------------------ */
 /* ************************************************************************* */
 /* ************************************************************************* */
