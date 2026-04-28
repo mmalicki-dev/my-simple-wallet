@@ -3,6 +3,7 @@ import type { Account } from "@/types";
 import Icon from "@/components/atoms/Icon/Icon";
 import ChartButton from "@/components/atoms/ChartButton/ChartButton";
 import ChartControlsItem from "@/components/molecules/ChartControlsItem/ChartControlsItem";
+import ChartDatePicker from "@/components/molecules/ChartDatePicker/ChartDatePicker";
 import styles from "./ChartControls.module.css";
 
 export type Period = "month" | "3months" | "6months" | "year" | "custom";
@@ -51,8 +52,6 @@ export const COMPATIBLE_CHARTS: Record<DataType, ChartType[]> = {
   cashflow: ["bar", "line", "pie"],
 };
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
-
 const ChartControls = ({
   config,
   onChange,
@@ -74,98 +73,69 @@ const ChartControls = ({
       <ChartControlsItem label="Account">
         {accountsLoading ? (
           <div className={styles.placeholder} />
-        ) : (
-          <div className={styles.chips} role="radiogroup" aria-label="Account">
-            {accounts.map((acc) => (
-              <ChartButton
-                key={acc._id}
-                active={acc._id === config.accountId}
-                onClick={() => onChange({ accountId: acc._id })}
-              >
-                {acc.name}
-              </ChartButton>
-            ))}
-          </div>
-        )}
+        ) : accounts.map((acc) => (
+          <ChartButton
+            key={acc._id}
+            active={acc._id === config.accountId}
+            onClick={() => onChange({ accountId: acc._id })}
+          >
+            {acc.name}
+          </ChartButton>
+        ))}
       </ChartControlsItem>
 
-      <ChartControlsItem label="Period">
-        <div className={styles.segment} role="radiogroup" aria-label="Period">
-          {PERIODS.map(({ value, label }) => (
+      <ChartControlsItem
+        label="Period"
+        role="radiogroup"
+        aria-label="Period"
+        footer={config.period === "custom" && (
+          <ChartDatePicker
+            from={config.customFrom}
+            to={config.customTo}
+            onFromChange={(customFrom) => onChange({ customFrom })}
+            onToChange={(customTo) => onChange({ customTo })}
+          />
+        )}
+      >
+        {PERIODS.map(({ value, label }) => (
+          <ChartButton
+            key={value}
+            active={config.period === value}
+            onClick={() => onChange({ period: value })}
+          >
+            {label}
+          </ChartButton>
+        ))}
+      </ChartControlsItem>
+
+      <ChartControlsItem label="Data" role="radiogroup" aria-label="Data">
+        {DATA_TYPES.map(({ value, label }) => (
+          <ChartButton
+            key={value}
+            active={config.dataType === value}
+            onClick={() => handleDataTypeChange(value)}
+          >
+            {label}
+          </ChartButton>
+        ))}
+      </ChartControlsItem>
+
+      <ChartControlsItem label="Chart" role="radiogroup" aria-label="Chart type">
+        {CHART_TYPES.map(({ value, icon, label }) => {
+          const disabled = !allowedCharts.includes(value);
+          return (
             <ChartButton
               key={value}
-              active={config.period === value}
-              onClick={() => onChange({ period: value })}
+              active={config.chartType === value}
+              disabled={disabled}
+              ariaLabel={label}
+              title={disabled ? `${label} not available for this data` : label}
+              onClick={() => onChange({ chartType: value })}
             >
-              {label}
+              <Icon name={icon} className={styles.icon} />
             </ChartButton>
-          ))}
-        </div>
-        {config.period === "custom" && (
-          <div className={styles.dateRange}>
-            <label className={styles.dateField}>
-              <span className={styles.dateLabel}>From</span>
-              <input
-                type="date"
-                value={config.customFrom}
-                max={config.customTo}
-                onChange={(e) => onChange({ customFrom: e.target.value })}
-                className={styles.dateInput}
-              />
-            </label>
-            <label className={styles.dateField}>
-              <span className={styles.dateLabel}>To</span>
-              <input
-                type="date"
-                value={config.customTo}
-                min={config.customFrom}
-                max={todayIso()}
-                onChange={(e) => onChange({ customTo: e.target.value })}
-                className={styles.dateInput}
-              />
-            </label>
-          </div>
-        )}
-      </ChartControlsItem>
-
-      <ChartControlsItem label="Data">
-        <div className={styles.segment} role="radiogroup" aria-label="Data">
-          {DATA_TYPES.map(({ value, label }) => (
-            <ChartButton
-              key={value}
-              active={config.dataType === value}
-              onClick={() => handleDataTypeChange(value)}
-            >
-              {label}
-            </ChartButton>
-          ))}
-        </div>
-      </ChartControlsItem>
-
-      <ChartControlsItem label="Chart">
-        <div
-          className={styles.iconSegment}
-          role="radiogroup"
-          aria-label="Chart type"
-        >
-          {CHART_TYPES.map(({ value, icon, label }) => {
-            const disabled = !allowedCharts.includes(value);
-            return (
-              <ChartButton
-                key={value}
-                active={config.chartType === value}
-                disabled={disabled}
-                ariaLabel={label}
-                title={
-                  disabled ? `${label} not available for this data` : label
-                }
-                onClick={() => onChange({ chartType: value })}
-              >
-                <Icon name={icon} className={styles.icon} />
-              </ChartButton>
-            );
-          })}
-        </div>
+          );
+        })}
       </ChartControlsItem>
     </div>
   );

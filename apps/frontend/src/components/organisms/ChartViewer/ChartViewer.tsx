@@ -100,14 +100,12 @@ const ChartViewer = () => {
 
   return (
     <div className={styles.viewer}>
-      <HudPanel>
-        <ChartControls
-          config={config}
-          onChange={updateConfig}
-          accounts={accounts}
-          accountsLoading={accountsLoading}
-        />
-      </HudPanel>
+      <ChartControls
+        config={config}
+        onChange={updateConfig}
+        accounts={accounts}
+        accountsLoading={accountsLoading}
+      />
 
       <HudPanel className={styles.chartPanel}>
         <PanelLabel label={DATA_LABELS[config.dataType]} />
