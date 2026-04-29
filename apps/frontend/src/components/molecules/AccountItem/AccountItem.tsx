@@ -27,7 +27,7 @@ const AccountItem = ({
       onMouseLeave={() => setIsOpen(false)}
     >
       <div className={styles.wrapper}>
-        <AccentPanel className={styles.account} hideBorder={isOpen}>
+        <AccentPanel className={styles.account}>
           <button
             className={styles.content}
             onClick={() => setIsOpen((t) => !t)}

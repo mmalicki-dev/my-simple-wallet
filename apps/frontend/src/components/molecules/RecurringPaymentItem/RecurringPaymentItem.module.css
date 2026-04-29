@@ -1,13 +1,30 @@
-.button {
+.item {
   width: 100%;
+  position: relative;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  text-align: left;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding-right: 0.5rem;
+  cursor: pointer;
+  color: inherit;
 }
 
 .payment {
   text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 0.5rem;
 }
 
 .info {

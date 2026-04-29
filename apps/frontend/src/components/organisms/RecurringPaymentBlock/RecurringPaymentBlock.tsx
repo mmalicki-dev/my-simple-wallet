@@ -41,25 +41,23 @@ const RecurringPaymentBlock = ({
     <RecurringPaymentItem
       key={payment._id}
       payment={payment}
-      currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
-      onClick={() => onItemClick(payment)}
+      currency={
+        accounts.find((a) => a._id === payment.account)?.currency ?? "USD"
+      }
+      onEdit={() => onItemClick(payment)}
     />
   );
 
   return (
     <section className={styles.block}>
       <PanelLabel label={LABELS[type]} />
-      <ul className={styles.list}>
-        {preview.map(renderItem)}
-      </ul>
+      <ul className={styles.list}>{preview.map(renderItem)}</ul>
       {hasMore && (
         <div
           className={styles.extraWrapper}
           style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
         >
-          <ul className={styles.extraList}>
-            {extra.map(renderItem)}
-          </ul>
+          <ul className={styles.extraList}>{extra.map(renderItem)}</ul>
         </div>
       )}
       {hasMore && (
