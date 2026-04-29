@@ -4,11 +4,20 @@ import styles from "./AccentPanel.module.css";
 interface AccentPanelProps {
   children: ReactNode;
   className?: string;
+  onlyRightBorder?: boolean;
 }
 
-const AccentPanel = ({ children, className }: AccentPanelProps) => {
+const AccentPanel = ({
+  children,
+  className,
+  onlyRightBorder = false,
+}: AccentPanelProps) => {
   return (
-    <div className={[styles.panel, className].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.panel, onlyRightBorder && styles.onlyRight, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
       <span className={styles.border} />
     </div>

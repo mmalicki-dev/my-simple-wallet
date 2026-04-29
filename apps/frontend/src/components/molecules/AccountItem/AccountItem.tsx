@@ -26,26 +26,28 @@ const AccountItem = ({
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <AccentPanel className={styles.account}>
-        <button
-          className={styles.content}
-          onClick={() => setIsOpen((t) => !t)}
-          tabIndex={0}
-        >
-          <span className={styles.name}>{account.name}</span>
-          <Amount
-            value={account.balance}
-            currency={account.currency}
-            className={styles.balance}
-          />
-        </button>
-      </AccentPanel>
-      <QuickActions
-        isOpen={isOpen}
-        onViewMore={onViewMore}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+      <div className={styles.wrapper}>
+        <AccentPanel className={styles.account}>
+          <button
+            className={styles.content}
+            onClick={() => setIsOpen((t) => !t)}
+            tabIndex={0}
+          >
+            <span className={styles.name}>{account.name}</span>
+            <Amount
+              value={account.balance}
+              currency={account.currency}
+              className={styles.balance}
+            />
+          </button>
+        </AccentPanel>
+        <QuickActions
+          isOpen={isOpen}
+          onViewMore={onViewMore}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      </div>
     </li>
   );
 };
