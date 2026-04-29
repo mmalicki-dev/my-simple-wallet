@@ -31,10 +31,10 @@ const AccountBlock = () => {
       <ul className={styles.list}>
         {accounts.map((account) => (
           <AccountItem
-            isLoading={isLoading}
             key={account._id}
             account={account}
-            onClick={() => navigate(`/${lang}/accounts/${account._id}`)}
+            onViewMore={() => navigate(`/${lang}/accounts/${account._id}`)}
+            onEdit={() => navigate(`/${lang}/user/accounts`)}
           />
         ))}
       </ul>

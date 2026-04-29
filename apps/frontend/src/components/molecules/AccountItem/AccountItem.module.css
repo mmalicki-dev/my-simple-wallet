@@ -1,5 +1,7 @@
 .item {
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .account {
@@ -7,6 +9,19 @@
   flex-direction: column;
   gap: 0.5rem;
   text-align: left;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
 }
 
 .name {

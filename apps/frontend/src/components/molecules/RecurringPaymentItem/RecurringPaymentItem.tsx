@@ -5,14 +5,12 @@ import AccentPanel from "@/components/templates/AccentPanel/AccentPanel";
 import styles from "./RecurringPaymentItem.module.css";
 
 interface RecurringPaymentItemProps {
-  isLoading: boolean;
   payment: RecurringPayment;
   currency: Currency;
   onClick?: () => void;
 }
 
 const RecurringPaymentItem = ({
-  isLoading = false,
   payment,
   currency,
   onClick,
@@ -20,7 +18,7 @@ const RecurringPaymentItem = ({
   const dueDate = new Date(payment.nextDueDate).toLocaleDateString();
 
   const content = (
-    <AccentPanel className={styles.payment} isLoading={isLoading}>
+    <AccentPanel className={styles.payment}>
       <div className={styles.info}>
         <span className={styles.name}>{payment.name}</span>
         <span className={styles.meta}>

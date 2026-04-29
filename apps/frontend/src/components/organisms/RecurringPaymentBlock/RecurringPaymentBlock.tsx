@@ -43,7 +43,6 @@ const RecurringPaymentBlock = ({
       payment={payment}
       currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
       onClick={() => onItemClick(payment)}
-      isLoading={accountsLoading && paymentsLoading}
     />
   );
 

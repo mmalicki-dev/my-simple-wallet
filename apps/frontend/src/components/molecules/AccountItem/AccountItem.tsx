@@ -1,35 +1,51 @@
+import { useState } from "react";
 import type { Account } from "@/types";
 import Amount from "@/components/atoms/Amount/Amount";
-import styles from "./AccountItem.module.css";
 import AccentPanel from "@/components/templates/AccentPanel/AccentPanel";
+import QuickActions from "@/components/molecules/QuickActions/QuickActions";
+import styles from "./AccountItem.module.css";
 
 interface AccountItemProps {
-  isLoading: boolean;
   account: Account;
-  onClick?: () => void;
+  onViewMore?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const AccountItem = ({
   account,
-  isLoading = false,
-  onClick,
+  onViewMore,
+  onEdit,
+  onDelete,
 }: AccountItemProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <li>
-      <button
-        className={styles.item}
-        onClick={onClick}
-        role={onClick ? "button" : undefined}
-      >
-        <AccentPanel className={styles.account} isLoading={isLoading}>
+    <li
+      className={styles.item}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <AccentPanel className={styles.account}>
+        <button
+          className={styles.content}
+          onClick={() => setIsOpen((t) => !t)}
+          tabIndex={0}
+        >
           <span className={styles.name}>{account.name}</span>
           <Amount
             value={account.balance}
             currency={account.currency}
             className={styles.balance}
           />
-        </AccentPanel>
-      </button>
+        </button>
+      </AccentPanel>
+      <QuickActions
+        isOpen={isOpen}
+        onViewMore={onViewMore}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     </li>
   );
 };
