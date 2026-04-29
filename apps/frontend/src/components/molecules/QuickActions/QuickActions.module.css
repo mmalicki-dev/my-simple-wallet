@@ -1,9 +1,12 @@
 .panel {
-  width: 0px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
   display: flex;
   align-items: stretch;
 
-  transform: translateX(30%);
+  transform: translateX(100%);
   transition: transform 0.22s ease;
 
   background-image: linear-gradient(
@@ -11,13 +14,12 @@
     color-mix(in srgb, var(--color-primary) 10%, transparent) 1%,
     transparent
   );
-  border-width: 0 0 2px 0;
+  border-width: 0 0 2px 2px;
   border-style: solid;
-  border-image: linear-gradient(to right, var(--color-primary), transparent) 1;
+  border-image: linear-gradient(to top, var(--color-primary), transparent) 1;
 }
 
 .open {
-  width: fit-content;
   transform: translateX(0);
 }
 

@@ -5,12 +5,14 @@ interface AccentPanelProps {
   children: ReactNode;
   className?: string;
   onlyRightBorder?: boolean;
+  hideBorder?: boolean;
 }
 
 const AccentPanel = ({
   children,
   className,
   onlyRightBorder = false,
+  hideBorder = false,
 }: AccentPanelProps) => {
   return (
     <div
@@ -19,7 +21,7 @@ const AccentPanel = ({
         .join(" ")}
     >
       {children}
-      <span className={styles.border} />
+      <span className={[styles.border, hideBorder && styles.borderHidden].filter(Boolean).join(" ")} />
     </div>
   );
 };

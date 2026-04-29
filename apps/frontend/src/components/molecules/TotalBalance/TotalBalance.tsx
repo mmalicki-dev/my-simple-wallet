@@ -34,7 +34,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
           onMouseLeave={() => setIsOpen(false)}
           onClick={() => setIsOpen((o) => !o)}
         >
-          <AccentPanel onlyRightBorder>
+          <AccentPanel onlyRightBorder hideBorder={isOpen}>
             <Amount
               value={total!}
               currency={baseCurrency}

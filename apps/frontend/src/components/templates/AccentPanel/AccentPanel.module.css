@@ -26,4 +26,10 @@
   height: 100%;
   width: 2px;
   background-image: linear-gradient(to top, var(--color-primary), transparent);
+  transform: translateX(0);
+  transition: transform 0.22s ease;
+}
+
+.borderHidden {
+  transform: translateX(100%);
 }
