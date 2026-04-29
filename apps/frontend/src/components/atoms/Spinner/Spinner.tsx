@@ -6,7 +6,7 @@ interface SpinnerProps {
 
 const Spinner = ({ className }: SpinnerProps) => {
   return (
-    <output
+    <div
       className={[styles.spinner, className].filter(Boolean).join(" ")}
       aria-label="Loading"
     />

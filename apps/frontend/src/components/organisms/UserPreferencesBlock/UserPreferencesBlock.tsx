@@ -51,7 +51,7 @@ const UserPreferencesBlock = () => {
             ))}
           </select>
         </div>
-        <Button type="submit" isLoading={true}>
+        <Button type="submit" isLoading={isLoading}>
           Save
         </Button>
       </form>
