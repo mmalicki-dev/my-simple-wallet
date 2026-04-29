@@ -1,25 +1,35 @@
-import { useContext } from 'react'
-import { ThemeContext } from '@/context'
-import styles from './ThemeToggle.module.css'
+import { useContext } from "react";
+import { ThemeContext } from "@/context";
+import Icon from "@/components/atoms/Icon/Icon";
+import SciSelector from "@/components/atoms/SciSelector/SciSelector";
+import styles from "./ThemeToggle.module.css";
 
-const ThemeToggle = () => {
-  const themeCtx = useContext(ThemeContext)
-
-  return (
-    <button
-      type="button"
-      className={styles.toggle}
-      onClick={themeCtx?.toggleTheme}
-      aria-label="Toggle theme"
-    >
-      <span className={[styles.track, themeCtx?.theme === 'dark' ? styles.dark : ''].join(' ')}>
-        <span className={styles.thumb} />
-      </span>
-      <span className={styles.label}>
-        {themeCtx?.theme === 'dark' ? 'Dark' : 'Light'}
-      </span>
-    </button>
-  )
+interface Props {
+  side?: "left" | "right";
 }
 
-export default ThemeToggle
+const ThemeToggle = ({ side = "left" }: Props) => {
+  const themeCtx = useContext(ThemeContext);
+  const current = themeCtx?.theme ?? "dark";
+  const other = current === "dark" ? "light" : "dark";
+
+  const options = [
+    {
+      label: other,
+      icon: <Icon name={other === "dark" ? "moon" : "sun"} className={styles.icon} />,
+      ariaLabel: `Switch to ${other} theme`,
+      onClick: () => themeCtx?.toggleTheme?.(),
+    },
+  ];
+
+  return (
+    <SciSelector
+      value={<Icon name={current === "dark" ? "moon" : "sun"} className={styles.icon} />}
+      valueLabel={current}
+      options={options}
+      side={side}
+    />
+  );
+};
+
+export default ThemeToggle;

@@ -24,9 +24,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={
-        className ? `${styles.amount} ${className}` : `${styles.amount}`
-      }
+      className={[styles.button, className].filter(Boolean).join(" ")}
       disabled={disabled || isLoading}
       {...rest}
     >

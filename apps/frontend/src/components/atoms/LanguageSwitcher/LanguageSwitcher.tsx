@@ -1,25 +1,23 @@
-import { useContext } from 'react'
-import { LanguageContext, SUPPORTED_LANGUAGES } from '@/context'
-import type { Language } from '@/context'
-import styles from './LanguageSwitcher.module.css'
+import { useContext } from "react";
+import { LanguageContext, SUPPORTED_LANGUAGES } from "@/context";
+import SciSelector from "@/components/atoms/SciSelector/SciSelector";
 
-const LanguageSwitcher = () => {
-  const langCtx = useContext(LanguageContext)
-
-  return (
-    <div className={styles.switcher}>
-      {[...SUPPORTED_LANGUAGES].map((lang) => (
-        <button
-          key={lang}
-          type="button"
-          className={[styles.option, langCtx?.language === lang ? styles.active : ''].join(' ')}
-          onClick={() => langCtx?.setLanguage(lang as Language)}
-        >
-          {lang.toUpperCase()}
-        </button>
-      ))}
-    </div>
-  )
+interface Props {
+  side?: "left" | "right";
 }
 
-export default LanguageSwitcher
+const LanguageSwitcher = ({ side = "right" }: Props) => {
+  const langCtx = useContext(LanguageContext);
+  const current = langCtx?.language ?? "";
+
+  const options = [...SUPPORTED_LANGUAGES]
+    .filter((l) => l !== current)
+    .map((lang) => ({
+      label: lang.toUpperCase(),
+      onClick: () => langCtx?.setLanguage(lang),
+    }));
+
+  return <SciSelector value={current.toUpperCase()} options={options} side={side} />;
+};
+
+export default LanguageSwitcher;

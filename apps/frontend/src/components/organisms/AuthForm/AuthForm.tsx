@@ -5,6 +5,7 @@ import { useTranslations } from "@/i18n";
 import Input from "@/components/atoms/Input/Input";
 import Button from "@/components/atoms/Button/Button";
 import Checkbox from "@/components/atoms/Checkbox/Checkbox";
+import PasswordInput from "@/components/molecules/PasswordInput/PasswordInput";
 import { useLoginMutation, useRegisterMutation } from "@/services/authApi";
 import { setCredentials } from "@/redux/slices/authSlice";
 import styles from "./AuthForm.module.css";
@@ -68,8 +69,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         required
         autoComplete="email"
       />
-      <Input
-        type="password"
+      <PasswordInput
         placeholder={common.password}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
