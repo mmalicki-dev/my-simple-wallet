@@ -2,7 +2,10 @@
   width: 0px;
   display: flex;
   align-items: stretch;
-  transition: width 0.22s ease;
+
+  transform: translateX(30%);
+  transition: transform 0.22s ease;
+
   background-image: linear-gradient(
     45deg,
     color-mix(in srgb, var(--color-primary) 10%, transparent) 1%,
@@ -14,7 +17,8 @@
 }
 
 .open {
-  width: 30%;
+  width: fit-content;
+  transform: translateX(0);
 }
 
 .btn {
