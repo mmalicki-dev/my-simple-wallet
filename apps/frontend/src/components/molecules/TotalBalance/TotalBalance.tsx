@@ -16,9 +16,9 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
   return (
     <>
       <PanelLabel label="Total balance" />
-      {!isLoading && <div className={styles.skeleton} aria-hidden="true" />}
+      {isLoading && <div className={styles.skeleton} aria-hidden="true" />}
       {isError && <span className={styles.error}>Could not load rates</span>}
-      {isError && !isLoading && (
+      {!isError && !isLoading && (
         <Amount
           value={total!}
           currency={baseCurrency}

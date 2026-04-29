@@ -9,7 +9,13 @@ interface UseTotalBalanceResult {
 }
 
 export const useTotalBalance = (accounts: Account[], baseCurrency: Currency): UseTotalBalanceResult => {
-  const { data, isLoading, isError } = useGetExchangeRatesQuery(baseCurrency)
+  const allSameCurrency = accounts.every((a) => a.currency === baseCurrency)
+  const { data, isLoading, isError } = useGetExchangeRatesQuery(baseCurrency, { skip: allSameCurrency })
+
+  if (allSameCurrency) {
+    const total = accounts.reduce((acc, account) => acc + account.balance, 0)
+    return { total, isLoading: false, isError: false }
+  }
 
   if (isLoading || isError || !data) {
     return { total: null, isLoading, isError }

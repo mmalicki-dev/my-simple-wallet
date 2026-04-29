@@ -1,18 +1,14 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { setCredentials } from "@/redux/slices/authSlice";
-import {
-  LanguageContext,
-  SUPPORTED_LANGUAGES,
-} from "@/context/Language/LanguageContext";
-import type { Language } from "@/context/Language/LanguageContext";
 import { CURRENCIES } from "shared";
 import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
 import Button from "@/components/atoms/Button/Button";
+import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
+import LanguageSwitcher from "@/components/atoms/LanguageSwitcher/LanguageSwitcher";
 import { useUpdateProfileMutation } from "@/services/authApi";
 import styles from "./UserPreferencesBlock.module.css";
-import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
 
 const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, label: c }));
 
@@ -20,7 +16,6 @@ const UserPreferencesBlock = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch();
-  const langCtx = useContext(LanguageContext);
   const [totalBalanceCurrency, setTotalBalanceCurrency] = useState(
     user?.totalBalanceCurrency ?? "PLN",
   );
@@ -34,23 +29,9 @@ const UserPreferencesBlock = () => {
 
   return (
     <UserBlockWrapper title="Preferences">
-      <ThemeToggle />
-      <div className={styles.field}>
-        <label htmlFor="language" className={styles.label}>
-          Language
-        </label>
-        <select
-          id="language"
-          className={styles.select}
-          value={langCtx?.language}
-          onChange={(e) => langCtx?.setLanguage(e.target.value as Language)}
-        >
-          {[...SUPPORTED_LANGUAGES].map((lang) => (
-            <option key={lang} value={lang}>
-              {lang.toUpperCase()}
-            </option>
-          ))}
-        </select>
+      <div className={styles.controls}>
+        <ThemeToggle />
+        <LanguageSwitcher />
       </div>
       <form onSubmit={handleSave}>
         <div className={styles.field}>

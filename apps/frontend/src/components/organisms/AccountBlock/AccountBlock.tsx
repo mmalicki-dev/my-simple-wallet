@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import AccountItem from "@/components/molecules/AccountItem/AccountItem";
 import Icon from "@/components/atoms/Icon/Icon";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
@@ -17,7 +17,9 @@ const AccountBlock = () => {
       <div className={styles.empty}>
         <Icon name="wallet" className={styles.emptyIcon} />
         <p className={styles.emptyText}>No accounts yet</p>
-        <p className={styles.emptyHint}>Go to settings to add your first account</p>
+        <Link to={`/${lang}/user/accounts`} className={styles.emptyHint}>
+          Go to settings to add your first account
+        </Link>
       </div>
     );
   }
