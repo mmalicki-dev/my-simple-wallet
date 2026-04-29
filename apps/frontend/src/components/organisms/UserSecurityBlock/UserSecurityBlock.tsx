@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import UserBlockWrapper from '@/components/molecules/UserBlockWrapper/UserBlockWrapper'
-import Input from '@/components/atoms/Input/Input'
+import PasswordInput from '@/components/molecules/PasswordInput/PasswordInput'
 import Button from '@/components/atoms/Button/Button'
 import styles from './UserSecurityBlock.module.css'
 
@@ -13,27 +13,24 @@ const UserSecurityBlock = () => {
     <UserBlockWrapper title="Security">
       <div className={styles.field}>
         <label htmlFor="currentPassword" className={styles.label}>Current Password</label>
-        <Input
+        <PasswordInput
           id="currentPassword"
-          type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
       </div>
       <div className={styles.field}>
         <label htmlFor="newPassword" className={styles.label}>New Password</label>
-        <Input
+        <PasswordInput
           id="newPassword"
-          type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
       </div>
       <div className={styles.field}>
         <label htmlFor="confirmPassword" className={styles.label}>Confirm New Password</label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />

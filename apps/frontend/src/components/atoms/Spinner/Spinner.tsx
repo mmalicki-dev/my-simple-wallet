@@ -7,9 +7,7 @@ interface SpinnerProps {
 const Spinner = ({ className }: SpinnerProps) => {
   return (
     <output
-      className={
-        className ? `${styles.amount} ${className}` : `${styles.amount}`
-      }
+      className={[styles.spinner, className].filter(Boolean).join(" ")}
       aria-label="Loading"
     />
   );

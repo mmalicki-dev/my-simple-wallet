@@ -25,7 +25,11 @@ const UserSectionItem = ({ label, subtitle, indicator, onEdit, onDelete }: UserS
           </button>
         )}
         {onDelete && (
-          <button type="button" className={styles.actionBtn} onClick={onDelete}>
+          <button
+            type="button"
+            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+            onClick={onDelete}
+          >
             Delete
           </button>
         )}

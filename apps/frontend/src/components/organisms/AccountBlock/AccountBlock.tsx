@@ -1,15 +1,26 @@
 import { useNavigate, useParams } from "react-router-dom";
 import AccountItem from "@/components/molecules/AccountItem/AccountItem";
-import styles from "./AccountBlock.module.css";
+import Icon from "@/components/atoms/Icon/Icon";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetAccountsQuery } from "@/services";
+import styles from "./AccountBlock.module.css";
 
 const AccountBlock = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
   const { lang = "en" } = useParams();
   const navigate = useNavigate();
 
-  if (accounts.length === 0) return null;
+  if (isLoading) return null;
+
+  if (accounts.length === 0) {
+    return (
+      <div className={styles.empty}>
+        <Icon name="wallet" className={styles.emptyIcon} />
+        <p className={styles.emptyText}>No accounts yet</p>
+        <p className={styles.emptyHint}>Go to settings to add your first account</p>
+      </div>
+    );
+  }
 
   return (
     <section className={styles.block}>

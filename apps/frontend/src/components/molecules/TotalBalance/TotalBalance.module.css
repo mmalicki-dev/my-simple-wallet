@@ -5,6 +5,52 @@
 }
 
 .error {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--color-danger);
+}
+
+/* ── Balance skeleton loader ───────────────────────────── */
+@keyframes balance-scan {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+.skeleton {
+  position: relative;
+  height: 1.4rem;
+  width: min(9rem, 100%);
+  background: color-mix(in srgb, var(--color-neon) 8%, transparent);
+  border-left: 2px solid color-mix(in srgb, var(--color-neon) 35%, transparent);
+  overflow: hidden;
+}
+
+/* Redacted-data stripe pattern */
+.skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-neon) 10%, transparent) 0px,
+    color-mix(in srgb, var(--color-neon) 10%, transparent) 5px,
+    transparent 5px,
+    transparent 9px
+  );
+}
+
+/* Sweep scan line */
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 15%,
+    color-mix(in srgb, var(--color-neon) 65%, transparent) 50%,
+    transparent 85%
+  );
+  animation: balance-scan 1.4s ease-in-out infinite;
 }
