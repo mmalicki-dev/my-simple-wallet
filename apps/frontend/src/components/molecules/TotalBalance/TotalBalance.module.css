@@ -14,14 +14,18 @@
 
 /* ── Balance skeleton loader ───────────────────────────── */
 @keyframes balance-scan {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(300%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
 }
 
 .skeleton {
+  width: 100%;
   position: relative;
   height: 1.4rem;
-  width: min(9rem, 100%);
   background: color-mix(in srgb, var(--color-neon) 8%, transparent);
   border-left: 2px solid color-mix(in srgb, var(--color-neon) 35%, transparent);
   overflow: hidden;
