@@ -2,15 +2,6 @@
   width: 100%;
 }
 
-.wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 0;
-  overflow: hidden;
-}
-
 .account {
   display: flex;
   flex-direction: column;
@@ -24,11 +15,6 @@
   gap: 0.5rem;
   width: 100%;
   text-align: left;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: inherit;
 }
 
 .name {

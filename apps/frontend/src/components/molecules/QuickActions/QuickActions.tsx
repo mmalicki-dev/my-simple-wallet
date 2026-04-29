@@ -21,6 +21,9 @@ const QuickActions = ({
       className={[styles.panel, isOpen && styles.open]
         .filter(Boolean)
         .join(" ")}
+      role="none"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
     >
       {onViewMore && (
         <button
