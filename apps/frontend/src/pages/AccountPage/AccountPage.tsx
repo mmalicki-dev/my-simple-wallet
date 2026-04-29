@@ -7,6 +7,7 @@ import BackButton from "@/components/molecules/BackButton/BackButton";
 import Modal from "@/components/templates/Modal/Modal";
 import EditTransactionForm from "@/components/organisms/EditTransactionForm/EditTransactionForm";
 import Spinner from "@/components/atoms/Spinner/Spinner";
+import HudPanel from "@/components/templates/HudPanel/HudPanel";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import { useGetTransactionsQuery, useDeleteTransactionMutation } from "@/services/transactionApi";
 import styles from "./AccountPage.module.css";
@@ -54,11 +55,13 @@ const AccountPage = () => {
             {account.balance.toLocaleString()} {account.currency}
           </span>
         </div>
-        <TransactionList
-          transactions={transactions}
-          currency={account.currency}
-          onTransactionClick={setSelectedTransaction}
-        />
+        <HudPanel>
+          <TransactionList
+            transactions={transactions}
+            currency={account.currency}
+            onTransactionClick={setSelectedTransaction}
+          />
+        </HudPanel>
       </div>
     </>
   );

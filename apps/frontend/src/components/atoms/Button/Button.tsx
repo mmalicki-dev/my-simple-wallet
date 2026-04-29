@@ -24,12 +24,18 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={[styles.button, variant !== "primary" && styles[variant], className].filter(Boolean).join(" ")}
+      className={[
+        styles.button,
+        variant !== "primary" && styles[variant],
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       disabled={disabled || isLoading}
       {...rest}
     >
       {isLoading ? (
-        <Spinner />
+        <Spinner className={styles.icon} />
       ) : (
         icon && <Icon name={icon} className={styles.icon} />
       )}

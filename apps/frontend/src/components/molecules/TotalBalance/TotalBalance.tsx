@@ -3,6 +3,7 @@ import type { Account } from "@/types";
 import { useTotalBalance } from "@/hooks";
 import Amount from "@/components/atoms/Amount/Amount";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 import styles from "./TotalBalance.module.css";
 
 interface TotalBalanceProps {
@@ -16,7 +17,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
   return (
     <>
       <PanelLabel label="Total balance" />
-      {isLoading && <div className={styles.skeleton} aria-hidden="true" />}
+      {isLoading && <SkeletonLoader className={styles.skeletonWidth} />}
       {isError && <span className={styles.error}>Could not load rates</span>}
       {!isError && !isLoading && (
         <Amount

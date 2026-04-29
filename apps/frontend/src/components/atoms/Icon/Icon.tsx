@@ -9,7 +9,7 @@ interface IconProps {
 const Icon = ({ name, className }: IconProps) => {
   return (
     <svg
-      className={className ? `${styles.svg} ${className}` : `${styles.svg}`}
+      className={[styles.svg, className].filter(Boolean).join(" ")}
       aria-hidden="true"
       focusable="false"
     >

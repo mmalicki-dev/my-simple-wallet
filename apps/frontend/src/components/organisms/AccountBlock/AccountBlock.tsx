@@ -3,6 +3,7 @@ import AccountItem from "@/components/molecules/AccountItem/AccountItem";
 import Icon from "@/components/atoms/Icon/Icon";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetAccountsQuery } from "@/services";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 import styles from "./AccountBlock.module.css";
 
 const AccountBlock = () => {
@@ -10,7 +11,7 @@ const AccountBlock = () => {
   const { lang = "en" } = useParams();
   const navigate = useNavigate();
 
-  if (isLoading) return null;
+  if (isLoading) return <SkeletonLoader count={3} />;
 
   if (accounts.length === 0) {
     return (

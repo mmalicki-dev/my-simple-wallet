@@ -9,10 +9,14 @@
   overflow: hidden;
 
   clip-path: polygon(
-    10px 0%, calc(100% - 10px) 0%,
-    100% 10px, 100% calc(100% - 10px),
-    calc(100% - 10px) 100%, 10px 100%,
-    0% calc(100% - 10px), 0% 10px
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
   );
 
   background: color-mix(in srgb, var(--color-neon) 20%, transparent);
@@ -24,7 +28,9 @@
   text-transform: uppercase;
   text-shadow: 0 0 6px var(--color-neon);
   cursor: pointer;
-  transition: background 0.2s, filter 0.2s;
+  transition:
+    background 0.2s,
+    filter 0.2s;
 }
 
 /* Scan line sweep */
@@ -48,7 +54,9 @@
 
 .button:not(:disabled):hover {
   background: color-mix(in srgb, var(--color-neon) 28%, transparent);
-  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--color-neon) 60%, transparent));
+  filter: drop-shadow(
+    0 0 12px color-mix(in srgb, var(--color-neon) 60%, transparent)
+  );
 }
 
 .button:disabled {
@@ -74,10 +82,13 @@
 
 .danger:not(:disabled):hover {
   background: color-mix(in srgb, var(--color-danger) 28%, transparent);
-  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--color-danger) 55%, transparent));
+  filter: drop-shadow(
+    0 0 12px color-mix(in srgb, var(--color-danger) 55%, transparent)
+  );
 }
 
 .icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 20px;
+  height: 20px;
+  color: aliceblue;
 }

@@ -1,7 +1,7 @@
 import type { Transaction } from '@/types'
 import type { Currency } from 'shared'
 import TransactionItem from '@/components/molecules/TransactionItem/TransactionItem'
-import Spinner from '@/components/atoms/Spinner/Spinner'
+import SkeletonLoader from '@/components/atoms/SkeletonLoader/SkeletonLoader'
 import styles from './TransactionList.module.css'
 
 interface TransactionListProps {
@@ -30,7 +30,7 @@ const groupByMonth = (transactions: Transaction[]): [string, Transaction[]][] =>
 }
 
 const TransactionList = ({ transactions, currency, isLoading, onTransactionClick }: TransactionListProps) => {
-  if (isLoading) return <Spinner />
+  if (isLoading) return <SkeletonLoader count={5} />
   if (transactions.length === 0) return <p className={styles.empty}>No transactions yet.</p>
 
   const groups = groupByMonth(transactions)

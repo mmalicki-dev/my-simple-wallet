@@ -6,6 +6,7 @@ import styles from "./RecurringPaymentBlock.module.css";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetRecurringPaymentsQuery } from "@/services";
 import Icon from "@/components/atoms/Icon/Icon";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 
 const PREVIEW_COUNT = 2;
 
@@ -29,6 +30,8 @@ const RecurringPaymentBlock = ({
   const { data: accounts = [], isLoading: accountsLoading } =
     useGetAccountsQuery();
   const [expanded, setExpanded] = useState(false);
+
+  if (paymentsLoading || accountsLoading) return <SkeletonLoader count={2} />;
 
   const hasMore = payments.length > PREVIEW_COUNT;
   const preview = payments.slice(0, PREVIEW_COUNT);
