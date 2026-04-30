@@ -4,16 +4,13 @@
   "version": "0.0.1",
   "scripts": {
     "install:all": "pnpm install",
-
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
     "dev:mobile": "pnpm --filter mobile start",
     "dev": "pnpm --parallel --filter backend --filter frontend dev",
-
     "build:frontend": "pnpm --filter frontend build",
     "build:backend": "pnpm --filter backend build",
     "build:all": "pnpm --filter './apps/*' build",
-
     "start:backend": "pnpm --filter backend start"
   },
   "devDependencies": {
@@ -21,6 +18,6 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "pnpm": ">=9.0.0"
   }
 }
