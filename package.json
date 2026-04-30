@@ -8,7 +8,7 @@
     "dev:backend": "pnpm --filter backend dev",
     "dev:mobile": "pnpm --filter mobile start",
     "dev": "pnpm --parallel --filter backend --filter frontend dev",
-    "build:frontend": "pnpm --filter frontend build",
+    "build:frontend": "pnpm --filter shared build && pnpm --filter frontend build",
     "build:backend": "pnpm --filter shared build && pnpm --filter backend build",
     "build:all": "pnpm --filter './apps/*' build",
     "start:backend": "pnpm --filter backend start"
