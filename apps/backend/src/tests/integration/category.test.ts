@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../../app";
-import { UserModel } from "../../models/index";
-import { DEFAULT_CATEGORIES } from "../../config/defaultCategories";
+import app from "../../app.js";
+import { UserModel } from "../../models/index.js";
+import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
 vi.mock("../../config/email", () => ({
   sendVerificationEmail: vi.fn().mockResolvedValue(undefined),

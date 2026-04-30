@@ -1,9 +1,9 @@
 import { Router } from "express";
-import authRoutes from "./authRoutes";
-import accountRoutes from "./accountRoutes";
-import categoryRoutes from "./categoryRoutes";
-import transactionRoutes from "./transactionRoutes";
-import recurringPaymentRoutes from "./recurringPayment";
+import authRoutes from "./authRoutes.js";
+import accountRoutes from "./accountRoutes.js";
+import categoryRoutes from "./categoryRoutes.js";
+import transactionRoutes from "./transactionRoutes.js";
+import recurringPaymentRoutes from "./recurringPayment.js";
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../../app";
-import { UserModel } from "../../models/index";
+import app from "../../app.js";
+import { UserModel } from "../../models/index.js";
 
 // Mock the email service so no real emails are sent during tests
 vi.mock("../../config/email", () => ({
@@ -239,13 +239,11 @@ describe("Auth endpoints", () => {
     });
 
     it("can login with new password after reset", async () => {
-      await request(app)
-        .post("/api/auth/register")
-        .send({
-          email: "reset@example.com",
-          name: "Reset User",
-          password: "password123",
-        });
+      await request(app).post("/api/auth/register").send({
+        email: "reset@example.com",
+        name: "Reset User",
+        password: "password123",
+      });
       const newUser = await UserModel.findOne({ email: "reset@example.com" });
       await request(app).get(
         `/api/auth/verify-email?token=${newUser?.verificationToken}`,

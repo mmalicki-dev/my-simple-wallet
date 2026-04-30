@@ -1,5 +1,5 @@
 import z from "zod";
-import { CATEGORY_ICON_NAMES } from "../types/icon";
+import { CATEGORY_ICON_NAMES } from "../types/icon.js";
 
 export const categorySchema = z.object({
   name: z

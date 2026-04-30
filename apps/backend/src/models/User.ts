@@ -1,29 +1,29 @@
-import mongoose, { Document, Schema } from 'mongoose'
-import bcrypt from 'bcryptjs'
-import { CURRENCIES } from 'shared'
+import mongoose, { Document, Schema } from "mongoose";
+import bcrypt from "bcryptjs";
+import { CURRENCIES } from "shared/src/index.js";
 
 export interface IRefreshToken {
-  token: string
-  expiresAt: Date
+  token: string;
+  expiresAt: Date;
 }
 
 export interface IUser extends Document {
-  email: string
-  name: string
-  password: string
-  accounts: mongoose.Types.ObjectId[]
-  totalBalanceCurrency: string
-  isVerified: boolean
-  verificationToken?: string
-  passwordResetToken?: string
-  passwordResetExpires?: Date
-  pendingEmail?: string
-  emailChangeToken?: string
-  emailChangeExpires?: Date
-  refreshTokens: IRefreshToken[]
-  createdAt: Date
-  updatedAt: Date
-  comparePassword(candidate: string): Promise<boolean>
+  email: string;
+  name: string;
+  password: string;
+  accounts: mongoose.Types.ObjectId[];
+  totalBalanceCurrency: string;
+  isVerified: boolean;
+  verificationToken?: string;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  pendingEmail?: string;
+  emailChangeToken?: string;
+  emailChangeExpires?: Date;
+  refreshTokens: IRefreshToken[];
+  createdAt: Date;
+  updatedAt: Date;
+  comparePassword(candidate: string): Promise<boolean>;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -48,13 +48,13 @@ const UserSchema = new Schema<IUser>(
     accounts: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Account',
+        ref: "Account",
       },
     ],
     totalBalanceCurrency: {
       type: String,
       enum: CURRENCIES,
-      default: 'PLN',
+      default: "PLN",
     },
     isVerified: {
       type: Boolean,
@@ -88,16 +88,18 @@ const UserSchema = new Schema<IUser>(
     ],
   },
   { timestamps: true },
-)
+);
 
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next()
-  this.password = await bcrypt.hash(this.password, 12)
-  next()
-})
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
 
-UserSchema.methods.comparePassword = function (candidate: string): Promise<boolean> {
-  return bcrypt.compare(candidate, this.password)
-}
+UserSchema.methods.comparePassword = function (
+  candidate: string,
+): Promise<boolean> {
+  return bcrypt.compare(candidate, this.password);
+};
 
-export default mongoose.model<IUser>('User', UserSchema)
+export default mongoose.model<IUser>("User", UserSchema);

@@ -1,4 +1,4 @@
-import { createEmailService } from "email";
+import { createEmailService } from "email/src/index.js";
 import env from "./env.js";
 
 const emailService = createEmailService({

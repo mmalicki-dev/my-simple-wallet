@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { TransactionType } from "shared";
+import { TransactionType } from "shared/src/index.js";
 
 export interface ITransaction extends Document {
   user: mongoose.Types.ObjectId;

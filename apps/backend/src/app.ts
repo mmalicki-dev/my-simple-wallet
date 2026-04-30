@@ -3,13 +3,13 @@ import morgan from "morgan";
 import express from "express";
 import cookieParser from "cookie-parser";
 
-import "./config/passport";
-import env from "./config/env";
+import "./config/passport.js";
+import env from "./config/env.js";
 
-import routes from "./api/routes";
-import docRoutes from "./docs/docRoutes";
+import routes from "./api/routes/index.js";
+import docRoutes from "./docs/docRoutes.js";
 
-import { errorHandler } from "./api/middlewares/errorMiddleware";
+import { errorHandler } from "./api/middlewares/errorMiddleware.js";
 
 const app = express();
 
