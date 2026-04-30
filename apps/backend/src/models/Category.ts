@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { TransactionType } from "shared";
+import { TransactionType } from "shared/dist/index.js";
 
 export interface ICategory extends Document {
   name: string;
