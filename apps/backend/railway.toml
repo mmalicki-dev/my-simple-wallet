@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "cd ../../ && pnpm install --frozen-lockfile && pnpm build:backend"
+buildCommand = "cd ../../ && pnpm install --frozen-lockfile && pnpm --filter shared build && pnpm --filter backend build"
 
 [deploy]
 startCommand = "node dist/index.js"
