@@ -12,7 +12,10 @@ COPY packages/ ./packages/
 COPY apps/frontend/ ./apps/frontend/
 
 # Install all workspace dependencies
-RUN pnpm install --frozen-lockfile && pnpm --filter shared build && pnpm --filter frontend build
+RUN pnpm install --frozen-lockfile && \
+    pnpm --filter shared build && \
+    pnpm --filter email build && \
+    pnpm --filter frontend build
 
 WORKDIR /app/apps/frontend
 
