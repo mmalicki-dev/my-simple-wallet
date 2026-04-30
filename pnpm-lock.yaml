@@ -231,8 +231,8 @@ importers:
   packages/email:
     dependencies:
       '@emailjs/nodejs':
-        specifier: ^4.0.0
-        version: 4.1.0
+        specifier: ^5.0.2
+        version: 5.0.2
     devDependencies:
       tsup:
         specifier: ^8.5.1
@@ -995,9 +995,9 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@emailjs/nodejs@4.1.0':
-    resolution: {integrity: sha512-d97BsKytRhP9Nme66Hmk+S5HO+zQPJ0XZ+FsNERS8uxpSXvj6rEXUeOC49ilH8LAWOdb/eL8xhsM9tfpHrvkcA==}
-    engines: {node: '>=14.0.0'}
+  '@emailjs/nodejs@5.0.2':
+    resolution: {integrity: sha512-+BrO5rF0msaoEeSKxoa64weUkczd3fTXRCB8/EnKaIRzC8B1EyLDZfr9vYK5TNG/U3Eco9cpjMNnA1IlUBkmOw==}
+    engines: {node: '>=18.0.0'}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -6792,7 +6792,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@emailjs/nodejs@4.1.0': {}
+  '@emailjs/nodejs@5.0.2': {}
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true

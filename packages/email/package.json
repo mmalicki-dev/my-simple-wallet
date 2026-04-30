@@ -5,15 +5,13 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "postinstall": "patch-package"
-  },
-  "dependencies": {
-    "@emailjs/nodejs": "^4.0.3"
+    "build": "tsc"
   },
   "devDependencies": {
-    "patch-package": "^8.0.1",
     "tsup": "^8.5.1",
     "typescript": "^5.2.0"
+  },
+  "dependencies": {
+    "@emailjs/nodejs": "^5.0.2"
   }
 }
