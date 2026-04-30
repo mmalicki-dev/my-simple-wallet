@@ -1,0 +1,21 @@
+FROM node:18-alpine
+
+RUN corepack enable
+
+WORKDIR /app
+
+# Copy workspace config and lockfile
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+
+# Copy source packages
+COPY packages/ ./packages/
+COPY apps/frontend/ ./apps/frontend/
+
+# Install all workspace dependencies
+RUN pnpm install --frozen-lockfile && pnpm --filter shared build && pnpm --filter frontend build
+
+WORKDIR /app/apps/frontend
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "npx serve dist --listen $PORT"]
