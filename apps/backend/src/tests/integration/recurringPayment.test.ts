@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../../app";
-import { UserModel } from "../../models/index";
+import app from "../../app.js";
+import { UserModel } from "../../models/index.js";
 
 vi.mock("../../config/email", () => ({
   sendVerificationEmail: vi.fn().mockResolvedValue(undefined),

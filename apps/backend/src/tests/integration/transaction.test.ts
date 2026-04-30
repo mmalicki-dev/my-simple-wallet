@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../../app";
-import { UserModel, AccountModel } from "../../models/index";
+import app from "../../app.js";
+import { UserModel, AccountModel } from "../../models/index.js";
 
 vi.mock("../../config/email", () => ({
   sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
@@ -82,7 +82,12 @@ describe("Transaction endpoints", () => {
       const res = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
@@ -93,7 +98,12 @@ describe("Transaction endpoints", () => {
       await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 50, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 50,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       const account = await AccountModel.findById(accountId);
       expect(account?.balance).toBe(50);
@@ -103,7 +113,12 @@ describe("Transaction endpoints", () => {
       const res = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: "000000000000000000000000", account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: "000000000000000000000000",
+          account: accountId,
+        });
 
       expect(res.status).toBe(404);
     });
@@ -112,7 +127,12 @@ describe("Transaction endpoints", () => {
       const res = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: "000000000000000000000000" });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: "000000000000000000000000",
+        });
 
       expect(res.status).toBe(404);
     });
@@ -129,7 +149,12 @@ describe("Transaction endpoints", () => {
     it("returns 401 without token", async () => {
       const res = await request(app)
         .post("/api/transaction/")
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       expect(res.status).toBe(401);
     });
@@ -140,13 +165,23 @@ describe("Transaction endpoints", () => {
       const createRes = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
       const transactionId = createRes.body.data._id;
 
       const res = await request(app)
         .put(`/api/transaction/${transactionId}`)
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 200, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 200,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
@@ -157,7 +192,12 @@ describe("Transaction endpoints", () => {
       const res = await request(app)
         .put("/api/transaction/000000000000000000000000")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: "000000000000000000000000" });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: "000000000000000000000000",
+        });
 
       expect(res.status).toBe(404);
     });
@@ -166,7 +206,12 @@ describe("Transaction endpoints", () => {
       const res = await request(app)
         .put("/api/transaction/000000000000000000000000")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       expect(res.status).toBe(404);
     });
@@ -174,7 +219,12 @@ describe("Transaction endpoints", () => {
     it("returns 401 without token", async () => {
       const res = await request(app)
         .put("/api/transaction/000000000000000000000000")
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
 
       expect(res.status).toBe(401);
     });
@@ -185,7 +235,12 @@ describe("Transaction endpoints", () => {
       const createRes = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
       const transactionId = createRes.body.data._id;
 
       const res = await request(app)
@@ -200,7 +255,12 @@ describe("Transaction endpoints", () => {
       const createRes = await request(app)
         .post("/api/transaction/")
         .set("Authorization", `Bearer ${token}`)
-        .send({ amount: 100, type: "income", category: categoryId, account: accountId });
+        .send({
+          amount: 100,
+          type: "income",
+          category: categoryId,
+          account: accountId,
+        });
       const transactionId = createRes.body.data._id;
 
       await request(app)

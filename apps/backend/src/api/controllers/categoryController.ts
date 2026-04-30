@@ -1,8 +1,14 @@
 import { RequestHandler } from "express";
-import { asyncHandler, AppError, ok, created, deleted } from "../../lib/index.js";
+import {
+  asyncHandler,
+  AppError,
+  ok,
+  created,
+  deleted,
+} from "../../lib/index.js";
 import { CategoryModel } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
-import { categorySchema } from "shared";
+import { categorySchema } from "shared/src/index.js";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   const userId = req.user!._id;

@@ -16,7 +16,7 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from "shared";
+} from "shared/src/index.js";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
 function parseDuration(duration: string): number {
@@ -129,7 +129,12 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     res,
     {
       accessToken,
-      user: { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency },
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        totalBalanceCurrency: user.totalBalanceCurrency,
+      },
     },
     "Logged in successfully",
   );
@@ -196,7 +201,16 @@ export const updateProfile: RequestHandler = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  ok(res, { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency }, "Profile updated");
+  ok(
+    res,
+    {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      totalBalanceCurrency: user.totalBalanceCurrency,
+    },
+    "Profile updated",
+  );
 });
 
 export const requestEmailChange: RequestHandler = asyncHandler(
@@ -280,7 +294,15 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
 
   ok(
     res,
-    { accessToken, user: { id: user._id, email: user.email, name: user.name, totalBalanceCurrency: user.totalBalanceCurrency } },
+    {
+      accessToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        totalBalanceCurrency: user.totalBalanceCurrency,
+      },
+    },
     "Access token refreshed",
   );
 });

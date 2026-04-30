@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../../app";
-import { UserModel, AccountModel } from "../../models/index";
+import app from "../../app.js";
+import { UserModel, AccountModel } from "../../models/index.js";
 
 vi.mock("../../config/email", () => ({
   sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
@@ -20,7 +20,9 @@ describe("Account endpoints", () => {
   beforeEach(async () => {
     await request(app).post("/api/auth/register").send(validUser);
     const user = await UserModel.findOne({ email: validUser.email });
-    await request(app).get(`/api/auth/verify-email?token=${user?.verificationToken}`);
+    await request(app).get(
+      `/api/auth/verify-email?token=${user?.verificationToken}`,
+    );
     const loginRes = await request(app)
       .post("/api/auth/login")
       .send({ email: validUser.email, password: validUser.password });
@@ -140,7 +142,9 @@ describe("Account endpoints", () => {
         .set("Authorization", `Bearer ${token}`)
         .send({ isDefault: true });
 
-      const accounts = await AccountModel.find({ user: secondRes.body.data.user });
+      const accounts = await AccountModel.find({
+        user: secondRes.body.data.user,
+      });
       const defaults = accounts.filter((a) => a.isDefault);
       expect(defaults).toHaveLength(1);
       expect(defaults[0]._id.toString()).toBe(secondId);
@@ -226,7 +230,9 @@ describe("Account endpoints", () => {
     });
 
     it("returns 401 without token", async () => {
-      const res = await request(app).delete("/api/account/000000000000000000000000");
+      const res = await request(app).delete(
+        "/api/account/000000000000000000000000",
+      );
       expect(res.status).toBe(401);
     });
   });
