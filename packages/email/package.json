@@ -1,6 +1,7 @@
 {
   "name": "email",
   "version": "0.0.1",
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -10,6 +11,7 @@
     "@emailjs/nodejs": "^4.0.0"
   },
   "devDependencies": {
+    "tsup": "^8.5.1",
     "typescript": "^5.2.0"
   }
 }
