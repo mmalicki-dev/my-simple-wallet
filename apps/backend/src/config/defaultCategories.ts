@@ -1,4 +1,4 @@
-import { CategoryIconName, TransactionType } from "shared/src/index.js";
+import { CategoryIconName, TransactionType } from "shared";
 
 interface DefaultCategory {
   name: string;

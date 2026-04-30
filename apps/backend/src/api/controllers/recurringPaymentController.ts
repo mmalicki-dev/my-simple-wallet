@@ -15,7 +15,7 @@ import { validate } from "../validators/authValidator.js";
 import {
   createRecurringPaymentSchema,
   updateRecurringPaymentSchema,
-} from "shared/src/index.js";
+} from "shared";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   const recurringPayments = await RecurringPaymentModel.find({
