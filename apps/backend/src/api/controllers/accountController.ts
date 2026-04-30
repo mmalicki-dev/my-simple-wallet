@@ -12,7 +12,7 @@ import {
   UserModel,
 } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
-import { createAccountSchema, updateAccountSchema } from "shared/src/index.js";
+import { createAccountSchema, updateAccountSchema } from "shared";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   const accounts = await AccountModel.find({ user: req.user!._id });

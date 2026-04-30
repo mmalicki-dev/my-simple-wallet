@@ -16,7 +16,7 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from "shared/src/index.js";
+} from "shared";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
 function parseDuration(duration: string): number {
