@@ -1,4 +1,7 @@
-import { CategoryIconName, TransactionType } from "shared/dist/index.js";
+import {
+  CategoryIconName,
+  TransactionType,
+} from "../../../../packages/shared/dist/index.js";
 
 interface DefaultCategory {
   name: string;

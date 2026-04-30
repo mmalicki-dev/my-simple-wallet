@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { CURRENCIES } from "shared/dist/index.js";
+import { CURRENCIES } from "../../../../packages/shared/dist/index.js";
 
 export interface IRefreshToken {
   token: string;
