@@ -1,0 +1,49 @@
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 0.5rem;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+  cursor: pointer;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.item:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+.active {
+  color: var(--color-primary);
+}
+
+.label {
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .item {
+    flex-direction: row;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .label {
+    font-size: 0.875rem;
+  }
+}

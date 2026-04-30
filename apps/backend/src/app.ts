@@ -1,20 +1,30 @@
-import express from 'express'
-import cors from 'cors'
-import morgan from 'morgan'
-import env from './config/env'
-import './config/passport'
-import routes from './api/routes'
+import cors from "cors";
+import morgan from "morgan";
+import express from "express";
+import cookieParser from "cookie-parser";
 
-const app = express()
+import "./config/passport";
+import env from "./config/env";
 
-app.use(cors({ origin: env.CLIENT_URL, credentials: true }))
-app.use(express.json())
-app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'))
+import routes from "./api/routes";
+import docRoutes from "./docs/docRoutes";
 
-app.use('/api', routes)
+import { errorHandler } from "./api/middlewares/errorMiddleware";
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' })
-})
+const app = express();
 
-export default app
+app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
+app.use(express.json());
+app.use(morgan(env.NODE_ENV === "development" ? "dev" : "combined"));
+app.use(cookieParser());
+
+app.use("/api", routes);
+app.use("/api/docs", docRoutes);
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.use(errorHandler);
+
+export default app;

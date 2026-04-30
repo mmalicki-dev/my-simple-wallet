@@ -1,23 +1,16 @@
-export interface RegisterBody {
-  email: string
-  password: string
-}
+import { ZodSchema } from "zod";
 
-export interface LoginBody {
-  email: string
-  password: string
-}
+type ValidationResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-export const validateRegister = (body: Partial<RegisterBody>): string | null => {
-  if (!body.email || !EMAIL_REGEX.test(body.email)) return 'Valid email is required'
-  if (!body.password || body.password.length < 6) return 'Password must be at least 6 characters'
-  return null
-}
-
-export const validateLogin = (body: Partial<LoginBody>): string | null => {
-  if (!body.email || !EMAIL_REGEX.test(body.email)) return 'Valid email is required'
-  if (!body.password) return 'Password is required'
-  return null
-}
+export const validate = <T>(
+  schema: ZodSchema<T>,
+  data: unknown,
+): ValidationResult<T> => {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    return { success: false, error: result.error.errors[0].message };
+  }
+  return { success: true, data: result.data };
+};

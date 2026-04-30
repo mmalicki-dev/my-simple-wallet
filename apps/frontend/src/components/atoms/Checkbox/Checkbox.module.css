@@ -1,0 +1,51 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-left: 2px solid color-mix(in srgb, var(--color-neon) 55%, transparent);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-neon);
+}
+
+.input:checked {
+  background: color-mix(in srgb, var(--color-neon) 75%, transparent);
+  border-color: var(--color-neon);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-neon) 55%, transparent);
+}
+
+.wrapper:hover .input {
+  border-color: color-mix(in srgb, var(--color-neon) 80%, transparent);
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color 0.15s;
+  user-select: none;
+}
+
+.wrapper:hover .label {
+  color: var(--color-text);
+}

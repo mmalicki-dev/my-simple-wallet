@@ -1,0 +1,9 @@
+{
+  "name": "email",
+  "version": "0.0.1",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@emailjs/nodejs": "^4.0.0"
+  }
+}

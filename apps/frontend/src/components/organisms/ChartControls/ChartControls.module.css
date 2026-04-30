@@ -1,0 +1,17 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.placeholder {
+  height: 2rem;
+}
+
+/* ============================================================
+   Icon size inside chart-type buttons
+   ============================================================ */
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}

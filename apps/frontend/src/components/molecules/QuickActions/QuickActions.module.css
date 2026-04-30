@@ -1,0 +1,51 @@
+.panel {
+  flex-shrink: 0;
+  max-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  transition: max-width 0.5s ease;
+
+  background-image: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--color-primary) 10%, transparent) 1%,
+    transparent
+  );
+  border-width: 0 0 2px 0;
+  border-style: solid;
+  border-image: linear-gradient(to right, var(--color-primary), transparent) 1;
+}
+
+.open {
+  max-width: 10rem;
+}
+
+.btn {
+  padding: 0 0.85rem;
+  cursor: pointer;
+  color: color-mix(in srgb, var(--color-neon) 60%, var(--color-text-muted));
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.btn:hover {
+  color: var(--color-neon);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  text-shadow: 0 0 6px var(--color-neon);
+}
+
+.deleteBtn {
+  color: color-mix(in srgb, var(--color-danger) 60%, var(--color-text-muted));
+}
+
+.deleteBtn:hover {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  text-shadow: 0 0 6px var(--color-danger);
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+}

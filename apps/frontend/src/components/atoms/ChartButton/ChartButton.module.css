@@ -1,0 +1,351 @@
+@keyframes btn-active-scan {
+  0% {
+    transform: translateX(-150%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+}
+
+.active {
+  color: var(--color-neon);
+  text-shadow:
+    0 0 6px var(--color-neon),
+    0 0 18px color-mix(in srgb, var(--color-neon) 60%, transparent);
+  background: color-mix(in srgb, var(--color-neon) 35%, transparent);
+  box-shadow: inset 0 0 var(--btn-glow-inset)
+    color-mix(in srgb, var(--color-neon) 45%, transparent);
+}
+
+.btn-sci-holo.active::before {
+  animation: btn-active-scan 2.5s linear infinite;
+  transition: none;
+}
+
+.outer:has(.active) .lines {
+  opacity: 1;
+}
+
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(70%) brightness(0.55);
+  pointer-events: none;
+}
+
+.outer:has(.disabled) .corner,
+.outer:has(.disabled) .lines {
+  opacity: 0.35;
+  filter: grayscale(70%);
+}
+
+/* ------------------------------------------------------------------------ */
+/* ************************************************************************* */
+/* ************************************************************************* */
+/* -----------------------last-holo--------------------------------------------- */
+
+.outer {
+  /* dimensions */
+  --btn-width: 160px;
+  --btn-height: 48px;
+
+  /* shape — top notch */
+  --btn-notch-x1: 20%;
+  --btn-notch-x2: 80%;
+  --btn-notch-depth: 10%;
+
+  /* shape — bottom-right tab cut */
+  --btn-tab-x: 70%;
+  --btn-tab-y: 80%;
+  --btn-tab-corner: 65%;
+
+  /* shape — bottom-left corner cut */
+  --btn-bl-cut: 7px;
+
+  /* fill & glow */
+  --btn-bg-mix: 25%;
+  --btn-glow-near: 25px;
+  --btn-glow-far: 60px;
+  --btn-glow-inset: 20px;
+
+  /* animation */
+  --btn-sweep-duration: 0.6s;
+  --btn-lines-delay: 0.3s;
+
+  /* corner decorations */
+  --btn-corner-size: 14px;
+  --btn-corner-border: 3px;
+
+  /* bottom-right lines decoration */
+  --btn-lines-width: 34%;
+  --btn-lines-stripe: 5px;
+  --btn-lines-gap: 7px;
+  --btn-lines-skew: -40deg;
+  --btn-lines-fade: 70%;
+
+  position: relative;
+  min-width: var(--btn-width);
+  min-height: var(--btn-height);
+  padding: 1px;
+  overflow: hidden;
+}
+
+.btn-sci-holo {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--color-text);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  background: color-mix(
+    in srgb,
+    var(--color-neon) var(--btn-bg-mix),
+    transparent
+  );
+  cursor: pointer;
+  overflow: hidden;
+
+  clip-path: polygon(
+    0% 0%,
+    var(--btn-notch-x1) 0%,
+    calc(var(--btn-notch-x1) + 2%) var(--btn-notch-depth),
+    calc(var(--btn-notch-x2) - 2%) var(--btn-notch-depth),
+    var(--btn-notch-x2) 0%,
+    100% 0%,
+    100% var(--btn-tab-y),
+    var(--btn-tab-x) var(--btn-tab-y),
+    var(--btn-tab-corner) 100%,
+    var(--btn-bl-cut) 100%,
+    0% calc(100% - var(--btn-bl-cut))
+  );
+
+  transition: 0.3s ease;
+}
+
+/* animated scan line */
+.btn-sci-holo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    var(--color-neon) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform var(--btn-sweep-duration) ease;
+}
+
+.btn-sci-holo:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-sci-holo:hover {
+  color: #ffffff;
+
+  box-shadow:
+    0 0 var(--btn-glow-near) var(--color-neon),
+    0 0 var(--btn-glow-far) var(--color-neon),
+    inset 0 0 var(--btn-glow-inset) var(--color-neon);
+}
+
+.corner {
+  position: absolute;
+  width: var(--btn-corner-size);
+  height: var(--btn-corner-size);
+}
+
+.tl {
+  top: 0;
+  left: 0;
+  border-top: var(--btn-corner-border) solid var(--color-neon);
+  border-left: var(--btn-corner-border) solid var(--color-neon);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  border-top: var(--btn-corner-border) solid var(--color-neon);
+  border-right: var(--btn-corner-border) solid var(--color-neon);
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+
+.tm {
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  top: 0;
+  background-color: var(--color-neon);
+  clip-path: polygon(
+    var(--btn-notch-x1) 0%,
+    calc(var(--btn-notch-x1) + 2%) var(--btn-notch-depth),
+    calc(var(--btn-notch-x2) - 2%) var(--btn-notch-depth),
+    var(--btn-notch-x2) 0%
+  );
+}
+
+.br {
+  bottom: 20%;
+  right: 0;
+  border-right: var(--btn-corner-border) solid var(--color-neon);
+  border-bottom: var(--btn-corner-border) solid var(--color-neon);
+  clip-path: polygon(100% 100%, 0 100%, 100% 0);
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-neon);
+  border-left: var(--btn-corner-border) solid var(--color-neon);
+  border-bottom: var(--btn-corner-border) solid var(--color-neon);
+  clip-path: polygon(
+    0 0,
+    var(--btn-corner-border) var(--btn-corner-border),
+    var(--btn-corner-border) calc(100% - 8px),
+    calc(100% - 6px) calc(100% - var(--btn-corner-border)),
+    calc(100% - var(--btn-corner-border)) calc(100% - var(--btn-corner-border)),
+    100% 100%,
+    var(--btn-bl-cut) 100%,
+    0 calc(100% - var(--btn-bl-cut))
+  );
+}
+
+.lines {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: var(--btn-lines-width);
+  height: 18%;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-neon) 0px,
+    var(--color-neon) var(--btn-lines-stripe),
+    transparent var(--btn-lines-stripe),
+    transparent calc(var(--btn-lines-stripe) + var(--btn-lines-gap))
+  );
+  opacity: 0.85;
+  transform: skewX(var(--btn-lines-skew));
+  transform-origin: right bottom;
+  mask-image: linear-gradient(
+    to right,
+    black,
+    transparent var(--btn-lines-fade)
+  );
+}
+
+.lines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.7) 50%,
+    transparent 65%
+  );
+  transform: translateX(-150%);
+  transition: transform var(--btn-sweep-duration) ease;
+}
+
+.outer:not(:has(.disabled)):hover .lines::before {
+  transform: translateX(150%);
+  transition-delay: var(--btn-lines-delay);
+}
+
+/* ------------------------------------------------------------------------ */
+/* ************************************************************************* */
+/* ************************************************************************* */
+/* -----------------------panel-pro--------------------------------------------- */
+
+.btn-sci-panel-pro {
+  position: relative;
+  padding: 16px 40px;
+  color: #8ffcff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(145deg, #081521, #0d2a44);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  cursor: pointer;
+
+  clip-path: polygon(
+    12px 0%,
+    calc(100% - 12px) 0%,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0% calc(100% - 12px),
+    0% 12px
+  );
+
+  box-shadow:
+    0 0 6px rgba(0, 255, 255, 0.4),
+    inset 0 0 12px rgba(0, 255, 255, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+/* inner panel frame */
+.btn-sci-panel-pro::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
+  );
+
+  pointer-events: none;
+}
+
+/* corner brackets */
+.btn-sci-panel-pro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(#00f7ff, #00f7ff) top left,
+    linear-gradient(#00f7ff, #00f7ff) top right,
+    linear-gradient(#00f7ff, #00f7ff) bottom left,
+    linear-gradient(#00f7ff, #00f7ff) bottom right;
+  background-size:
+    14px 2px,
+    2px 14px;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.btn-sci-panel-pro:hover {
+  color: #ffffff;
+  border-color: #00ffff;
+
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.9),
+    inset 0 0 18px rgba(0, 255, 255, 0.6);
+}

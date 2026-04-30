@@ -1,0 +1,140 @@
+/* ── Wrapper ───────────────────────────────────────────── */
+.switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Current chip ──────────────────────────────────────── */
+.current {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  border: none;
+  border-top: 1.5px solid var(--color-neon);
+  background: color-mix(in srgb, var(--color-neon) 15%, transparent);
+  color: var(--color-neon);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  text-shadow: 0 0 8px var(--color-neon);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--color-neon) 55%, transparent));
+  transition: background 0.2s, filter 0.2s;
+}
+
+/* Skew direction points toward expansion side */
+.switcher[data-side="left"] .current {
+  transform: skewX(-10deg);
+}
+
+.switcher[data-side="right"] .current {
+  transform: skewX(10deg);
+}
+
+.switcher:hover .current,
+.switcher.open .current {
+  background: color-mix(in srgb, var(--color-neon) 22%, transparent);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--color-neon) 75%, transparent));
+}
+
+/* ── Options panel ─────────────────────────────────────── */
+.options {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.switcher[data-side="left"] .options {
+  left: 100%;
+  padding-left: 6px;
+}
+
+.switcher[data-side="right"] .options {
+  right: 100%;
+  padding-right: 6px;
+  flex-direction: row-reverse;
+}
+
+.switcher:hover .options,
+.switcher.open .options {
+  pointer-events: auto;
+}
+
+/* ── Option chip ───────────────────────────────────────── */
+.option {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--color-neon) 40%, transparent);
+  background: color-mix(in srgb, var(--color-neon) 8%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    color 0.15s,
+    background 0.15s;
+}
+
+/* Base skew + initial slide offset for entrance animation */
+.switcher[data-side="left"] .option {
+  transform: skewX(-10deg) translateX(-8px);
+}
+
+.switcher[data-side="right"] .option {
+  transform: skewX(10deg) translateX(8px);
+}
+
+/* Entrance: fade + slide to resting position (keep skew) */
+.switcher:hover .option,
+.switcher.open .option {
+  opacity: 1;
+}
+
+.switcher[data-side="left"]:hover .option,
+.switcher[data-side="left"].open .option {
+  transform: skewX(-10deg);
+}
+
+.switcher[data-side="right"]:hover .option,
+.switcher[data-side="right"].open .option {
+  transform: skewX(10deg);
+}
+
+/* Stagger: closest first */
+.switcher:hover .option:nth-child(2),
+.switcher.open .option:nth-child(2) {
+  transition-delay: 0.07s;
+}
+
+.switcher:hover .option:nth-child(3),
+.switcher.open .option:nth-child(3) {
+  transition-delay: 0.14s;
+}
+
+.option:hover {
+  color: var(--color-neon);
+  text-shadow: 0 0 8px var(--color-neon);
+  background: color-mix(in srgb, var(--color-neon) 18%, transparent);
+  border-top-color: var(--color-neon);
+}

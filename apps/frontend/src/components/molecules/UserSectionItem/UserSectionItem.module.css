@@ -1,0 +1,81 @@
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  transition: background 0.15s;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background: color-mix(in srgb, var(--color-neon) 4%, transparent);
+}
+
+/* Angular square — no border-radius */
+.indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.actionBtn {
+  appearance: none;
+  background: none;
+  border: none;
+  border-left: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  padding: 0.15rem 0.45rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color 0.15s, border-color 0.15s, background 0.15s, text-shadow 0.15s;
+}
+
+.actionBtn:hover {
+  color: var(--color-neon);
+  border-left-color: var(--color-neon);
+  background: color-mix(in srgb, var(--color-neon) 8%, transparent);
+  text-shadow: 0 0 6px var(--color-neon);
+}
+
+.deleteBtn:hover {
+  color: var(--color-danger);
+  border-left-color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  text-shadow: 0 0 6px var(--color-danger);
+}

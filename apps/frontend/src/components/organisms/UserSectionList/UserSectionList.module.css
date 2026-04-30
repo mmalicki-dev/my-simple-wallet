@@ -1,0 +1,48 @@
+.section {
+  padding: 1.25rem 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-neon);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--color-neon) 55%, transparent);
+}
+
+.addBtn {
+  appearance: none;
+  background: none;
+  border: none;
+  border-left: 2px solid color-mix(in srgb, var(--color-neon) 50%, transparent);
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-neon) 70%, var(--color-text-muted));
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.addBtn:hover {
+  color: var(--color-neon);
+  border-left-color: var(--color-neon);
+  background: color-mix(in srgb, var(--color-neon) 10%, transparent);
+  text-shadow: 0 0 6px var(--color-neon);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

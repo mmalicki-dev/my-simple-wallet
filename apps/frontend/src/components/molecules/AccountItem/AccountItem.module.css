@@ -1,0 +1,30 @@
+.item {
+  width: 100%;
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+}
+
+.name {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+.balance {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}

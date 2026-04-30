@@ -1,0 +1,6 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd ../../ && pnpm install --frozen-lockfile && pnpm build:frontend"
+
+[deploy]
+startCommand = "npx serve dist --listen $PORT"

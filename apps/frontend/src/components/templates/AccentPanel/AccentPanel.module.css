@@ -1,0 +1,29 @@
+.panel {
+  position: relative;
+  padding: 0.5rem 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to left, var(--color-primary), transparent);
+}
+
+.onlyRight.panel::after {
+  content: none;
+}
+
+.border {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2px;
+  background-image: linear-gradient(to top, var(--color-primary), transparent);
+}
