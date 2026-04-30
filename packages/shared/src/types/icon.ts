@@ -69,6 +69,7 @@ export const CATEGORY_ICON_NAMES = [
   "hand-money",
   "graph-up",
   "sale",
+  "add-circle",
 
   // Housing & bills
   "house",
@@ -113,6 +114,7 @@ export const CATEGORY_ICON_NAMES = [
 
   // Other
   "heart",
+  "minus-circle",
 ] as const satisfies readonly IconName[];
 
 export type CategoryIconName = (typeof CATEGORY_ICON_NAMES)[number];
