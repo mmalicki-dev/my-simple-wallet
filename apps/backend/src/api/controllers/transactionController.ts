@@ -12,7 +12,7 @@ import {
   AccountModel,
 } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
-import { transactionSchema } from "shared";
+import { transactionSchema } from "shared/dist/index.js";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   let from: Date;
