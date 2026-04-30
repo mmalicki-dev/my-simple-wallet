@@ -12,7 +12,10 @@ COPY packages/ ./packages/
 COPY apps/backend/ ./apps/backend/
 
 # Install all workspace dependencies
-RUN pnpm install --frozen-lockfile && pnpm --filter shared build && pnpm --filter backend build
+RUN pnpm install --frozen-lockfile && \
+    pnpm --filter shared build && \
+    pnpm --filter email build && \
+    pnpm --filter backend build
 
 WORKDIR /app/apps/backend
 
