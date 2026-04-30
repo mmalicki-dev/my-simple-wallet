@@ -8,7 +8,7 @@ import {
 } from "../../lib/index.js";
 import { CategoryModel } from "../../models/index.js";
 import { validate } from "../validators/authValidator.js";
-import { categorySchema } from "shared/dist/index.js";
+import { categorySchema } from "../../../../../packages/shared/dist/index.js";
 
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   const userId = req.user!._id;
