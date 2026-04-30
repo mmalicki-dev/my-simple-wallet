@@ -1,0 +1,111 @@
+diff --git a/node_modules/@emailjs/nodejs/mjs/api/sendPost.js b/node_modules/@emailjs/nodejs/mjs/api/sendPost.js
+index 9ca2849..c3cb868 100644
+--- a/node_modules/@emailjs/nodejs/mjs/api/sendPost.js
++++ b/node_modules/@emailjs/nodejs/mjs/api/sendPost.js
+@@ -1,6 +1,6 @@
+ import { request } from 'https';
+-import { store } from '../store/store';
+-import { EmailJSResponseStatus } from '../models/EmailJSResponseStatus';
++import { store } from '../store/store.js';
++import { EmailJSResponseStatus } from '../models/EmailJSResponseStatus.js';
+ export const sendPost = (data) => {
+     const options = {
+         host: store.origin,
+diff --git a/node_modules/@emailjs/nodejs/mjs/errors/blockedEmailError/blockedEmailError.js b/node_modules/@emailjs/nodejs/mjs/errors/blockedEmailError/blockedEmailError.js
+index 9c8c57b..e42a969 100644
+--- a/node_modules/@emailjs/nodejs/mjs/errors/blockedEmailError/blockedEmailError.js
++++ b/node_modules/@emailjs/nodejs/mjs/errors/blockedEmailError/blockedEmailError.js
+@@ -1,4 +1,4 @@
+-import { EmailJSResponseStatus } from '../../models/EmailJSResponseStatus';
++import { EmailJSResponseStatus } from '../../models/EmailJSResponseStatus.js';
+ export const blockedEmailError = () => {
+     return new EmailJSResponseStatus(403, 'Forbidden');
+ };
+diff --git a/node_modules/@emailjs/nodejs/mjs/errors/limitRateError/limitRateError.js b/node_modules/@emailjs/nodejs/mjs/errors/limitRateError/limitRateError.js
+index 1537140..7b723ac 100644
+--- a/node_modules/@emailjs/nodejs/mjs/errors/limitRateError/limitRateError.js
++++ b/node_modules/@emailjs/nodejs/mjs/errors/limitRateError/limitRateError.js
+@@ -1,4 +1,4 @@
+-import { EmailJSResponseStatus } from '../../models/EmailJSResponseStatus';
++import { EmailJSResponseStatus } from '../../models/EmailJSResponseStatus.js';
+ export const limitRateError = () => {
+     return new EmailJSResponseStatus(429, 'Too Many Requests');
+ };
+diff --git a/node_modules/@emailjs/nodejs/mjs/index.js b/node_modules/@emailjs/nodejs/mjs/index.js
+index 587e35d..cfac1cb 100644
+--- a/node_modules/@emailjs/nodejs/mjs/index.js
++++ b/node_modules/@emailjs/nodejs/mjs/index.js
+@@ -1,6 +1,6 @@
+-import { EmailJSResponseStatus } from './models/EmailJSResponseStatus';
+-import { init } from './methods/init/init';
+-import { send } from './methods/send/send';
++import { EmailJSResponseStatus } from './models/EmailJSResponseStatus.js';
++import { init } from './methods/init/init.js';
++import { send } from './methods/send/send.js';
+ export { init, send, EmailJSResponseStatus };
+ export default {
+     init,
+diff --git a/node_modules/@emailjs/nodejs/mjs/methods/init/init.js b/node_modules/@emailjs/nodejs/mjs/methods/init/init.js
+index 61592a9..4581a64 100644
+--- a/node_modules/@emailjs/nodejs/mjs/methods/init/init.js
++++ b/node_modules/@emailjs/nodejs/mjs/methods/init/init.js
+@@ -1,4 +1,4 @@
+-import { store } from '../../store/store';
++import { store } from '../../store/store.js';
+ /**
+  * EmailJS global SDK config
+  * @param {object} options - the EmailJS global SDK config options
+diff --git a/node_modules/@emailjs/nodejs/mjs/methods/send/send.js b/node_modules/@emailjs/nodejs/mjs/methods/send/send.js
+index da58ba0..5529327 100644
+--- a/node_modules/@emailjs/nodejs/mjs/methods/send/send.js
++++ b/node_modules/@emailjs/nodejs/mjs/methods/send/send.js
+@@ -1,11 +1,11 @@
+-import { store } from '../../store/store';
+-import { sendPost } from '../../api/sendPost';
+-import { validateParams } from '../../utils/validateParams/validateParams';
+-import { validateTemplateParams } from '../../utils/validateTemplateParams/validateTemplateParams';
+-import { isBlockedValueInParams } from '../../utils/isBlockedValueInParams/isBlockedValueInParams';
+-import { blockedEmailError } from '../../errors/blockedEmailError/blockedEmailError';
+-import { isLimitRateHit } from '../../utils/isLimitRateHit/isLimitRateHit';
+-import { limitRateError } from '../../errors/limitRateError/limitRateError';
++import { store } from '../../store/store.js';
++import { sendPost } from '../../api/sendPost.js';
++import { validateParams } from '../../utils/validateParams/validateParams.js';
++import { validateTemplateParams } from '../../utils/validateTemplateParams/validateTemplateParams.js';
++import { isBlockedValueInParams } from '../../utils/isBlockedValueInParams/isBlockedValueInParams.js';
++import { blockedEmailError } from '../../errors/blockedEmailError/blockedEmailError.js';
++import { isLimitRateHit } from '../../utils/isLimitRateHit/isLimitRateHit.js';
++import { limitRateError } from '../../errors/limitRateError/limitRateError.js';
+ /**
+  * Send a template to the specific EmailJS service
+  * @param {string} serviceID - the EmailJS service ID
+diff --git a/node_modules/@emailjs/nodejs/mjs/store/store.js b/node_modules/@emailjs/nodejs/mjs/store/store.js
+index cff282c..653cd1b 100644
+--- a/node_modules/@emailjs/nodejs/mjs/store/store.js
++++ b/node_modules/@emailjs/nodejs/mjs/store/store.js
+@@ -1,4 +1,4 @@
+-import { createMemoryStorage } from '../utils/createMemoryStorage/createMemoryStorage';
++import { createMemoryStorage } from '../utils/createMemoryStorage/createMemoryStorage.js';
+ export const store = {
+     origin: 'api.emailjs.com',
+     storageProvider: createMemoryStorage(),
+diff --git a/node_modules/@emailjs/nodejs/mjs/utils/isBlockedValueInParams/isBlockedValueInParams.js b/node_modules/@emailjs/nodejs/mjs/utils/isBlockedValueInParams/isBlockedValueInParams.js
+index 9dd1f1a..16407e6 100644
+--- a/node_modules/@emailjs/nodejs/mjs/utils/isBlockedValueInParams/isBlockedValueInParams.js
++++ b/node_modules/@emailjs/nodejs/mjs/utils/isBlockedValueInParams/isBlockedValueInParams.js
+@@ -1,4 +1,4 @@
+-import { validateBlockListParams } from '../validateBlockListParams/validateBlockListParams';
++import { validateBlockListParams } from '../validateBlockListParams/validateBlockListParams.js';
+ const isBlockListDisabled = (options) => {
+     return !options.list?.length || !options.watchVariable;
+ };
+diff --git a/node_modules/@emailjs/nodejs/mjs/utils/isLimitRateHit/isLimitRateHit.js b/node_modules/@emailjs/nodejs/mjs/utils/isLimitRateHit/isLimitRateHit.js
+index 280f3ea..ed49913 100644
+--- a/node_modules/@emailjs/nodejs/mjs/utils/isLimitRateHit/isLimitRateHit.js
++++ b/node_modules/@emailjs/nodejs/mjs/utils/isLimitRateHit/isLimitRateHit.js
+@@ -1,4 +1,4 @@
+-import { validateLimitRateParams } from '../validateLimitRateParams/validateLimitRateParams';
++import { validateLimitRateParams } from '../validateLimitRateParams/validateLimitRateParams.js';
+ const getLeftTime = async (id, throttle, storage) => {
+     const lastTime = Number((await storage.get(id)) || 0);
+     return throttle - Date.now() + lastTime;
