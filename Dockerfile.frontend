@@ -11,6 +11,12 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/ ./packages/
 COPY apps/frontend/ ./apps/frontend/
 
+# Declare build args
+ARG VITE_API_URL
+
+# Make them available to Vite during build
+ENV VITE_API_URL=$VITE_API_URL
+
 # Install all workspace dependencies
 RUN pnpm install --frozen-lockfile && \
     pnpm --filter shared build && \
