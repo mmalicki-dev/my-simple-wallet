@@ -27,4 +27,4 @@ WORKDIR /app/apps/frontend
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx serve dist --single --listen $PORT"]
+CMD ["sh", "-c", "npx serve -s dist -l $PORT"]
