@@ -4,6 +4,7 @@ import accountRoutes from "./accountRoutes.js";
 import categoryRoutes from "./categoryRoutes.js";
 import transactionRoutes from "./transactionRoutes.js";
 import recurringPaymentRoutes from "./recurringPayment.js";
+import exchangeRateRoutes from "./exchangeRateRoutes.js";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/account", accountRoutes);
 router.use("/category", categoryRoutes);
 router.use("/transaction", transactionRoutes);
 router.use("/recurringPayment", recurringPaymentRoutes);
+router.use("/exchange-rates", exchangeRateRoutes);
 
 export default router;
