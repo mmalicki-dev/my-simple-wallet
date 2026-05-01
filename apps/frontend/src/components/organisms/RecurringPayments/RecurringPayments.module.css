@@ -3,3 +3,38 @@
   flex-direction: column;
   gap: 2rem;
 }
+
+/* ── Empty state ────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.emptyIcon {
+  width: 2rem;
+  height: 2rem;
+  color: color-mix(in srgb, var(--color-neon) 40%, var(--color-text-muted));
+  opacity: 0.6;
+}
+
+.emptyText {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.emptyLink {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.emptyLink:hover {
+  color: var(--color-neon);
+}

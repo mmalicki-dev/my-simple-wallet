@@ -1,7 +1,5 @@
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  composes: form from '../../../styles/shared.module.css';
 }
 
 .colourField {
@@ -26,13 +24,3 @@
   background: none;
 }
 
-.actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.right {
-  display: flex;
-  gap: 0.5rem;
-}

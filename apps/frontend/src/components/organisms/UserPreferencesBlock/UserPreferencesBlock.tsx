@@ -4,6 +4,8 @@ import type { RootState } from "@/redux/store";
 import { setCredentials } from "@/redux/slices/authSlice";
 import { CURRENCIES } from "shared";
 import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
+import FormField from "@/components/molecules/FormField/FormField";
+import SelectOption from "@/components/atoms/SelectOption/SelectOption";
 import Button from "@/components/atoms/Button/Button";
 import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
 import LanguageSwitcher from "@/components/atoms/LanguageSwitcher/LanguageSwitcher";
@@ -34,23 +36,14 @@ const UserPreferencesBlock = () => {
         <LanguageSwitcher />
       </div>
       <form onSubmit={handleSave}>
-        <div className={styles.field}>
-          <label htmlFor="totalBalanceCurrency" className={styles.label}>
-            Total Balance Currency
-          </label>
-          <select
+        <FormField label="Total Balance Currency" htmlFor="totalBalanceCurrency">
+          <SelectOption
             id="totalBalanceCurrency"
-            className={styles.select}
             value={totalBalanceCurrency}
+            options={CURRENCY_OPTIONS}
             onChange={(e) => setTotalBalanceCurrency(e.target.value)}
-          >
-            {CURRENCY_OPTIONS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </div>
+          />
+        </FormField>
         <Button type="submit" isLoading={isLoading}>
           Save
         </Button>

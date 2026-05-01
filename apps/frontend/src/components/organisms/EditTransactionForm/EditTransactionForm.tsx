@@ -1,42 +1,64 @@
 import { useState } from "react";
 import type { TransactionType } from "shared";
 import type { Transaction } from "@/types";
+import FormActions from "@/components/molecules/FormActions/FormActions";
 import Input from "@/components/atoms/Input/Input";
-import Button from "@/components/atoms/Button/Button";
+import SelectOption from "@/components/atoms/SelectOption/SelectOption";
+import { useCreateTransactionMutation, useUpdateTransactionMutation } from "@/services/transactionApi";
+import { useGetCategoriesQuery } from "@/services/categoryApi";
 import styles from "./EditTransactionForm.module.css";
-import { useUpdateTransactionMutation } from "@/services";
 
 interface EditTransactionFormProps {
-  transaction: Transaction;
+  transaction?: Transaction;
+  accountId?: string;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 const EditTransactionForm = ({
   transaction,
+  accountId,
   onClose,
   onDelete,
 }: EditTransactionFormProps) => {
-  const [type, setType] = useState<TransactionType>(transaction.type);
-  const [amount, setAmount] = useState(String(transaction.amount));
-  const [category, setCategory] = useState(transaction.category);
-  const [description, setDescription] = useState(transaction.description ?? "");
-  const [date, setDate] = useState(transaction.date.slice(0, 10));
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: categories = [] } = useGetCategoriesQuery();
+
+  const [type, setType] = useState<TransactionType>(transaction?.type ?? "expense");
+  const [amount, setAmount] = useState(String(transaction?.amount ?? ""));
+  const [category, setCategory] = useState(transaction?.category ?? "");
+  const [description, setDescription] = useState(transaction?.description ?? "");
+  const [date, setDate] = useState(transaction?.date.slice(0, 10) ?? today);
+
+  const [createTransaction] = useCreateTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const categoryOptions = categories
+    .filter((c) => c.type === type)
+    .map((c) => ({ value: c._id, label: c.name }));
+
+  const effectiveCategory = category || categoryOptions[0]?.value || "";
+
+  const handleTypeChange = (next: TransactionType) => {
+    setType(next);
+    const firstOfType = categories.find((c) => c.type === next);
+    setCategory(firstOfType?._id ?? "");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateTransaction({
-      id: transaction._id,
-      body: {
-        account: transaction.account,
-        amount: transaction.amount,
-        type: transaction.type,
-        category: transaction.category,
-        description: transaction.description,
-        date: transaction.date,
-      },
-    });
+    const body = {
+      amount: Number.parseFloat(amount),
+      type,
+      category: effectiveCategory,
+      description: description || undefined,
+      date,
+    };
+    if (transaction) {
+      await updateTransaction({ id: transaction._id, body: { ...body, account: transaction.account } });
+    } else {
+      await createTransaction({ ...body, account: accountId! });
+    }
     onClose();
   };
 
@@ -45,21 +67,15 @@ const EditTransactionForm = ({
       <div className={styles.typeToggle}>
         <button
           type="button"
-          className={[
-            styles.typeBtn,
-            type === "income" ? styles.income : "",
-          ].join(" ")}
-          onClick={() => setType("income")}
+          className={[styles.typeBtn, type === "income" ? styles.income : ""].join(" ")}
+          onClick={() => handleTypeChange("income")}
         >
           Income
         </button>
         <button
           type="button"
-          className={[
-            styles.typeBtn,
-            type === "expense" ? styles.expense : "",
-          ].join(" ")}
-          onClick={() => setType("expense")}
+          className={[styles.typeBtn, type === "expense" ? styles.expense : ""].join(" ")}
+          onClick={() => handleTypeChange("expense")}
         >
           Expense
         </button>
@@ -72,12 +88,10 @@ const EditTransactionForm = ({
         inputMode="decimal"
         required
       />
-      <Input
-        type="text"
-        placeholder="Category"
-        value={category}
+      <SelectOption
+        value={effectiveCategory}
+        options={categoryOptions}
         onChange={(e) => setCategory(e.target.value)}
-        required
       />
       <Input
         type="text"
@@ -91,17 +105,11 @@ const EditTransactionForm = ({
         onChange={(e) => setDate(e.target.value)}
         required
       />
-      <div className={styles.actions}>
-        <Button type="button" variant="danger" onClick={onDelete}>
-          Delete
-        </Button>
-        <div className={styles.right}>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">Save</Button>
-        </div>
-      </div>
+      <FormActions
+        onCancel={onClose}
+        onDelete={onDelete}
+        submitLabel={transaction ? "Save" : "Create"}
+      />
     </form>
   );
 };

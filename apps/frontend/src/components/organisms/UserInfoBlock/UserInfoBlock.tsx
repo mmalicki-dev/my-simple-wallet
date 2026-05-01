@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/redux/store'
 import { setCredentials } from '@/redux/slices/authSlice'
 import UserBlockWrapper from '@/components/molecules/UserBlockWrapper/UserBlockWrapper'
+import FormField from '@/components/molecules/FormField/FormField'
 import Input from '@/components/atoms/Input/Input'
 import Button from '@/components/atoms/Button/Button'
 import { useRequestEmailChangeMutation, useUpdateProfileMutation } from '@/services/authApi'
@@ -35,20 +36,17 @@ const UserInfoBlock = () => {
   return (
     <UserBlockWrapper title="User Info">
       <form onSubmit={handleSaveName}>
-        <div className={styles.field}>
-          <label htmlFor="name" className={styles.label}>Name</label>
+        <FormField label="Name" htmlFor="name">
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-        </div>
+        </FormField>
         <Button type="submit" isLoading={isSavingName}>Save</Button>
       </form>
       <div className={styles.divider} />
-      <div className={styles.field}>
-        <label htmlFor="currentEmail" className={styles.label}>Current Email</label>
+      <FormField label="Current Email" htmlFor="currentEmail">
         <Input id="currentEmail" value={user?.email ?? ''} disabled />
-      </div>
+      </FormField>
       <form onSubmit={handleEmailChange}>
-        <div className={styles.field}>
-          <label htmlFor="newEmail" className={styles.label}>New Email</label>
+        <FormField label="New Email" htmlFor="newEmail">
           <Input
             id="newEmail"
             type="email"
@@ -57,7 +55,7 @@ const UserInfoBlock = () => {
             placeholder="Enter new email address"
             required
           />
-        </div>
+        </FormField>
         {emailSent && (
           <p className={styles.success}>Verification email sent. Check your inbox.</p>
         )}

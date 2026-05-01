@@ -31,10 +31,13 @@ export const get: RequestHandler = asyncHandler(async (req, res) => {
   if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime()))
     throw new AppError("Invalid date format", 400);
 
-  const transactions = await TransactionModel.find({
+  const filter: Record<string, unknown> = {
     user: userId,
     date: { $gte: from, $lte: to },
-  });
+  };
+  if (query.accountId) filter.account = query.accountId;
+
+  const transactions = await TransactionModel.find(filter);
   ok(res, transactions);
 });
 

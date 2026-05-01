@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import type { RecurringPayment, RecurringPaymentType } from "@/types";
 import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
 import RecurringPaymentBlock from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
 import EditRecurringPaymentForm from "@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm";
 import Spinner from "@/components/atoms/Spinner/Spinner";
+import Icon from "@/components/atoms/Icon/Icon";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
+import styles from "./RecurringPayments.module.css";
 
 interface SectionProps {
   type: RecurringPaymentType;
@@ -37,12 +40,26 @@ const RecurringPaymentSection = ({
 const RecurringPayments = () => {
   const { data = [], isLoading } = useGetRecurringPaymentsQuery();
   const [selected, setSelected] = useState<RecurringPayment | null>(null);
+  const { lang = "en" } = useParams();
 
   const loans = data.filter((p) => p.type === "loan");
   const subscriptions = data.filter((p) => p.type === "subscription");
 
   if (isLoading) return <Spinner />;
-  if (loans.length === 0 && subscriptions.length === 0) return null;
+
+  if (loans.length === 0 && subscriptions.length === 0) {
+    return (
+      <HudPanel>
+        <div className={styles.empty}>
+          <Icon name="repeat" className={styles.emptyIcon} />
+          <p className={styles.emptyText}>No recurring payments yet</p>
+          <Link to={`/${lang}/user/recurring-payments`} className={styles.emptyLink}>
+            Add subscriptions or loans
+          </Link>
+        </div>
+      </HudPanel>
+    );
+  }
 
   return (
     <>
