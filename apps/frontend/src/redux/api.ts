@@ -1,7 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query";
 import type { RootState } from "./store";
 import { setCredentials, logout } from "./slices/authSlice";
+
+console.log("API URL:", import.meta.env.VITE_API_URL);
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_URL ?? "http://localhost:3000"}/api`,
@@ -20,11 +26,11 @@ const unwrap = (result: Awaited<ReturnType<typeof rawBaseQuery>>) => {
   return result;
 };
 
-const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extra,
-) => {
+const baseQuery: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extra) => {
   let result = unwrap(await rawBaseQuery(args, api, extra));
 
   if (result.error?.status === 401) {
@@ -35,7 +41,9 @@ const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
     );
 
     if (refreshResult.data) {
-      const { accessToken } = (refreshResult.data as { data: { accessToken: string } }).data;
+      const { accessToken } = (
+        refreshResult.data as { data: { accessToken: string } }
+      ).data;
       const user = (api.getState() as RootState).auth.user!;
       api.dispatch(setCredentials({ user, accessToken }));
       result = unwrap(await rawBaseQuery(args, api, extra));
