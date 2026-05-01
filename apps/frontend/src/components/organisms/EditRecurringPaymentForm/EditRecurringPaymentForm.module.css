@@ -1,40 +1,97 @@
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  composes: form from "../../../styles/shared.module.css";
+  border-left: 2px solid color-mix(in srgb, var(--color-neon) 35%, transparent);
+  padding-left: 0.875rem;
 }
 
+/* ── Type toggle ────────────────────────────── */
 .typeToggle {
   display: flex;
-  border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid var(--color-border);
 }
 
 .typeBtn {
+  position: relative;
   flex: 1;
   padding: 0.5rem;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--color-text-muted);
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.typeBtn::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-neon);
+  box-shadow: 0 0 8px var(--color-neon);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 .active {
-  background-color: var(--color-primary-subtle);
-  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-neon) 8%, transparent);
+  color: var(--color-text);
 }
 
-.actions {
+.active::after {
+  opacity: 1;
+}
+
+/* ── Two-column row ─────────────────────────── */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── Scan-line divider ──────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--color-neon),
+    color-mix(in srgb, var(--color-neon) 15%, transparent)
+  );
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-neon) 55%, transparent);
+  margin: 0.25rem 0;
+}
+
+/* ── Status row (active checkbox) ───────────── */
+.statusRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
+  padding: 0.125rem 0;
 }
 
-.right {
-  display: flex;
-  gap: 0.5rem;
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-success);
+  box-shadow:
+    0 0 6px var(--color-success),
+    0 0 12px color-mix(in srgb, var(--color-success) 40%, transparent);
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.statusDotOff {
+  background: var(--color-text-muted);
+  box-shadow: none;
 }

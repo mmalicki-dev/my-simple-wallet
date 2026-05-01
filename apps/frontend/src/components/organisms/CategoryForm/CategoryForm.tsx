@@ -3,7 +3,7 @@ import type { Category, CreateCategoryRequest } from '@/types'
 import type { TransactionType } from 'shared'
 import Input from '@/components/atoms/Input/Input'
 import SelectOption from '@/components/atoms/SelectOption/SelectOption'
-import Button from '@/components/atoms/Button/Button'
+import FormActions from '@/components/molecules/FormActions/FormActions'
 import { useCreateCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from '@/services/categoryApi'
 import styles from './CategoryForm.module.css'
 
@@ -67,19 +67,11 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
           className={styles.colourPicker}
         />
       </div>
-      <div className={styles.actions}>
-        {category && (
-          <Button type="button" variant="danger" onClick={handleDelete}>
-            Delete
-          </Button>
-        )}
-        <div className={styles.right}>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">{category ? 'Save' : 'Create'}</Button>
-        </div>
-      </div>
+      <FormActions
+        onCancel={onClose}
+        onDelete={category ? handleDelete : undefined}
+        submitLabel={category ? 'Save' : 'Create'}
+      />
     </form>
   )
 }

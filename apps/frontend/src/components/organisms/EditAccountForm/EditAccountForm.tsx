@@ -4,7 +4,7 @@ import type { Account } from '@/types'
 import Input from '@/components/atoms/Input/Input'
 import SelectOption from '@/components/atoms/SelectOption/SelectOption'
 import Checkbox from '@/components/atoms/Checkbox/Checkbox'
-import Button from '@/components/atoms/Button/Button'
+import FormActions from '@/components/molecules/FormActions/FormActions'
 import { useCreateAccountMutation, useUpdateAccountMutation, useDeleteAccountMutation } from '@/services/accountApi'
 import styles from './EditAccountForm.module.css'
 
@@ -60,19 +60,11 @@ const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
         checked={isDefault}
         onChange={(e) => setIsDefault(e.target.checked)}
       />
-      <div className={styles.actions}>
-        {account && (
-          <Button type="button" variant="danger" onClick={handleDelete}>
-            Delete
-          </Button>
-        )}
-        <div className={styles.right}>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">{account ? 'Save' : 'Create'}</Button>
-        </div>
-      </div>
+      <FormActions
+        onCancel={onClose}
+        onDelete={account ? handleDelete : undefined}
+        submitLabel={account ? 'Save' : 'Create'}
+      />
     </form>
   )
 }

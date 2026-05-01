@@ -1,7 +1,5 @@
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  composes: form from '../../../styles/shared.module.css';
 }
 
 .error {
