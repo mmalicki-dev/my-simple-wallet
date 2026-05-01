@@ -24,3 +24,11 @@
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
 }
+
+.over {
+  color: var(--color-success);
+}
+
+.under {
+  color: var(--color-danger);
+}
