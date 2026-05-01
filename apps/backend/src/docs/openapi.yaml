@@ -585,6 +585,49 @@ paths:
         "404":
           description: Account not found
 
+  /api/exchange-rates/{from}:
+    get:
+      summary: Get exchange rates
+      description: Returns the latest exchange rates from frankfurter.app relative to the given base currency.
+      tags: [Exchange Rates]
+      security: []
+      parameters:
+        - in: path
+          name: from
+          required: true
+          schema:
+            type: string
+            example: PLN
+          description: Base currency code (e.g. PLN, EUR, USD)
+      responses:
+        "200":
+          description: Exchange rates for the given base currency
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      base:
+                        type: string
+                        example: PLN
+                      rates:
+                        type: object
+                        additionalProperties:
+                          type: number
+                        example:
+                          EUR: 0.234
+                          USD: 0.251
+        "400":
+          description: Unsupported currency
+        "502":
+          description: Failed to fetch rates from upstream
+
   /api/recurringPayment:
     get:
       summary: Get all recurring payments

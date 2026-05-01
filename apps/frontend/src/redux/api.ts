@@ -7,8 +7,6 @@ import type {
 import type { RootState } from "./store";
 import { setCredentials, logout } from "./slices/authSlice";
 
-console.log("API URL:", import.meta.env.VITE_API_URL);
-
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_URL ?? "http://localhost:3000"}/api`,
   credentials: "include",
