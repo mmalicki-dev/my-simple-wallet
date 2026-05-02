@@ -85,13 +85,14 @@ const ChartViewer = () => {
       ? { from: config.customFrom, to: config.customTo }
       : getPresetRange(config.period);
 
-  const { data: transactions = [], isLoading: txLoading } =
+  const { data: txData, isLoading: txLoading } =
     useGetTransactionsQuery(
       config.accountId
         ? { from, to, accountId: config.accountId }
         : { from, to },
       { skip: !config.accountId },
     );
+  const transactions = txData?.transactions.filter((t) => t.status === "posted") ?? [];
 
   const { data: categories = [], isLoading: categoriesLoading } =
     useGetCategoriesQuery();

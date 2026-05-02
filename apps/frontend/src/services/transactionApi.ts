@@ -9,7 +9,7 @@ import type {
 
 export const transactionApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTransactions: builder.query<Transaction[], GetTransactionsRequest>({
+    getTransactions: builder.query<{ transactions: Transaction[]; hasMore: boolean }, GetTransactionsRequest>({
       query: ({ accountId, from, to } = {}) => {
         const params = new URLSearchParams();
         if (accountId) params.set("accountId", accountId);

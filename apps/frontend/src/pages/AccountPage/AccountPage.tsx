@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import type { Transaction } from "@/types";
@@ -33,8 +33,27 @@ const AccountPage = () => {
 
   const { data: accounts = [], isLoading: accountsLoading } =
     useGetAccountsQuery();
-  const { data: transactions = [], isLoading: txLoading } =
+  const { data: txData, isLoading: txLoading } =
     useGetTransactionsQuery({ accountId: id, from, to });
+  const transactions = txData?.transactions ?? [];
+  const hasMore = txData?.hasMore ?? true;
+
+  const prevCountRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (txLoading || prevCountRef.current === null) return;
+    if (transactions.length === prevCountRef.current && hasMore) {
+      prevCountRef.current = transactions.length;
+      setMonthsBack((m) => m + 1);
+    } else {
+      prevCountRef.current = null;
+    }
+  }, [txLoading, txData]);
+
+  const handleLoadMore = () => {
+    prevCountRef.current = transactions.length;
+    setMonthsBack((m) => m + 1);
+  };
+
   const [deleteTransaction] = useDeleteTransactionMutation({
     fixedCacheKey: "delete-transaction",
   });
@@ -107,7 +126,7 @@ const AccountPage = () => {
               transactions={transactions.filter((t) => t.status === "posted")}
               currency={account.currency}
               onTransactionClick={setSelectedTransaction}
-              onLoadMore={() => setMonthsBack((m) => m + 1)}
+              onLoadMore={hasMore ? handleLoadMore : undefined}
             />
           )}
         </HudPanel>

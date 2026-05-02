@@ -39,8 +39,11 @@ export const get: RequestHandler = asyncHandler(async (req, res) => {
   };
   if (query.accountId) filter.account = query.accountId;
 
-  const transactions = await TransactionModel.find(filter);
-  ok(res, transactions);
+  const [transactions, hasMore] = await Promise.all([
+    TransactionModel.find(filter),
+    TransactionModel.exists({ ...filter, date: { $lt: from } }),
+  ]);
+  ok(res, { transactions, hasMore: !!hasMore });
 });
 
 export const create: RequestHandler = asyncHandler(async (req, res) => {
@@ -81,14 +84,11 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   const newDate = result.data.date ?? transaction.date;
   const newStatus = newDate > endOfDay(new Date()) ? "scheduled" : "posted";
 
-  const oldContribution =
-    transaction.status === "posted"
-      ? transaction.type === "income" ? transaction.amount : -transaction.amount
-      : 0;
-  const newContribution =
-    newStatus === "posted"
-      ? result.data.type === "income" ? result.data.amount : -result.data.amount
-      : 0;
+  const oldSign = transaction.type === "income" ? transaction.amount : -transaction.amount;
+  const oldContribution = transaction.status === "posted" ? oldSign : 0;
+
+  const newSign = result.data.type === "income" ? result.data.amount : -result.data.amount;
+  const newContribution = newStatus === "posted" ? newSign : 0;
   const delta = newContribution - oldContribution;
 
   Object.assign(transaction, result.data, { status: newStatus });

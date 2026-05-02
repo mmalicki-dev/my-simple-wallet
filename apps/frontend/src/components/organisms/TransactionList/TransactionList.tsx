@@ -16,7 +16,6 @@ interface TransactionListProps {
   currency: Currency;
   isLoading?: boolean;
   onTransactionClick?: (transaction: Transaction) => void;
-  onAddClick?: () => void;
   onLoadMore?: () => void;
 }
 
@@ -48,7 +47,6 @@ const TransactionList = ({
   currency,
   isLoading,
   onTransactionClick,
-  onAddClick,
   onLoadMore,
 }: TransactionListProps) => {
   const [, { isLoading: isCreating, isError: isCreateError, isSuccess: isCreateSuccess }] =
@@ -74,9 +72,6 @@ const TransactionList = ({
   if (transactions.length === 0)
     return (
       <>
-        <button className={styles.add} onClick={onAddClick}>
-          <Icon name="add-circle" />
-        </button>
         <p className={styles.empty}>
           No transactions yet in{" "}
           {new Date()
@@ -97,11 +92,6 @@ const TransactionList = ({
       {isMutating && <SkeletonLoader />}
       {hasError && <p className={styles.mutationError}>Something went wrong. Please try again.</p>}
       {showSuccess && <p className={styles.mutationSuccess}>Saved!</p>}
-      {onAddClick && (
-        <button className={styles.add} onClick={onAddClick}>
-          <Icon name="add-circle" />
-        </button>
-      )}
       {groups.map(([month, items]) => (
         <section key={month}>
           <h3 className={styles.monthLabel}>{month}</h3>
