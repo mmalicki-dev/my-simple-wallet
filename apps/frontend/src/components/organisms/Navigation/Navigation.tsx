@@ -4,6 +4,7 @@ import Logo from "@/components/atoms/Logo/Logo";
 import NavItem from "@/components/molecules/NavItem/NavItem";
 import { useLanguage } from "@/hooks";
 import { logout } from "@/redux/slices/authSlice";
+import { api } from "@/redux/api";
 import { useLogoutMutation } from "@/services/authApi";
 import styles from "./Navigation.module.css";
 
@@ -19,6 +20,7 @@ const Navigation = () => {
       .unwrap()
       .catch(() => {});
     dispatch(logout());
+    dispatch(api.util.resetApiState());
     navigate(`/${language}/auth/login`, { replace: true });
   };
 

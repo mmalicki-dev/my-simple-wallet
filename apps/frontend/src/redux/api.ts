@@ -28,13 +28,13 @@ const baseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
-> = async (args, api, extra) => {
-  let result = unwrap(await rawBaseQuery(args, api, extra));
+> = async (args, queryApi, extra) => {
+  let result = unwrap(await rawBaseQuery(args, queryApi, extra));
 
   if (result.error?.status === 401) {
     const refreshResult = await rawBaseQuery(
       { url: "/auth/refresh", method: "POST" },
-      api,
+      queryApi,
       extra,
     );
 
@@ -42,11 +42,12 @@ const baseQuery: BaseQueryFn<
       const { accessToken } = (
         refreshResult.data as { data: { accessToken: string } }
       ).data;
-      const user = (api.getState() as RootState).auth.user!;
-      api.dispatch(setCredentials({ user, accessToken }));
-      result = unwrap(await rawBaseQuery(args, api, extra));
+      const user = (queryApi.getState() as RootState).auth.user!;
+      queryApi.dispatch(setCredentials({ user, accessToken }));
+      result = unwrap(await rawBaseQuery(args, queryApi, extra));
     } else {
-      api.dispatch(logout());
+      queryApi.dispatch(logout());
+      queryApi.dispatch(api.util.resetApiState());
     }
   }
 
