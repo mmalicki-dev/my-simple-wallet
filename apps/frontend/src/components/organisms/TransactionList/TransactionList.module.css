@@ -39,3 +39,17 @@
   color: var(--color-neon);
   transition: all 0.5s ease;
 }
+
+.mutationError {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+  margin: 0;
+  padding: 0.4rem 0;
+}
+
+.mutationSuccess {
+  font-size: 0.8rem;
+  color: var(--color-success);
+  margin: 0;
+  padding: 0.4rem 0;
+}

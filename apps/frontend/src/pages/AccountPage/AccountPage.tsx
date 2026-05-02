@@ -26,7 +26,9 @@ const AccountPage = () => {
     useGetAccountsQuery();
   const { data: transactions = [], isLoading: txLoading } =
     useGetTransactionsQuery({ accountId: id });
-  const [deleteTransaction] = useDeleteTransactionMutation();
+  const [deleteTransaction] = useDeleteTransactionMutation({
+    fixedCacheKey: "delete-transaction",
+  });
 
   const account = accounts.find((a) => a._id === id) ?? accounts[0];
   const isLoading = accountsLoading || txLoading;
