@@ -41,8 +41,11 @@ const AccountPage = () => {
 
   const { data: accounts = [], isLoading: accountsLoading } =
     useGetAccountsQuery();
-  const { data: txData, isLoading: txLoading, isFetching: txFetching } =
-    useGetTransactionsQuery({ accountId: id, from, to });
+  const {
+    data: txData,
+    isLoading: txLoading,
+    isFetching: txFetching,
+  } = useGetTransactionsQuery({ accountId: id, from, to });
   const transactions = txData?.transactions ?? [];
   const hasMore = txData?.hasMore ?? true;
   const isLoadingMore = txFetching && !txLoading;
@@ -133,20 +136,22 @@ const AccountPage = () => {
             </>
           )}
         </div>
+        {!isLoading && transactions.some((t) => t.status === "scheduled") && (
+          <HudPanel>
+            <PanelLabel label="Scheduled" />
+            <TransactionList
+              transactions={transactions.filter(
+                (t) => t.status === "scheduled",
+              )}
+              currency={account.currency}
+              onTransactionClick={setSelectedTransaction}
+            />
+          </HudPanel>
+        )}
         <HudPanel>
+          <PanelLabel label="Posted" />
           {isLoading && <SkeletonLoader />}
-          {!isLoading && transactions.some((t) => t.status === "scheduled") && (
-            <HudPanel>
-              <PanelLabel label="Scheduled" />
-              <TransactionList
-                transactions={transactions.filter(
-                  (t) => t.status === "scheduled",
-                )}
-                currency={account.currency}
-                onTransactionClick={setSelectedTransaction}
-              />
-            </HudPanel>
-          )}
+
           {!isLoading && (
             <TransactionList
               transactions={transactions.filter((t) => t.status === "posted")}
