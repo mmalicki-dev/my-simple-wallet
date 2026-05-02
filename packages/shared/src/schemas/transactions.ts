@@ -6,7 +6,7 @@ export const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
   category: z.string(),
   description: z.string().optional(),
-  date: z.date().optional(),
+  date: z.coerce.date().optional(),
 });
 
 export type TransactionBody = z.infer<typeof transactionSchema>;
