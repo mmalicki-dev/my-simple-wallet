@@ -53,13 +53,9 @@ const TransactionSchema = new Schema<ITransaction>(
 );
 
 TransactionSchema.pre("save", async function (next) {
-  if (!this.isNew && !this.isModified("amount") && !this.isModified("type"))
-    return next();
+  if (!this.isNew) return next();
 
   const Account = mongoose.model("Account");
-  const account = await Account.findById(this.account);
-  if (!account) return next();
-
   const delta = this.type === "income" ? this.amount : -this.amount;
   await Account.findByIdAndUpdate(this.account, { $inc: { balance: delta } });
 

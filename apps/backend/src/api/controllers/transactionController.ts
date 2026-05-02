@@ -63,21 +63,29 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(transactionSchema, req.body);
   if (!result.success) throw new AppError(result.error, 400);
 
-  const [category, account] = await Promise.all([
+  const [category, account, transaction] = await Promise.all([
     CategoryModel.findOne({ _id: result.data.category, user: req.user!._id }),
     AccountModel.findOne({ _id: result.data.account, user: req.user!._id }),
+    TransactionModel.findOne({ _id: req.params.id, user: req.user!._id }),
   ]);
   if (!category) throw new AppError("Category not found", 404);
   if (!account) throw new AppError("Account not found", 404);
-
-  const transaction = await TransactionModel.findOne({
-    _id: req.params.id,
-    user: req.user!._id,
-  });
   if (!transaction) throw new AppError("Transaction not found", 404);
+
+  const oldContribution =
+    transaction.type === "income" ? transaction.amount : -transaction.amount;
+  const newContribution =
+    result.data.type === "income" ? result.data.amount : -result.data.amount;
+  const delta = newContribution - oldContribution;
 
   Object.assign(transaction, result.data);
   await transaction.save();
+
+  if (delta !== 0) {
+    await AccountModel.findByIdAndUpdate(transaction.account, {
+      $inc: { balance: delta },
+    });
+  }
 
   ok(res, transaction);
 });
