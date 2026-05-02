@@ -15,6 +15,7 @@ interface TransactionListProps {
   transactions: Transaction[];
   currency: Currency;
   isLoading?: boolean;
+  isLoadingMore?: boolean;
   onTransactionClick?: (transaction: Transaction) => void;
   onLoadMore?: () => void;
 }
@@ -46,15 +47,34 @@ const TransactionList = ({
   transactions,
   currency,
   isLoading,
+  isLoadingMore,
   onTransactionClick,
   onLoadMore,
 }: TransactionListProps) => {
-  const [, { isLoading: isCreating, isError: isCreateError, isSuccess: isCreateSuccess }] =
-    useCreateTransactionMutation({ fixedCacheKey: "create-transaction" });
-  const [, { isLoading: isUpdating, isError: isUpdateError, isSuccess: isUpdateSuccess }] =
-    useUpdateTransactionMutation({ fixedCacheKey: "update-transaction" });
-  const [, { isLoading: isDeleting, isError: isDeleteError, isSuccess: isDeleteSuccess }] =
-    useDeleteTransactionMutation({ fixedCacheKey: "delete-transaction" });
+  const [
+    ,
+    {
+      isLoading: isCreating,
+      isError: isCreateError,
+      isSuccess: isCreateSuccess,
+    },
+  ] = useCreateTransactionMutation({ fixedCacheKey: "create-transaction" });
+  const [
+    ,
+    {
+      isLoading: isUpdating,
+      isError: isUpdateError,
+      isSuccess: isUpdateSuccess,
+    },
+  ] = useUpdateTransactionMutation({ fixedCacheKey: "update-transaction" });
+  const [
+    ,
+    {
+      isLoading: isDeleting,
+      isError: isDeleteError,
+      isSuccess: isDeleteSuccess,
+    },
+  ] = useDeleteTransactionMutation({ fixedCacheKey: "delete-transaction" });
 
   const isMutating = isCreating || isUpdating || isDeleting;
   const hasError = isCreateError || isUpdateError || isDeleteError;
@@ -79,9 +99,13 @@ const TransactionList = ({
             .toLocaleUpperCase()}
           .
         </p>
-        <button className={styles.add} onClick={onLoadMore}>
-          <Icon name="arrow-down" />
-        </button>
+        {isLoadingMore ? (
+          <SkeletonLoader />
+        ) : (
+          <button className={styles.add} onClick={onLoadMore}>
+            <Icon name="arrow-down" />
+          </button>
+        )}
       </>
     );
 
@@ -90,7 +114,11 @@ const TransactionList = ({
   return (
     <div className={styles.wrapper}>
       {isMutating && <SkeletonLoader />}
-      {hasError && <p className={styles.mutationError}>Something went wrong. Please try again.</p>}
+      {hasError && (
+        <p className={styles.mutationError}>
+          Something went wrong. Please try again.
+        </p>
+      )}
       {showSuccess && <p className={styles.mutationSuccess}>Saved!</p>}
       {groups.map(([month, items]) => (
         <section key={month}>
@@ -110,9 +138,13 @@ const TransactionList = ({
         </section>
       ))}
       {onLoadMore && (
-        <button className={styles.add} onClick={onLoadMore}>
-          <Icon name="arrow-down" />
-        </button>
+        isLoadingMore ? (
+          <SkeletonLoader />
+        ) : (
+          <button className={styles.add} onClick={onLoadMore}>
+            <Icon name="arrow-down" />
+          </button>
+        )
       )}
     </div>
   );

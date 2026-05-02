@@ -27,16 +27,25 @@ const AccountPage = () => {
   const from = new Date(today.getFullYear(), today.getMonth() - monthsBack, 1)
     .toISOString()
     .slice(0, 10);
-  const to = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+  const to = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0,
+    23,
+    59,
+    59,
+    999,
+  )
     .toISOString()
     .slice(0, 10);
 
   const { data: accounts = [], isLoading: accountsLoading } =
     useGetAccountsQuery();
-  const { data: txData, isLoading: txLoading } =
+  const { data: txData, isLoading: txLoading, isFetching: txFetching } =
     useGetTransactionsQuery({ accountId: id, from, to });
   const transactions = txData?.transactions ?? [];
   const hasMore = txData?.hasMore ?? true;
+  const isLoadingMore = txFetching && !txLoading;
 
   const prevCountRef = useRef<number | null>(null);
   useEffect(() => {
@@ -114,32 +123,40 @@ const AccountPage = () => {
                 >
                   {account.balance.toLocaleString()} {account.currency}
                 </span>
-                <button className={styles.addBtn} onClick={() => setIsCreating(true)}>+</button>
+                <button
+                  className={styles.addBtn}
+                  onClick={() => setIsCreating(true)}
+                >
+                  +
+                </button>
               </div>
             </>
           )}
         </div>
         <HudPanel>
           {isLoading && <SkeletonLoader />}
+          {!isLoading && transactions.some((t) => t.status === "scheduled") && (
+            <HudPanel>
+              <PanelLabel label="Scheduled" />
+              <TransactionList
+                transactions={transactions.filter(
+                  (t) => t.status === "scheduled",
+                )}
+                currency={account.currency}
+                onTransactionClick={setSelectedTransaction}
+              />
+            </HudPanel>
+          )}
           {!isLoading && (
             <TransactionList
               transactions={transactions.filter((t) => t.status === "posted")}
               currency={account.currency}
               onTransactionClick={setSelectedTransaction}
               onLoadMore={hasMore ? handleLoadMore : undefined}
+              isLoadingMore={isLoadingMore}
             />
           )}
         </HudPanel>
-        {!isLoading && transactions.some((t) => t.status === "scheduled") && (
-          <HudPanel>
-            <PanelLabel label="Scheduled" />
-            <TransactionList
-              transactions={transactions.filter((t) => t.status === "scheduled")}
-              currency={account.currency}
-              onTransactionClick={setSelectedTransaction}
-            />
-          </HudPanel>
-        )}
       </div>
     </>
   );
