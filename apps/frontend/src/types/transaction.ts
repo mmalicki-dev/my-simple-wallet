@@ -1,10 +1,11 @@
-import { TransactionType } from "shared";
+import { TransactionType, TransactionStatus } from "shared";
 
 export interface Transaction {
   _id: string;
   account: string;
   amount: number;
   type: TransactionType;
+  status: TransactionStatus;
   category: string;
   description?: string;
   date: string;

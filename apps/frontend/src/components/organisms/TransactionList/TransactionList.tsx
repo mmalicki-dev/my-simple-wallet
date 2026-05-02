@@ -1,7 +1,13 @@
+import { useEffect, useState } from "react";
 import type { Transaction } from "@/types";
 import type { Currency } from "shared";
 import TransactionItem from "@/components/molecules/TransactionItem/TransactionItem";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
+import {
+  useCreateTransactionMutation,
+  useUpdateTransactionMutation,
+  useDeleteTransactionMutation,
+} from "@/services/transactionApi";
 import styles from "./TransactionList.module.css";
 import Icon from "@/components/atoms/Icon/Icon";
 
@@ -9,8 +15,8 @@ interface TransactionListProps {
   transactions: Transaction[];
   currency: Currency;
   isLoading?: boolean;
+  isLoadingMore?: boolean;
   onTransactionClick?: (transaction: Transaction) => void;
-  onAddClick?: () => void;
   onLoadMore?: () => void;
 }
 
@@ -41,17 +47,51 @@ const TransactionList = ({
   transactions,
   currency,
   isLoading,
+  isLoadingMore,
   onTransactionClick,
-  onAddClick,
   onLoadMore,
 }: TransactionListProps) => {
+  const [
+    ,
+    {
+      isLoading: isCreating,
+      isError: isCreateError,
+      isSuccess: isCreateSuccess,
+    },
+  ] = useCreateTransactionMutation({ fixedCacheKey: "create-transaction" });
+  const [
+    ,
+    {
+      isLoading: isUpdating,
+      isError: isUpdateError,
+      isSuccess: isUpdateSuccess,
+    },
+  ] = useUpdateTransactionMutation({ fixedCacheKey: "update-transaction" });
+  const [
+    ,
+    {
+      isLoading: isDeleting,
+      isError: isDeleteError,
+      isSuccess: isDeleteSuccess,
+    },
+  ] = useDeleteTransactionMutation({ fixedCacheKey: "delete-transaction" });
+
+  const isMutating = isCreating || isUpdating || isDeleting;
+  const hasError = isCreateError || isUpdateError || isDeleteError;
+  const isSuccess = isCreateSuccess || isUpdateSuccess || isDeleteSuccess;
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  useEffect(() => {
+    if (!isSuccess) return;
+    setShowSuccess(true);
+    const t = setTimeout(() => setShowSuccess(false), 1500);
+    return () => clearTimeout(t);
+  }, [isSuccess]);
+
   if (isLoading) return <SkeletonLoader count={5} />;
   if (transactions.length === 0)
     return (
       <>
-        <button className={styles.add} onClick={onAddClick}>
-          <Icon name="add-circle" />
-        </button>
         <p className={styles.empty}>
           No transactions yet in{" "}
           {new Date()
@@ -59,9 +99,13 @@ const TransactionList = ({
             .toLocaleUpperCase()}
           .
         </p>
-        <button className={styles.add} onClick={onLoadMore}>
-          <Icon name="arrow-down" />
-        </button>
+        {isLoadingMore ? (
+          <SkeletonLoader />
+        ) : (
+          <button className={styles.add} onClick={onLoadMore}>
+            <Icon name="arrow-down" />
+          </button>
+        )}
       </>
     );
 
@@ -69,11 +113,13 @@ const TransactionList = ({
 
   return (
     <div className={styles.wrapper}>
-      {onAddClick && (
-        <button className={styles.add} onClick={onAddClick}>
-          <Icon name="add-circle" />
-        </button>
+      {isMutating && <SkeletonLoader />}
+      {hasError && (
+        <p className={styles.mutationError}>
+          Something went wrong. Please try again.
+        </p>
       )}
+      {showSuccess && <p className={styles.mutationSuccess}>Saved!</p>}
       {groups.map(([month, items]) => (
         <section key={month}>
           <h3 className={styles.monthLabel}>{month}</h3>
@@ -92,9 +138,13 @@ const TransactionList = ({
         </section>
       ))}
       {onLoadMore && (
-        <button className={styles.add} onClick={onLoadMore}>
-          <Icon name="arrow-down" />
-        </button>
+        isLoadingMore ? (
+          <SkeletonLoader />
+        ) : (
+          <button className={styles.add} onClick={onLoadMore}>
+            <Icon name="arrow-down" />
+          </button>
+        )
       )}
     </div>
   );

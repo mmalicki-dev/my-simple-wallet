@@ -14,6 +14,8 @@ import {
 import { validate } from "../validators/authValidator.js";
 import { transactionSchema } from "../../../../../packages/shared/dist/index.js";
 
+const endOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+
 export const get: RequestHandler = asyncHandler(async (req, res) => {
   let from: Date;
   let to: Date;
@@ -37,8 +39,11 @@ export const get: RequestHandler = asyncHandler(async (req, res) => {
   };
   if (query.accountId) filter.account = query.accountId;
 
-  const transactions = await TransactionModel.find(filter);
-  ok(res, transactions);
+  const [transactions, hasMore] = await Promise.all([
+    TransactionModel.find(filter),
+    TransactionModel.exists({ ...filter, date: { $lt: from } }),
+  ]);
+  ok(res, { transactions, hasMore: !!hasMore });
 });
 
 export const create: RequestHandler = asyncHandler(async (req, res) => {
@@ -52,9 +57,13 @@ export const create: RequestHandler = asyncHandler(async (req, res) => {
   if (!category) throw new AppError("Category not found", 404);
   if (!account) throw new AppError("Account not found", 404);
 
+  const transactionDate = result.data.date ?? new Date();
+  const status = transactionDate > endOfDay(new Date()) ? "scheduled" : "posted";
+
   const transaction = await TransactionModel.create({
     ...result.data,
     user: req.user!._id,
+    status,
   });
   created(res, transaction);
 });
@@ -72,13 +81,17 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   if (!account) throw new AppError("Account not found", 404);
   if (!transaction) throw new AppError("Transaction not found", 404);
 
-  const oldContribution =
-    transaction.type === "income" ? transaction.amount : -transaction.amount;
-  const newContribution =
-    result.data.type === "income" ? result.data.amount : -result.data.amount;
+  const newDate = result.data.date ?? transaction.date;
+  const newStatus = newDate > endOfDay(new Date()) ? "scheduled" : "posted";
+
+  const oldSign = transaction.type === "income" ? transaction.amount : -transaction.amount;
+  const oldContribution = transaction.status === "posted" ? oldSign : 0;
+
+  const newSign = result.data.type === "income" ? result.data.amount : -result.data.amount;
+  const newContribution = newStatus === "posted" ? newSign : 0;
   const delta = newContribution - oldContribution;
 
-  Object.assign(transaction, result.data);
+  Object.assign(transaction, result.data, { status: newStatus });
   await transaction.save();
 
   if (delta !== 0) {
@@ -97,11 +110,13 @@ export const remove: RequestHandler = asyncHandler(async (req, res) => {
   });
   if (!transaction) throw new AppError("Transaction not found", 404);
 
-  const delta =
-    transaction.type === "income" ? -transaction.amount : transaction.amount;
-  await AccountModel.findByIdAndUpdate(transaction.account, {
-    $inc: { balance: delta },
-  });
+  if (transaction.status === "posted") {
+    const delta =
+      transaction.type === "income" ? -transaction.amount : transaction.amount;
+    await AccountModel.findByIdAndUpdate(transaction.account, {
+      $inc: { balance: delta },
+    });
+  }
 
   deleted(res, "Transaction deleted");
 });
