@@ -82,16 +82,10 @@ pnpm --filter backend dev
 ### Environment Variables
 
 **Backend (.env):**
-```
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/wallet
-JWT_SECRET=your_jwt_secret
-```
+[apps/backend/.env.example](apps/backend/.env.example)
 
 **Frontend (.env):**
-```
-VITE_API_URL=http://localhost:3000
-```
+[apps/frontend/.env.example](apps/frontend/.env.example)
 
 ## Project Structure
 
