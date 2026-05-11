@@ -4,7 +4,10 @@ import type { Transaction } from "@/types";
 import FormActions from "@/components/molecules/FormActions/FormActions";
 import Input from "@/components/atoms/Input/Input";
 import SelectOption from "@/components/atoms/SelectOption/SelectOption";
-import { useCreateTransactionMutation, useUpdateTransactionMutation } from "@/services/transactionApi";
+import {
+  useCreateTransactionMutation,
+  useUpdateTransactionMutation,
+} from "@/services/transactionApi";
 import { useGetCategoriesQuery } from "@/services/categoryApi";
 import styles from "./EditTransactionForm.module.css";
 
@@ -24,14 +27,22 @@ const EditTransactionForm = ({
   const today = new Date().toISOString().slice(0, 10);
   const { data: categories = [] } = useGetCategoriesQuery();
 
-  const [type, setType] = useState<TransactionType>(transaction?.type ?? "expense");
+  const [type, setType] = useState<TransactionType>(
+    transaction?.type ?? "expense",
+  );
   const [amount, setAmount] = useState(String(transaction?.amount ?? ""));
   const [category, setCategory] = useState(transaction?.category ?? "");
-  const [description, setDescription] = useState(transaction?.description ?? "");
+  const [description, setDescription] = useState(
+    transaction?.description ?? "",
+  );
   const [date, setDate] = useState(transaction?.date.slice(0, 10) ?? today);
 
-  const [createTransaction] = useCreateTransactionMutation();
-  const [updateTransaction] = useUpdateTransactionMutation();
+  const [createTransaction] = useCreateTransactionMutation({
+    fixedCacheKey: "create-transaction",
+  });
+  const [updateTransaction] = useUpdateTransactionMutation({
+    fixedCacheKey: "update-transaction",
+  });
 
   const categoryOptions = categories
     .filter((c) => c.type === type)
@@ -54,12 +65,19 @@ const EditTransactionForm = ({
       description: description || undefined,
       date,
     };
-    if (transaction) {
-      await updateTransaction({ id: transaction._id, body: { ...body, account: transaction.account } });
-    } else {
-      await createTransaction({ ...body, account: accountId! });
+    try {
+      if (transaction) {
+        await updateTransaction({
+          id: transaction._id,
+          body: { ...body, account: transaction.account },
+        }).unwrap();
+      } else {
+        await createTransaction({ ...body, account: accountId! }).unwrap();
+      }
+      onClose();
+    } catch {
+      // error visible via fixedCacheKey in TransactionList
     }
-    onClose();
   };
 
   return (
@@ -67,14 +85,20 @@ const EditTransactionForm = ({
       <div className={styles.typeToggle}>
         <button
           type="button"
-          className={[styles.typeBtn, type === "income" ? styles.income : ""].join(" ")}
+          className={[
+            styles.typeBtn,
+            type === "income" ? styles.income : "",
+          ].join(" ")}
           onClick={() => handleTypeChange("income")}
         >
           Income
         </button>
         <button
           type="button"
-          className={[styles.typeBtn, type === "expense" ? styles.expense : ""].join(" ")}
+          className={[
+            styles.typeBtn,
+            type === "expense" ? styles.expense : "",
+          ].join(" ")}
           onClick={() => handleTypeChange("expense")}
         >
           Expense

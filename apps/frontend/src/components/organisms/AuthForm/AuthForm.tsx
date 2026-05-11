@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useTranslations } from "@/i18n";
 import Input from "@/components/atoms/Input/Input";
@@ -27,6 +27,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const [name, setName] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [registered, setRegistered] = useState(false);
 
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
@@ -42,12 +43,22 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         navigate(`/${lang}/home`, { replace: true });
       } else {
         await register({ email, password, name }).unwrap();
-        navigate(`/${lang}/auth/login`);
+        setRegistered(true);
       }
     } catch {
       setServerError(mode === "login" ? auth.loginError : auth.registerError);
     }
   };
+
+  if (registered) {
+    return (
+      <div className={styles.success}>
+        <p className={styles.successTitle}>{auth.checkEmailTitle}</p>
+        <p className={styles.successMessage}>{auth.checkEmailMessage}</p>
+        <Link to={`/${lang}/auth/login`} className={styles.successLink}>{auth.goToSignIn}</Link>
+      </div>
+    );
+  }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>

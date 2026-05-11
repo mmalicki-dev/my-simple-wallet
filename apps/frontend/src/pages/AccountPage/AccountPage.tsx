@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import type { Transaction } from "@/types";
@@ -7,6 +7,7 @@ import BackButton from "@/components/molecules/BackButton/BackButton";
 import Modal from "@/components/templates/Modal/Modal";
 import EditTransactionForm from "@/components/organisms/EditTransactionForm/EditTransactionForm";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
+import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import {
   useGetTransactionsQuery,
@@ -20,32 +21,57 @@ const AccountPage = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [loadMoreCount, setLoadMoreCount] = useState(0);
+  const [monthsBack, setMonthsBack] = useState(0);
+
+  const today = new Date();
+  const from = new Date(today.getFullYear(), today.getMonth() - monthsBack, 1)
+    .toISOString()
+    .slice(0, 10);
+  const to = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0,
+    23,
+    59,
+    59,
+    999,
+  )
+    .toISOString()
+    .slice(0, 10);
 
   const { data: accounts = [], isLoading: accountsLoading } =
     useGetAccountsQuery();
-  const { data: transactions = [], isLoading: txLoading } =
-    useGetTransactionsQuery({ accountId: id });
-  const [deleteTransaction] = useDeleteTransactionMutation();
+  const {
+    data: txData,
+    isLoading: txLoading,
+    isFetching: txFetching,
+  } = useGetTransactionsQuery({ accountId: id, from, to });
+  const transactions = txData?.transactions ?? [];
+  const hasMore = txData?.hasMore ?? true;
+  const isLoadingMore = txFetching && !txLoading;
+
+  const prevCountRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (txLoading || prevCountRef.current === null) return;
+    if (transactions.length === prevCountRef.current && hasMore) {
+      prevCountRef.current = transactions.length;
+      setMonthsBack((m) => m + 1);
+    } else {
+      prevCountRef.current = null;
+    }
+  }, [txLoading, txData]);
+
+  const handleLoadMore = () => {
+    prevCountRef.current = transactions.length;
+    setMonthsBack((m) => m + 1);
+  };
+
+  const [deleteTransaction] = useDeleteTransactionMutation({
+    fixedCacheKey: "delete-transaction",
+  });
 
   const account = accounts.find((a) => a._id === id) ?? accounts[0];
   const isLoading = accountsLoading || txLoading;
-
-  function useHandleLoadMore() {
-    const today = new Date();
-    const from = new Date(
-      today.getFullYear(),
-      today.getMonth() - (loadMoreCount + 1),
-      1,
-    );
-    const to = today.toISOString().slice(0, 10);
-    useGetTransactionsQuery({
-      accountId: id,
-      from: from.toISOString().slice(0, 10),
-      to,
-    });
-    setLoadMoreCount((c) => c + 1);
-  }
 
   if (!account) return <span>Something went wrong</span>;
 
@@ -91,26 +117,48 @@ const AccountPage = () => {
           {!isLoading && (
             <>
               <h1 className={styles.name}>{account.name}</h1>
-              <span
-                className={[
-                  styles.balance,
-                  account.balance > 0 ? styles.over : styles.under,
-                ].join(" ")}
-              >
-                {account.balance.toLocaleString()} {account.currency}
-              </span>
+              <div className={styles.headerRight}>
+                <span
+                  className={[
+                    styles.balance,
+                    account.balance > 0 ? styles.over : styles.under,
+                  ].join(" ")}
+                >
+                  {account.balance.toLocaleString()} {account.currency}
+                </span>
+                <button
+                  className={styles.addBtn}
+                  onClick={() => setIsCreating(true)}
+                >
+                  +
+                </button>
+              </div>
             </>
           )}
         </div>
-        <HudPanel>
-          {isLoading && <SkeletonLoader />}
-          {!isLoading && (
+        {!isLoading && transactions.some((t) => t.status === "scheduled") && (
+          <HudPanel>
+            <PanelLabel label="Scheduled" />
             <TransactionList
-              transactions={transactions}
+              transactions={transactions.filter(
+                (t) => t.status === "scheduled",
+              )}
               currency={account.currency}
               onTransactionClick={setSelectedTransaction}
-              onAddClick={() => setIsCreating(true)}
-              onLoadMore={() => useHandleLoadMore}
+            />
+          </HudPanel>
+        )}
+        <HudPanel>
+          <PanelLabel label="Posted" />
+          {isLoading && <SkeletonLoader />}
+
+          {!isLoading && (
+            <TransactionList
+              transactions={transactions.filter((t) => t.status === "posted")}
+              currency={account.currency}
+              onTransactionClick={setSelectedTransaction}
+              onLoadMore={hasMore ? handleLoadMore : undefined}
+              isLoadingMore={isLoadingMore}
             />
           )}
         </HudPanel>
