@@ -1,14 +1,21 @@
+import type { ReactNode } from "react";
 import styles from "./PanelLabel.module.css";
 
 interface PanelLabelProps {
-  label: string;
+  label?: string;
+  side?: "left" | "right";
   className?: string;
+  children?: ReactNode;
 }
 
-const PanelLabel = ({ label, className }: PanelLabelProps) => {
+const PanelLabel = ({ label, side = "left", className, children }: PanelLabelProps) => {
   return (
-    <span className={[styles.label, className].filter(Boolean).join(" ")}>
-      {label}
+    <span
+      className={[styles.label, side === "right" ? styles.right : undefined, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {children ?? label}
     </span>
   );
 };

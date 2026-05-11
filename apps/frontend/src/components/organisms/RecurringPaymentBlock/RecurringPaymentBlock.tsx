@@ -1,14 +1,20 @@
-import { useState } from "react";
-import type { RecurringPayment, RecurringPaymentType } from "@/types";
+import { useSelector } from "react-redux";
+import type { BillingCycle, RecurringPayment, RecurringPaymentType } from "@/types";
 import { useGetAccountsQuery } from "@/services/accountApi";
-import RecurringPaymentItem from "@/components/molecules/RecurringPaymentItem/RecurringPaymentItem";
-import styles from "./RecurringPaymentBlock.module.css";
-import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import { useGetExchangeRatesQuery } from "@/services/exchangeRateApi";
 import { useGetRecurringPaymentsQuery } from "@/services";
-import Icon from "@/components/atoms/Icon/Icon";
+import type { RootState } from "@/redux/store";
+import RecurringPaymentItem from "@/components/molecules/RecurringPaymentItem/RecurringPaymentItem";
+import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import Amount from "@/components/atoms/Amount/Amount";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
+import styles from "./RecurringPaymentBlock.module.css";
 
-const PREVIEW_COUNT = 2;
+const MONTHLY_FACTOR: Record<BillingCycle, number> = {
+  weekly: 52 / 12,
+  monthly: 1,
+  yearly: 1 / 12,
+};
 
 interface RecurringPaymentBlockProps {
   type: RecurringPaymentType;
@@ -27,52 +33,52 @@ const RecurringPaymentBlock = ({
   onItemClick,
 }: RecurringPaymentBlockProps) => {
   const { isLoading: paymentsLoading } = useGetRecurringPaymentsQuery();
-  const { data: accounts = [], isLoading: accountsLoading } =
-    useGetAccountsQuery();
-  const [expanded, setExpanded] = useState(false);
+  const { data: accounts = [], isLoading: accountsLoading } = useGetAccountsQuery();
+  const baseCurrency = useSelector((state: RootState) => state.auth.user?.totalBalanceCurrency);
+
+  const active = payments.filter((p) => p.isActive);
+  const activeCurrencies = [
+    ...new Set(active.map((p) => accounts.find((a) => a._id === p.account)?.currency ?? "USD")),
+  ];
+  const allSameCurrency =
+    activeCurrencies.length === 1 && activeCurrencies[0] === baseCurrency;
+
+  const { data: ratesData, isLoading: ratesLoading } = useGetExchangeRatesQuery(
+    baseCurrency ?? "USD",
+    { skip: !baseCurrency || allSameCurrency || active.length === 0 }
+  );
 
   if (paymentsLoading || accountsLoading) return <SkeletonLoader count={2} />;
 
-  const hasMore = payments.length > PREVIEW_COUNT;
-  const preview = payments.slice(0, PREVIEW_COUNT);
-  const extra = payments.slice(PREVIEW_COUNT);
+  const displayCurrency = baseCurrency ?? activeCurrencies[0] ?? "USD";
 
-  const renderItem = (payment: RecurringPayment) => (
-    <RecurringPaymentItem
-      key={payment._id}
-      payment={payment}
-      currency={
-        accounts.find((a) => a._id === payment.account)?.currency ?? "USD"
-      }
-      onEdit={() => onItemClick(payment)}
-    />
-  );
+  const monthlyTotal = active.reduce((sum, p) => {
+    const monthly = p.amount * MONTHLY_FACTOR[p.billingCycle];
+    const currency = accounts.find((a) => a._id === p.account)?.currency ?? "USD";
+    if (currency === displayCurrency) return sum + monthly;
+    const rate = ratesData?.rates[currency];
+    return rate ? sum + monthly / rate : sum + monthly;
+  }, 0);
 
   return (
     <section className={styles.block}>
       <PanelLabel label={LABELS[type]} />
-      <ul className={styles.list}>{preview.map(renderItem)}</ul>
-      {hasMore && (
-        <div
-          className={styles.extraWrapper}
-          style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
-        >
-          <ul className={styles.extraList}>{extra.map(renderItem)}</ul>
-        </div>
+      {active.length > 0 && !ratesLoading && (
+        <PanelLabel side="right" className={styles.negative}>
+          <Amount value={-monthlyTotal} currency={displayCurrency} />
+          <span className={styles.period}>/mo</span>
+        </PanelLabel>
       )}
-      {hasMore && (
-        <button
-          type="button"
-          className={styles.expandButton}
-          onClick={() => setExpanded((prev) => !prev)}
-        >
-          {expanded ? (
-            <Icon name="arrow-down" className={styles.arrowUp} />
-          ) : (
-            <Icon name="arrow-down" className={styles.arrowDown} />
-          )}
-        </button>
-      )}
+      <ul className={styles.list}>
+        {payments.map((payment) => (
+          <RecurringPaymentItem
+            key={payment._id}
+            payment={payment}
+            currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
+            onEdit={() => onItemClick(payment)}
+          />
+        ))}
+      </ul>
     </section>
   );
 };
