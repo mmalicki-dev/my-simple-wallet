@@ -21,6 +21,7 @@ import styles from "./EditRecurringPaymentForm.module.css";
 
 interface EditRecurringPaymentFormProps {
   payment?: RecurringPayment;
+  defaultType?: RecurringPaymentType;
   onClose: () => void;
 }
 
@@ -32,13 +33,14 @@ const BILLING_CYCLE_OPTIONS: { value: BillingCycle; label: string }[] = [
 
 const EditRecurringPaymentForm = ({
   payment,
+  defaultType,
   onClose,
 }: EditRecurringPaymentFormProps) => {
   const { data: accounts = [] } = useGetAccountsQuery();
   const { data: categories = [] } = useGetCategoriesQuery();
 
   const [type, setType] = useState<RecurringPaymentType>(
-    payment?.type ?? "subscription",
+    payment?.type ?? defaultType ?? "subscription",
   );
   const [name, setName] = useState(payment?.name ?? "");
   const [amount, setAmount] = useState(String(payment?.amount ?? ""));

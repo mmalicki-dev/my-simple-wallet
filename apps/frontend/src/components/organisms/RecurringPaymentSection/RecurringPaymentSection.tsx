@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { RecurringPayment } from '@/types'
+import type { RecurringPayment, RecurringPaymentType } from '@/types'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
 import EditRecurringPaymentForm from '@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm'
@@ -10,7 +10,7 @@ import { useGetRecurringPaymentsQuery } from '@/services/recurringPaymentApi'
 const RecurringPaymentSection = () => {
   const { data: payments = [], isLoading } = useGetRecurringPaymentsQuery()
   const [selected, setSelected] = useState<RecurringPayment | null>(null)
-  const [isAdding, setIsAdding] = useState(false)
+  const [addingType, setAddingType] = useState<RecurringPaymentType | null>(null)
 
   if (isLoading) return <Spinner />
 
@@ -29,11 +29,11 @@ const RecurringPaymentSection = () => {
   return (
     <>
       <Modal
-        isOpen={isAdding}
-        onClose={() => setIsAdding(false)}
+        isOpen={!!addingType}
+        onClose={() => setAddingType(null)}
         title="New Recurring Payment"
       >
-        <EditRecurringPaymentForm onClose={() => setIsAdding(false)} />
+        <EditRecurringPaymentForm defaultType={addingType ?? "subscription"} onClose={() => setAddingType(null)} />
       </Modal>
       <Modal
         isOpen={!!selected}
@@ -44,10 +44,10 @@ const RecurringPaymentSection = () => {
           <EditRecurringPaymentForm payment={selected} onClose={() => setSelected(null)} />
         )}
       </Modal>
-      <UserSectionList title="Subscriptions" onAdd={() => setIsAdding(true)}>
+      <UserSectionList title="Subscriptions" onAdd={() => setAddingType("subscription")}>
         {subscriptions.map(renderItem)}
       </UserSectionList>
-      <UserSectionList title="Loans" onAdd={() => setIsAdding(true)}>
+      <UserSectionList title="Loans" onAdd={() => setAddingType("loan")}>
         {loans.map(renderItem)}
       </UserSectionList>
     </>
