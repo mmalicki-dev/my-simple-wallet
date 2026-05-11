@@ -13,6 +13,7 @@ import {
   useGetTransactionsQuery,
   useDeleteTransactionMutation,
 } from "@/services/transactionApi";
+import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
 import styles from "./AccountPage.module.css";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 
@@ -49,6 +50,32 @@ const AccountPage = () => {
   const transactions = txData?.transactions ?? [];
   const hasMore = txData?.hasMore ?? true;
   const isLoadingMore = txFetching && !txLoading;
+
+  const { data: recurringPayments = [] } = useGetRecurringPaymentsQuery();
+  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59);
+  const recurringScheduled: Transaction[] = recurringPayments
+    .filter((rp) => {
+      const due = new Date(rp.nextDueDate);
+      return rp.isActive && rp.account === id && due >= today && due <= monthEnd;
+    })
+    .map((rp) => ({
+      _id: rp._id,
+      account: rp.account,
+      category: rp.category,
+      amount: rp.amount,
+      type: "expense" as const,
+      status: "scheduled" as const,
+      description: rp.name,
+      date: rp.nextDueDate,
+      createdAt: rp.createdAt,
+      updatedAt: rp.updatedAt,
+    }));
+  const recurringIds = new Set(recurringScheduled.map((r) => r._id));
+
+  const scheduledTransactions = [
+    ...transactions.filter((t) => t.status === "scheduled"),
+    ...recurringScheduled,
+  ];
 
   const prevCountRef = useRef<number | null>(null);
   useEffect(() => {
@@ -136,15 +163,15 @@ const AccountPage = () => {
             </>
           )}
         </div>
-        {!isLoading && transactions.some((t) => t.status === "scheduled") && (
+        {!isLoading && scheduledTransactions.length > 0 && (
           <HudPanel>
             <PanelLabel label="Scheduled" />
             <TransactionList
-              transactions={transactions.filter(
-                (t) => t.status === "scheduled",
-              )}
+              transactions={scheduledTransactions}
               currency={account.currency}
-              onTransactionClick={setSelectedTransaction}
+              onTransactionClick={(t) => {
+                if (!recurringIds.has(t._id)) setSelectedTransaction(t);
+              }}
             />
           </HudPanel>
         )}
