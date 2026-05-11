@@ -1,0 +1,12 @@
+{
+  admin off
+}
+
+:{$PORT} {
+  handle /api/* {
+    reverse_proxy {$BACKEND_INTERNAL_URL}
+  }
+  handle {
+    reverse_proxy {$FRONTEND_INTERNAL_URL}
+  }
+}
