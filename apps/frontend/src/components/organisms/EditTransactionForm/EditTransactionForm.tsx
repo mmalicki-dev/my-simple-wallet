@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { TransactionType } from "shared";
 import type { Transaction } from "@/types";
+import CategoryPicker from "@/components/molecules/CategoryPicker/CategoryPicker";
 import FormActions from "@/components/molecules/FormActions/FormActions";
 import Input from "@/components/atoms/Input/Input";
-import SelectOption from "@/components/atoms/SelectOption/SelectOption";
 import {
   useCreateTransactionMutation,
   useUpdateTransactionMutation,
@@ -44,11 +44,9 @@ const EditTransactionForm = ({
     fixedCacheKey: "update-transaction",
   });
 
-  const categoryOptions = categories
-    .filter((c) => c.type === type)
-    .map((c) => ({ value: c._id, label: c.name }));
+  const filteredCategories = categories.filter((c) => c.type === type)
 
-  const effectiveCategory = category || categoryOptions[0]?.value || "";
+  const effectiveCategory = category || filteredCategories[0]?._id || "";
 
   const handleTypeChange = (next: TransactionType) => {
     setType(next);
@@ -112,10 +110,10 @@ const EditTransactionForm = ({
         inputMode="decimal"
         required
       />
-      <SelectOption
+      <CategoryPicker
+        categories={filteredCategories}
         value={effectiveCategory}
-        options={categoryOptions}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={setCategory}
       />
       <Input
         type="text"
