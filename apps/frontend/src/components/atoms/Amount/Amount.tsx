@@ -1,11 +1,12 @@
 import type { Currency } from "shared";
-import { useLanguage } from "@/hooks";
 import styles from "./Amount.module.css";
 
-const LOCALE_MAP: Record<string, string> = {
-  en: "en-GB",
-  pl: "pl-PL",
-  no: "nb-NO",
+const CURRENCY_LOCALE: Record<string, string> = {
+  NOK: "nb-NO",
+  PLN: "pl-PL",
+  EUR: "de-DE",
+  USD: "en-US",
+  GBP: "en-GB",
 };
 
 interface AmountProps {
@@ -21,13 +22,12 @@ const Amount = ({
   className,
   isApproximate = false,
 }: AmountProps) => {
-  const { language } = useLanguage();
-
-  const formatted = new Intl.NumberFormat(LOCALE_MAP[language], {
+  const absFormatted = new Intl.NumberFormat(CURRENCY_LOCALE[currency], {
     style: "currency",
     currency,
-    currencyDisplay: "code",
-  }).format(value);
+    currencyDisplay: "symbol",
+  }).format(Math.abs(value));
+  const formatted = value < 0 ? `-${absFormatted}` : absFormatted;
 
   return (
     <span
