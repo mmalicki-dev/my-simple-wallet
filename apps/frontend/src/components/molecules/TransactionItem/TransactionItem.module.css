@@ -1,19 +1,40 @@
 .item {
-  border-bottom: 1px solid var(--color-border);
-  border-left: 3px solid transparent;
-  transition: border-left-color 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
-.item:last-child {
-  border-bottom: none;
+.item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
 }
 
-.income {
-  border-left-color: var(--color-success);
+.item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2px;
 }
 
-.expense {
-  border-left-color: var(--color-danger);
+.income::after {
+  background: linear-gradient(to left, var(--color-success), transparent);
+}
+
+.income::before {
+  background-image: linear-gradient(to top, var(--color-success), transparent);
+}
+
+.expense::after {
+  background: linear-gradient(to left, var(--color-danger), transparent);
+}
+
+.expense::before {
+  background-image: linear-gradient(to top, var(--color-danger), transparent);
 }
 
 .button {
@@ -38,6 +59,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  flex: 1;
+}
+
+.categoryCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.categoryIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+  opacity: 0.8;
+}
+
+.categoryName {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .description {
@@ -52,6 +95,9 @@
 }
 
 .amount {
+  display: block;
+  flex: 1;
+  text-align: right;
   font-size: 0.875rem;
   font-weight: 600;
 }

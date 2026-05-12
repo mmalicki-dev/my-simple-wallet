@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Transaction } from "@/types";
+import type { Category, Transaction } from "@/types";
 import type { Currency } from "shared";
 import TransactionItem from "@/components/molecules/TransactionItem/TransactionItem";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
@@ -8,6 +8,7 @@ import {
   useUpdateTransactionMutation,
   useDeleteTransactionMutation,
 } from "@/services/transactionApi";
+import { useGetCategoriesQuery } from "@/services/categoryApi";
 import styles from "./TransactionList.module.css";
 import Icon from "@/components/atoms/Icon/Icon";
 
@@ -76,6 +77,10 @@ const TransactionList = ({
     },
   ] = useDeleteTransactionMutation({ fixedCacheKey: "delete-transaction" });
 
+  const { data: categories = [] } = useGetCategoriesQuery();
+  const categoryById = (id: string): Category | undefined =>
+    categories.find((c) => c._id === id);
+
   const isMutating = isCreating || isUpdating || isDeleting;
   const hasError = isCreateError || isUpdateError || isDeleteError;
   const isSuccess = isCreateSuccess || isUpdateSuccess || isDeleteSuccess;
@@ -129,6 +134,7 @@ const TransactionList = ({
                 key={t._id}
                 transaction={t}
                 currency={currency}
+                category={categoryById(t.category)}
                 onClick={
                   onTransactionClick ? () => onTransactionClick(t) : undefined
                 }
