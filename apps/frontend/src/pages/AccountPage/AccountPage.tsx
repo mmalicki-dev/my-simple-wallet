@@ -5,7 +5,7 @@ import type { Transaction } from "@/types";
 import TransactionList from "@/components/organisms/TransactionList/TransactionList";
 import BackButton from "@/components/molecules/BackButton/BackButton";
 import Modal from "@/components/templates/Modal/Modal";
-import EditTransactionForm from "@/components/organisms/EditTransactionForm/EditTransactionForm";
+import TransactionForm from "@/components/organisms/TransactionForm/TransactionForm";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
 import { useGetAccountsQuery } from "@/services/accountApi";
@@ -112,7 +112,7 @@ const AccountPage = () => {
         onClose={() => setIsCreating(false)}
         title="New Transaction"
       >
-        <EditTransactionForm
+        <TransactionForm
           accountId={account._id}
           onClose={() => setIsCreating(false)}
         />
@@ -123,7 +123,7 @@ const AccountPage = () => {
         title="Edit Transaction"
       >
         {selectedTransaction && (
-          <EditTransactionForm
+          <TransactionForm
             transaction={selectedTransaction}
             onClose={() => setSelectedTransaction(null)}
             onDelete={() => {

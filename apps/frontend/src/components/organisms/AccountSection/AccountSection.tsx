@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Account } from '@/types'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
-import EditAccountForm from '@/components/organisms/EditAccountForm/EditAccountForm'
+import AccountForm from '@/components/organisms/AccountForm/AccountForm'
 import Modal from '@/components/templates/Modal/Modal'
 import Spinner from '@/components/atoms/Spinner/Spinner'
 import { useGetAccountsQuery } from '@/services/accountApi'
@@ -21,7 +21,7 @@ const AccountSection = () => {
         onClose={() => setIsAdding(false)}
         title="New Account"
       >
-        <EditAccountForm onClose={() => setIsAdding(false)} />
+        <AccountForm onClose={() => setIsAdding(false)} />
       </Modal>
       <Modal
         isOpen={!!selected}
@@ -29,7 +29,7 @@ const AccountSection = () => {
         title="Edit Account"
       >
         {selected && (
-          <EditAccountForm account={selected} onClose={() => setSelected(null)} />
+          <AccountForm account={selected} onClose={() => setSelected(null)} />
         )}
       </Modal>
       <UserSectionList title="Accounts" onAdd={() => setIsAdding(true)}>

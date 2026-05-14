@@ -17,9 +17,9 @@ import {
 } from "@/services/recurringPaymentApi";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import { useGetCategoriesQuery } from "@/services/categoryApi";
-import styles from "./EditRecurringPaymentForm.module.css";
+import styles from "./RecurringPaymentForm.module.css";
 
-interface EditRecurringPaymentFormProps {
+interface RecurringPaymentFormProps {
   payment?: RecurringPayment;
   defaultType?: RecurringPaymentType;
   onClose: () => void;
@@ -31,11 +31,11 @@ const BILLING_CYCLE_OPTIONS: { value: BillingCycle; label: string }[] = [
   { value: "yearly", label: "Yearly" },
 ];
 
-const EditRecurringPaymentForm = ({
+const RecurringPaymentForm = ({
   payment,
   defaultType,
   onClose,
-}: EditRecurringPaymentFormProps) => {
+}: RecurringPaymentFormProps) => {
   const { data: accounts = [] } = useGetAccountsQuery();
   const { data: categories = [] } = useGetCategoriesQuery();
 
@@ -203,4 +203,4 @@ const EditRecurringPaymentForm = ({
   );
 };
 
-export default EditRecurringPaymentForm;
+export default RecurringPaymentForm;

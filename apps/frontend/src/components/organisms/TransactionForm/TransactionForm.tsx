@@ -9,21 +9,21 @@ import {
   useUpdateTransactionMutation,
 } from "@/services/transactionApi";
 import { useGetCategoriesQuery } from "@/services/categoryApi";
-import styles from "./EditTransactionForm.module.css";
+import styles from "./TransactionForm.module.css";
 
-interface EditTransactionFormProps {
+interface TransactionFormProps {
   transaction?: Transaction;
   accountId?: string;
   onClose: () => void;
   onDelete?: () => void;
 }
 
-const EditTransactionForm = ({
+const TransactionForm = ({
   transaction,
   accountId,
   onClose,
   onDelete,
-}: EditTransactionFormProps) => {
+}: TransactionFormProps) => {
   const today = new Date().toISOString().slice(0, 10);
   const { data: categories = [] } = useGetCategoriesQuery();
 
@@ -136,4 +136,4 @@ const EditTransactionForm = ({
   );
 };
 
-export default EditTransactionForm;
+export default TransactionForm;

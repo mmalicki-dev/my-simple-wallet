@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { RecurringPayment, RecurringPaymentType } from '@/types'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
-import EditRecurringPaymentForm from '@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm'
+import RecurringPaymentForm from '@/components/organisms/RecurringPaymentForm/RecurringPaymentForm'
 import Modal from '@/components/templates/Modal/Modal'
 import Spinner from '@/components/atoms/Spinner/Spinner'
 import { useGetRecurringPaymentsQuery } from '@/services/recurringPaymentApi'
@@ -33,7 +33,7 @@ const RecurringPaymentSection = () => {
         onClose={() => setAddingType(null)}
         title="New Recurring Payment"
       >
-        <EditRecurringPaymentForm defaultType={addingType ?? "subscription"} onClose={() => setAddingType(null)} />
+        <RecurringPaymentForm defaultType={addingType ?? "subscription"} onClose={() => setAddingType(null)} />
       </Modal>
       <Modal
         isOpen={!!selected}
@@ -41,7 +41,7 @@ const RecurringPaymentSection = () => {
         title="Edit Recurring Payment"
       >
         {selected && (
-          <EditRecurringPaymentForm payment={selected} onClose={() => setSelected(null)} />
+          <RecurringPaymentForm payment={selected} onClose={() => setSelected(null)} />
         )}
       </Modal>
       <UserSectionList title="Subscriptions" onAdd={() => setAddingType("subscription")}>

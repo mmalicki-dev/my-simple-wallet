@@ -6,16 +6,16 @@ import SelectOption from '@/components/atoms/SelectOption/SelectOption'
 import Checkbox from '@/components/atoms/Checkbox/Checkbox'
 import FormActions from '@/components/molecules/FormActions/FormActions'
 import { useCreateAccountMutation, useUpdateAccountMutation, useDeleteAccountMutation } from '@/services/accountApi'
-import styles from './EditAccountForm.module.css'
+import styles from './AccountForm.module.css'
 
-interface EditAccountFormProps {
+interface AccountFormProps {
   account?: Account
   onClose: () => void
 }
 
 const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, label: c }))
 
-const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
+const AccountForm = ({ account, onClose }: AccountFormProps) => {
   const [name, setName] = useState(account?.name ?? '')
   const [currency, setCurrency] = useState<Account['currency']>(account?.currency ?? 'PLN')
   const [isDefault, setIsDefault] = useState(account?.isDefault ?? false)
@@ -69,4 +69,4 @@ const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
   )
 }
 
-export default EditAccountForm
+export default AccountForm
