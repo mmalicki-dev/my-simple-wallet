@@ -1,0 +1,5 @@
+.form {
+  composes: form from '../../../styles/shared.module.css';
+  border-left: 2px solid color-mix(in srgb, var(--color-neon) 35%, transparent);
+  padding-left: 0.875rem;
+}
