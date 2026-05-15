@@ -16,6 +16,8 @@
   --color-primary-subtle: #ede7f6;
   --color-success: #2e7d32;
   --color-danger: #c62828;
+  --color-account-debit: #9e9e9e;
+  --color-account-credit: #b45309;
 }
 
 [data-theme="dark"] {
@@ -29,6 +31,8 @@
   --color-primary-subtle: #1e1b4b;
   --color-success: #66bb6a;
   --color-danger: #ef5350;
+  --color-account-debit: #71717a;
+  --color-account-credit: #d97706;
 }
 
 * {

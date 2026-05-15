@@ -11,10 +11,17 @@
 
 .content {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   text-align: left;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .name {
@@ -27,4 +34,19 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-primary);
+}
+
+.type {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.debit {
+  color: var(--color-account-debit);
+}
+
+.credit {
+  color: var(--color-account-credit);
 }

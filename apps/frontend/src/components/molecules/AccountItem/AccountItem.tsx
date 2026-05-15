@@ -25,12 +25,17 @@ const AccountItem = ({
         onDelete={onDelete}
       >
         <div className={styles.content}>
-          <span className={styles.name}>{account.name}</span>
-          <Amount
-            value={account.balance}
-            currency={account.currency}
-            className={styles.balance}
-          />
+          <div className={styles.info}>
+            <span className={styles.name}>{account.name}</span>
+            <Amount
+              value={account.balance}
+              currency={account.currency}
+              className={styles.balance}
+            />
+          </div>
+          <span className={[styles.type, styles[account.type]].join(" ")}>
+            {account.type.toUpperCase()}
+          </span>
         </div>
       </ActionPanel>
     </li>
