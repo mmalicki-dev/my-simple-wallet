@@ -5,7 +5,7 @@ type BaseProps = {
   label: string;
   placeholder: string;
   value: string;
-  isRequired?: boolean;
+  isOptional?: boolean;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -18,22 +18,32 @@ type SelectProps = BaseProps & { type: "select"; optionsArray: string[] };
 type FormProps = InputProps | TextareaProps | SelectProps;
 
 const FormInput = (props: FormProps) => {
-  const { id, type, label, placeholder, value, isRequired, handleChange } =
-    props;
+  const {
+    id,
+    type,
+    label,
+    placeholder,
+    value,
+    isOptional = false,
+    handleChange,
+  } = props;
   const optionsArray = props.type === "select" ? props.optionsArray : undefined;
 
   return (
     <div className={styles.field}>
       <label className={styles.fieldLabel} htmlFor={id}>
         {label}
-        {!isRequired && <span className={styles.optional}> (optional)</span>}
+        {isOptional && <span className={styles.optional}> (optional)</span>}
       </label>
-      {(type === "text" || type === "email" || type === "date" || type === "color") && (
+      {(type === "text" ||
+        type === "email" ||
+        type === "date" ||
+        type === "color") && (
         <input
           id={id}
           name={id}
           type={type}
-          required={isRequired}
+          required={isOptional}
           value={value}
           onChange={handleChange}
           className={styles.input}
@@ -46,7 +56,7 @@ const FormInput = (props: FormProps) => {
           id={id}
           name={id}
           value={value}
-          required={isRequired}
+          required={isOptional}
           onChange={handleChange}
           className={styles.select}
         >
@@ -62,7 +72,7 @@ const FormInput = (props: FormProps) => {
         <textarea
           id={id}
           name={id}
-          required={isRequired}
+          required={isOptional}
           rows={4}
           value={value}
           onChange={handleChange}

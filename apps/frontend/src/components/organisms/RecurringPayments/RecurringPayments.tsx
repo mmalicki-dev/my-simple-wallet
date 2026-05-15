@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import type { RecurringPayment, RecurringPaymentType } from "@/types";
 import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
 import RecurringPaymentBlock from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
-import EditRecurringPaymentForm from "@/components/organisms/EditRecurringPaymentForm/EditRecurringPaymentForm";
+import RecurringPaymentForm from "@/components/organisms/RecurringPaymentForm/RecurringPaymentForm";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import Icon from "@/components/atoms/Icon/Icon";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
@@ -26,7 +26,7 @@ const RecurringPaymentSection = ({
 }: SectionProps) => (
   <HudPanel>
     {selected?.type === type ? (
-      <EditRecurringPaymentForm payment={selected} onClose={onClose} />
+      <RecurringPaymentForm payment={selected} onClose={onClose} />
     ) : (
       <RecurringPaymentBlock
         type={type}

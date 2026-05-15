@@ -7,20 +7,24 @@ type BaseProps = {
   label: string;
   placeholder: string;
   value: string;
-  isRequired?: boolean;
+  isOptional?: boolean;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => void;
 };
-type TextProps = BaseProps & { type: "text" | "email" };
+type TextProps = BaseProps & { type: "text" | "email" | "color" | "date" };
 type TextareaProps = BaseProps & { type: "textarea" };
 type SelectProps = BaseProps & { type: "select"; optionsArray: string[] };
 
 type FormProps = {
-  handleChange: () => void;
-  handleSubmit: () => void;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
   inputsArray?: TextProps[];
   textareasArray?: TextareaProps[];
   selectsArray?: SelectProps[];

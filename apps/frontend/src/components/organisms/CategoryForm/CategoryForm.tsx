@@ -1,35 +1,23 @@
 import { useState } from "react";
 import type { Category, CreateCategoryRequest } from "@/types";
-import type { TransactionType } from "shared";
-import Input from "@/components/atoms/Input/Input";
-import SelectOption from "@/components/atoms/SelectOption/SelectOption";
 import FormActions from "@/components/molecules/FormActions/FormActions";
+import Form from "../Form/Form";
 import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
 } from "@/services/categoryApi";
-import styles from "./CategoryForm.module.css";
+import { CATEGORY_ICON_NAMES } from "shared";
 
 interface CategoryFormProps {
   category?: Category;
   onClose: () => void;
 }
 
-const TYPE_OPTIONS = [
-  { value: "expense", label: "Expense" },
-  { value: "income", label: "Income" },
-];
-
 const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
   const [form, setForm] = useState<Category | CreateCategoryRequest>(
-    category ?? { name: "", type: "income", icon: "", colour: "" },
+    category ?? { name: "", type: "income", icon: "", colour: "#6366f1" },
   );
-  const [name, setName] = useState(category?.name ?? "");
-  const [type, setType] = useState<TransactionType>(
-    category?.type ?? "expense",
-  );
-  const [colour, setColour] = useState(category?.colour ?? "#6366f1");
 
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -46,12 +34,21 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (category) {
-      await updateCategory({ id: category._id, body: { name, type, colour } });
+      await updateCategory({
+        id: category._id,
+        body: {
+          name: form.name,
+          type: form.type,
+          colour: form.colour,
+          icon: form.icon,
+        },
+      });
     } else {
       const body: CreateCategoryRequest = {
         name: form.name,
         type: form.type,
-        colour,
+        icon: form.icon,
+        colour: form.colour,
       };
       await createCategory(body);
     }
@@ -65,37 +62,54 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <Input
-        type="text"
-        placeholder="Category name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <SelectOption
-        value={type}
-        options={TYPE_OPTIONS}
-        onChange={(e) => setType(e.target.value as TransactionType)}
-      />
-      <div className={styles.colourField}>
-        <label htmlFor="colour" className={styles.colourLabel}>
-          Colour
-        </label>
-        <input
-          id="colour"
-          type="color"
-          value={colour}
-          onChange={(e) => setColour(e.target.value)}
-          className={styles.colourPicker}
-        />
-      </div>
+    <Form
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      inputsArray={[
+        {
+          type: "text",
+          id: "name",
+          label: "Name",
+          placeholder: "fe. Food & Drinks",
+          handleChange: handleChange,
+          value: form.name,
+        },
+        {
+          type: "color",
+          id: "colour",
+          label: "Colour",
+          placeholder: "Choose colour",
+          handleChange: handleChange,
+          value: form.colour!,
+        },
+      ]}
+      selectsArray={[
+        {
+          type: "select",
+          id: "type",
+          label: "type",
+          placeholder: "Select type",
+          handleChange: handleChange,
+          value: form.type,
+          optionsArray: ["expense", "income"],
+        },
+        {
+          type: "select",
+          id: "icon",
+          label: "icon",
+          placeholder: "Select icon",
+          handleChange: handleChange,
+          value: form.icon!,
+          optionsArray: [...CATEGORY_ICON_NAMES],
+        },
+      ]}
+    >
       <FormActions
         onCancel={onClose}
         onDelete={category ? handleDelete : undefined}
         submitLabel={category ? "Save" : "Create"}
       />
-    </form>
+    </Form>
   );
 };
 
