@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { CURRENCIES } from "../../../../packages/shared/dist/index.js";
+import { CURRENCIES, Currency } from "../../../../packages/shared/dist/index.js";
 
 export interface IRefreshToken {
   token: string;
@@ -12,7 +12,7 @@ export interface IUser extends Document {
   name: string;
   password: string;
   accounts: mongoose.Types.ObjectId[];
-  totalBalanceCurrency: string;
+  totalBalanceCurrency: Currency;
   isVerified: boolean;
   verificationToken?: string;
   passwordResetToken?: string;

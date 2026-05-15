@@ -54,6 +54,10 @@ export const update: RequestHandler = asyncHandler(async (req, res) => {
   });
   if (!account) throw new AppError("Account not found", 404);
 
+  const newType = result.data.type ?? account.type;
+  if (result.data.isDefault && newType === "credit")
+    throw new AppError("Credit accounts cannot be set as default", 400);
+
   if (result.data.isDefault && !account.isDefault) {
     await AccountModel.findOneAndUpdate(
       { user: req.user!._id, isDefault: true },

@@ -1,7 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-
-export type RecurringPaymentType = "subscription" | "loan";
-export type BillingCycle = "weekly" | "monthly" | "yearly";
+import { RecurringPaymentType, BillingCycle, RECURRING_PAYMENT_TYPES, BILLING_CYCLES } from "../../../../packages/shared/dist/index.js";
 
 export interface IRecurringPayment extends Document {
   user: mongoose.Types.ObjectId;
@@ -42,12 +40,12 @@ const RecurringPaymentSchema = new Schema<IRecurringPayment>(
     },
     type: {
       type: String,
-      enum: ["subscription", "loan"],
+      enum: [...RECURRING_PAYMENT_TYPES] satisfies RecurringPaymentType[],
       required: true,
     },
     billingCycle: {
       type: String,
-      enum: ["weekly", "monthly", "yearly"],
+      enum: [...BILLING_CYCLES] satisfies BillingCycle[],
       required: true,
     },
     nextDueDate: {

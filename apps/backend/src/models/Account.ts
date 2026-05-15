@@ -1,12 +1,14 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { CURRENCIES, Currency } from "../../../../packages/shared/dist/index.js";
 
 export interface IAccount extends Document {
   user: mongoose.Types.ObjectId;
   name: string;
-  type: string;
+  type: "debit" | "credit";
   balance: number;
-  currency: string;
+  currency: Currency;
   isDefault: boolean;
+  includeInTotal: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,11 +31,17 @@ const AccountSchema = new Schema<IAccount>(
     },
     type: {
       type: String,
+      enum: ["debit", "credit"],
       default: "debit",
       trim: true,
     },
+    includeInTotal: {
+      type: Boolean,
+      default: true,
+    },
     currency: {
       type: String,
+      enum: [...CURRENCIES],
       default: "NOK",
       trim: true,
       uppercase: true,

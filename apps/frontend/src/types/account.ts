@@ -1,12 +1,14 @@
-import type { Currency } from 'shared'
+import type { Currency, AccountType } from 'shared'
 
 export interface Account {
   _id: string;
   user: string;
   name: string;
+  type: AccountType;
   balance: number;
   currency: Currency;
   isDefault: boolean;
+  includeInTotal: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -14,6 +16,8 @@ export interface Account {
 export interface CreateAccountRequest {
   name: string;
   currency: Currency;
+  type?: AccountType;
+  includeInTotal?: boolean;
 }
 
 export interface UpdateAccountRequest {
@@ -22,6 +26,8 @@ export interface UpdateAccountRequest {
     name?: string;
     currency?: string;
     isDefault?: boolean;
+    type?: AccountType;
+    includeInTotal?: boolean;
   };
 }
 
