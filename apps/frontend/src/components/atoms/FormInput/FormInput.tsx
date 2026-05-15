@@ -43,7 +43,7 @@ const FormInput = (props: FormProps) => {
           id={id}
           name={id}
           type={type}
-          required={isOptional}
+          required={!isOptional}
           value={value}
           onChange={handleChange}
           className={styles.input}
