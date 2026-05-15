@@ -28,6 +28,7 @@ type FormProps = {
   inputsArray?: TextProps[];
   textareasArray?: TextareaProps[];
   selectsArray?: SelectProps[];
+  header?: ReactNode;
   children?: ReactNode;
 };
 
@@ -38,10 +39,12 @@ const Form = (props: FormProps) => {
     inputsArray,
     textareasArray,
     selectsArray,
+    header,
     children,
   } = props;
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      {header}
       {inputsArray?.map((e) => (
         <FormInput
           key={e.id}

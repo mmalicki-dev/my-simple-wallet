@@ -1,7 +1,10 @@
 import { useState } from "react";
 import type { Category, CreateCategoryRequest } from "@/types";
+import type { TransactionType } from "shared";
 import FormActions from "@/components/molecules/FormActions/FormActions";
+import FormField from "@/components/molecules/FormField/FormField";
 import IconPicker from "@/components/molecules/IconPicker/IconPicker";
+import Toggle from "@/components/molecules/Toggle/Toggle";
 import Form from "../Form/Form";
 import {
   useCreateCategoryMutation,
@@ -65,6 +68,16 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
     <Form
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      header={
+        <Toggle
+          options={[
+            { value: "expense", label: "Expense" },
+            { value: "income", label: "Income" },
+          ]}
+          value={form.type}
+          onChange={(val) => setForm((prev) => ({ ...prev, type: val as TransactionType }))}
+        />
+      }
       inputsArray={[
         {
           type: "text",
@@ -83,22 +96,13 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
           value: form.colour!,
         },
       ]}
-      selectsArray={[
-        {
-          type: "select",
-          id: "type",
-          label: "Type",
-          placeholder: "Select type",
-          handleChange: handleChange,
-          value: form.type,
-          optionsArray: ["expense", "income"],
-        },
-      ]}
     >
-      <IconPicker
-        value={form.icon ?? ""}
-        onChange={(name) => setForm((prev) => ({ ...prev, icon: name }))}
-      />
+      <FormField label="Icon" variant="neon">
+        <IconPicker
+          value={form.icon ?? ""}
+          onChange={(name) => setForm((prev) => ({ ...prev, icon: name }))}
+        />
+      </FormField>
       <FormActions
         onCancel={onClose}
         onDelete={category ? handleDelete : undefined}
