@@ -5,11 +5,14 @@ import type {
   BillingCycle,
 } from "@/types";
 import { RECURRING_PAYMENT_TYPES } from "shared";
-import FormField from "@/components/molecules/FormField/FormField";
-import FormActions from "@/components/molecules/FormActions/FormActions";
+import CustomSelect from "@/components/atoms/CustomSelect/CustomSelect";
+import FormInput from "@/components/atoms/FormInput/FormInput";
 import Input from "@/components/atoms/Input/Input";
-import SelectOption from "@/components/atoms/SelectOption/SelectOption";
 import Checkbox from "@/components/atoms/Checkbox/Checkbox";
+import FormActions from "@/components/molecules/FormActions/FormActions";
+import FormField from "@/components/molecules/FormField/FormField";
+import Toggle from "@/components/molecules/Toggle/Toggle";
+import Form from "../Form/Form";
 import {
   useCreateRecurringPaymentMutation,
   useUpdateRecurringPaymentMutation,
@@ -39,24 +42,16 @@ const RecurringPaymentForm = ({
   const { data: accounts = [] } = useGetAccountsQuery();
   const { data: categories = [] } = useGetCategoriesQuery();
 
-  const [type, setType] = useState<RecurringPaymentType>(
-    payment?.type ?? defaultType ?? "subscription",
-  );
-  const [name, setName] = useState(payment?.name ?? "");
-  const [amount, setAmount] = useState(String(payment?.amount ?? ""));
-  const [account, setAccount] = useState(
-    payment?.account ?? accounts[0]?._id ?? "",
-  );
-  const [category, setCategory] = useState(
-    payment?.category ?? categories[0]?._id ?? "",
-  );
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>(
-    payment?.billingCycle ?? "monthly",
-  );
-  const [nextDueDate, setNextDueDate] = useState(
-    payment?.nextDueDate?.slice(0, 10) ?? "",
-  );
-  const [description, setDescription] = useState(payment?.description ?? "");
+  const [form, setForm] = useState({
+    type: (payment?.type ?? defaultType ?? "subscription") as RecurringPaymentType,
+    name: payment?.name ?? "",
+    amount: String(payment?.amount ?? ""),
+    account: payment?.account ?? accounts[0]?._id ?? "",
+    category: payment?.category ?? categories[0]?._id ?? "",
+    billingCycle: (payment?.billingCycle ?? "monthly") as BillingCycle,
+    nextDueDate: payment?.nextDueDate?.slice(0, 10) ?? "",
+    description: payment?.description ?? "",
+  });
   const [isActive, setIsActive] = useState(payment?.isActive ?? true);
 
   const [createRecurringPayment] = useCreateRecurringPaymentMutation();
@@ -64,27 +59,31 @@ const RecurringPaymentForm = ({
   const [deleteRecurringPayment] = useDeleteRecurringPaymentMutation();
 
   const accountOptions = accounts.map((a) => ({ value: a._id, label: a.name }));
-  const categoryOptions = categories.map((c) => ({
-    value: c._id,
-    label: c.name,
-  }));
-
-  const selectedAccount = accounts.find((a) => a._id === account);
+  const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }));
+  const selectedAccount = accounts.find((a) => a._id === form.account);
   const amountLabel = selectedAccount
     ? `Amount / Cycle (${selectedAccount.currency})`
     : "Amount / Cycle";
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const body = {
-      name,
-      type,
-      amount: Number.parseFloat(amount),
-      account,
-      category,
-      billingCycle,
-      nextDueDate,
-      description: description || undefined,
+      name: form.name,
+      type: form.type,
+      amount: Number.parseFloat(form.amount),
+      account: form.account,
+      category: form.category,
+      billingCycle: form.billingCycle,
+      nextDueDate: form.nextDueDate,
+      description: form.description || undefined,
       isActive,
     };
     if (payment) {
@@ -102,79 +101,83 @@ const RecurringPaymentForm = ({
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <FormField label="Type" variant="neon">
-        <div className={styles.typeToggle}>
-          {RECURRING_PAYMENT_TYPES.map((t) => (
-            <button
-              key={t}
-              type="button"
-              className={[styles.typeBtn, type === t ? styles.active : ""].join(
-                " ",
-              )}
-              onClick={() => setType(t)}
-            >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </button>
-          ))}
-        </div>
-      </FormField>
-      <FormField label="Name" variant="neon">
-        <Input
-          type="text"
-          placeholder="e.g. Netflix"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
+    <Form
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      header={
+        <Toggle
+          options={[...RECURRING_PAYMENT_TYPES].map((t) => ({
+            value: t,
+            label: t.charAt(0).toUpperCase() + t.slice(1),
+          }))}
+          value={form.type}
+          onChange={(val) =>
+            setForm((prev) => ({ ...prev, type: val as RecurringPaymentType }))
+          }
         />
-      </FormField>
+      }
+      inputsArray={[
+        {
+          type: "text",
+          id: "name",
+          label: "Name",
+          placeholder: "e.g. Netflix",
+          handleChange,
+          value: form.name,
+        },
+      ]}
+    >
       <FormField label={amountLabel} variant="neon">
         <div className={styles.row}>
           <Input
             type="text"
+            name="amount"
             placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={form.amount}
+            onChange={(e) => setForm((prev) => ({ ...prev, amount: e.target.value }))}
             inputMode="decimal"
             required
           />
-          <SelectOption
-            value={billingCycle}
+          <CustomSelect
+            value={form.billingCycle}
             options={BILLING_CYCLE_OPTIONS}
-            onChange={(e) => setBillingCycle(e.target.value as BillingCycle)}
+            onChange={(val) =>
+              setForm((prev) => ({ ...prev, billingCycle: val as BillingCycle }))
+            }
           />
         </div>
       </FormField>
       <FormField label="Account / Category" variant="neon">
         <div className={styles.row}>
-          <SelectOption
-            value={account}
+          <CustomSelect
+            value={form.account}
             options={accountOptions}
-            onChange={(e) => setAccount(e.target.value)}
+            onChange={(val) => setForm((prev) => ({ ...prev, account: val }))}
           />
-          <SelectOption
-            value={category}
+          <CustomSelect
+            value={form.category}
             options={categoryOptions}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(val) => setForm((prev) => ({ ...prev, category: val }))}
           />
         </div>
       </FormField>
-      <FormField label="Next Due Date" variant="neon">
-        <Input
-          type="date"
-          value={nextDueDate}
-          onChange={(e) => setNextDueDate(e.target.value)}
-          required
-        />
-      </FormField>
-      <FormField label="Notes" variant="neon">
-        <Input
-          type="text"
-          placeholder="Optional"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </FormField>
+      <FormInput
+        type="date"
+        id="nextDueDate"
+        label="Next Due Date"
+        placeholder=""
+        value={form.nextDueDate}
+        handleChange={handleChange}
+      />
+      <FormInput
+        type="text"
+        id="description"
+        label="Notes"
+        placeholder="Optional"
+        value={form.description}
+        isOptional
+        handleChange={handleChange}
+      />
       {payment && (
         <>
           <div className={styles.divider} />
@@ -199,7 +202,7 @@ const RecurringPaymentForm = ({
         submitLabel={payment ? "Save" : "Create"}
         divider
       />
-    </form>
+    </Form>
   );
 };
 
