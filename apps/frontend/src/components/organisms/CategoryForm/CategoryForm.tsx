@@ -1,13 +1,13 @@
 import { useState } from "react";
 import type { Category, CreateCategoryRequest } from "@/types";
 import FormActions from "@/components/molecules/FormActions/FormActions";
+import IconPicker from "@/components/molecules/IconPicker/IconPicker";
 import Form from "../Form/Form";
 import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
 } from "@/services/categoryApi";
-import { CATEGORY_ICON_NAMES } from "shared";
 
 interface CategoryFormProps {
   category?: Category;
@@ -87,23 +87,18 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
         {
           type: "select",
           id: "type",
-          label: "type",
+          label: "Type",
           placeholder: "Select type",
           handleChange: handleChange,
           value: form.type,
           optionsArray: ["expense", "income"],
         },
-        {
-          type: "select",
-          id: "icon",
-          label: "icon",
-          placeholder: "Select icon",
-          handleChange: handleChange,
-          value: form.icon!,
-          optionsArray: [...CATEGORY_ICON_NAMES],
-        },
       ]}
     >
+      <IconPicker
+        value={form.icon ?? ""}
+        onChange={(name) => setForm((prev) => ({ ...prev, icon: name }))}
+      />
       <FormActions
         onCancel={onClose}
         onDelete={category ? handleDelete : undefined}
