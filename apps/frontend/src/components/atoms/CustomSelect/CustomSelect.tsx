@@ -43,17 +43,18 @@ const CustomSelect = ({ id, value, options, onChange, placeholder }: CustomSelec
         <span className={[styles.chevron, open ? styles.chevronUp : ''].join(' ')}>▾</span>
       </button>
       {open && (
-        <ul className={styles.dropdown}>
+        <div className={styles.dropdown}>
           {options.map((opt) => (
-            <li
+            <button
               key={opt.value}
+              type="button"
               className={[styles.option, opt.value === value ? styles.selected : ''].join(' ')}
               onClick={() => { onChange(opt.value); setOpen(false) }}
             >
               {opt.label}
-            </li>
+            </button>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   )

@@ -43,12 +43,12 @@ const RecurringPaymentForm = ({
   const { data: categories = [] } = useGetCategoriesQuery();
 
   const [form, setForm] = useState({
-    type: (payment?.type ?? defaultType ?? "subscription") as RecurringPaymentType,
+    type: payment?.type ?? defaultType ?? "subscription",
     name: payment?.name ?? "",
     amount: String(payment?.amount ?? ""),
     account: payment?.account ?? accounts[0]?._id ?? "",
     category: payment?.category ?? categories[0]?._id ?? "",
-    billingCycle: (payment?.billingCycle ?? "monthly") as BillingCycle,
+    billingCycle: payment?.billingCycle ?? "monthly",
     nextDueDate: payment?.nextDueDate?.slice(0, 10) ?? "",
     description: payment?.description ?? "",
   });
@@ -59,7 +59,10 @@ const RecurringPaymentForm = ({
   const [deleteRecurringPayment] = useDeleteRecurringPaymentMutation();
 
   const accountOptions = accounts.map((a) => ({ value: a._id, label: a.name }));
-  const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }));
+  const categoryOptions = categories.map((c) => ({
+    value: c._id,
+    label: c.name,
+  }));
   const selectedAccount = accounts.find((a) => a._id === form.account);
   const amountLabel = selectedAccount
     ? `Amount / Cycle (${selectedAccount.currency})`
@@ -134,7 +137,9 @@ const RecurringPaymentForm = ({
             name="amount"
             placeholder="0.00"
             value={form.amount}
-            onChange={(e) => setForm((prev) => ({ ...prev, amount: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, amount: e.target.value }))
+            }
             inputMode="decimal"
             required
           />
@@ -142,7 +147,10 @@ const RecurringPaymentForm = ({
             value={form.billingCycle}
             options={BILLING_CYCLE_OPTIONS}
             onChange={(val) =>
-              setForm((prev) => ({ ...prev, billingCycle: val as BillingCycle }))
+              setForm((prev) => ({
+                ...prev,
+                billingCycle: val as BillingCycle,
+              }))
             }
           />
         </div>
