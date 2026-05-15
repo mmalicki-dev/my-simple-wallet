@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface IAccount extends Document {
   user: mongoose.Types.ObjectId;
   name: string;
+  type: string;
   balance: number;
   currency: string;
   isDefault: boolean;
@@ -25,6 +26,11 @@ const AccountSchema = new Schema<IAccount>(
     balance: {
       type: Number,
       default: 0,
+    },
+    type: {
+      type: String,
+      default: "debit",
+      trim: true,
     },
     currency: {
       type: String,

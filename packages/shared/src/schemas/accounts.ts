@@ -3,6 +3,7 @@ import z from "zod";
 export const createAccountSchema = z.object({
   name: z.string().min(1),
   currency: z.string().optional(),
+  type: z.enum(["debit", "credit"]),
 });
 
 export const updateAccountSchema = z.object({
