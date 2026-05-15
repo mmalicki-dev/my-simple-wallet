@@ -1,6 +1,6 @@
 .grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.4rem;
   padding: 0.5rem 0;
 }
@@ -17,7 +17,6 @@
   cursor: pointer;
   color: var(--color-text-muted);
   transition: background 0.15s, border-color 0.15s, color 0.15s;
-  min-width: 3.5rem;
 }
 
 .tile:hover {
