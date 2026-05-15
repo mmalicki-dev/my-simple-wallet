@@ -33,6 +33,7 @@ const QuickActions = ({
           aria-label="View more"
         >
           <Icon name="list-arrow-down" className={styles.icon} />
+          <span className={styles.label}>Txns</span>
         </button>
       )}
       {onEdit && (
@@ -43,6 +44,7 @@ const QuickActions = ({
           aria-label="Edit"
         >
           <Icon name="pen-edit-round" className={styles.icon} />
+          <span className={styles.label}>Edit</span>
         </button>
       )}
       {onDelete && (
@@ -53,6 +55,7 @@ const QuickActions = ({
           aria-label="Delete"
         >
           <Icon name="trash-bin" className={styles.icon} />
+          <span className={styles.label}>Delete</span>
         </button>
       )}
     </div>

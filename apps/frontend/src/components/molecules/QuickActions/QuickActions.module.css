@@ -21,12 +21,25 @@
 }
 
 .btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
   padding: 0 0.85rem;
   cursor: pointer;
   color: color-mix(in srgb, var(--color-neon) 60%, var(--color-text-muted));
   transition:
     color 0.15s,
     background 0.15s;
+}
+
+.label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .btn:hover {

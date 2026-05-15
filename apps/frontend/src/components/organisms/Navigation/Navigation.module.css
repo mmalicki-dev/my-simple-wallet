@@ -44,6 +44,50 @@
   height: fit-content;
 }
 
+.fabItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab {
+  position: relative;
+  transform: translateY(-50%);
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-neon);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--color-neon) 55%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-neon) 25%, transparent);
+  color: var(--color-neon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.fab:hover {
+  background: color-mix(in srgb, var(--color-neon) 12%, var(--color-surface));
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--color-neon) 75%, transparent),
+    0 0 36px color-mix(in srgb, var(--color-neon) 35%, transparent);
+}
+
+.fabIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.fabLabel {
+  display: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
 .logoutBtn:hover {
   color: var(--color-text);
   background-color: var(--color-surface-hover);
@@ -61,6 +105,31 @@
 }
 
 @media (min-width: 768px) {
+  .fabItem {
+    width: 100%;
+  }
+
+  .fab {
+    transform: none;
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    flex-direction: row;
+    gap: 0.75rem;
+    justify-content: flex-start;
+  }
+
+  .fabIcon {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
+  .fabLabel {
+    display: block;
+  }
+
   .nav {
     position: relative;
     max-height: none;

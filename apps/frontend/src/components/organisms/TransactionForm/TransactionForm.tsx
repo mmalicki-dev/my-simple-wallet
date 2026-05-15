@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { TransactionType } from "shared";
 import type { Transaction } from "@/types";
 import CategoryPicker from "@/components/molecules/CategoryPicker/CategoryPicker";
@@ -11,6 +11,7 @@ import {
   useUpdateTransactionMutation,
 } from "@/services/transactionApi";
 import { useGetCategoriesQuery } from "@/services/categoryApi";
+import { useGetAccountsQuery } from "@/services/accountApi";
 
 interface TransactionFormProps {
   transaction?: Transaction;
@@ -27,6 +28,8 @@ const TransactionForm = ({
 }: TransactionFormProps) => {
   const today = new Date().toISOString().slice(0, 10);
   const { data: categories = [] } = useGetCategoriesQuery();
+  const { data: accounts = [] } = useGetAccountsQuery();
+  const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
 
   const [form, setForm] = useState({
     type: (transaction?.type ?? "expense") as TransactionType,
@@ -34,7 +37,14 @@ const TransactionForm = ({
     category: transaction?.category ?? "",
     description: transaction?.description ?? "",
     date: transaction?.date.slice(0, 10) ?? today,
+    account: transaction?.account ?? accountId ?? defaultAccount?._id ?? "",
   });
+
+  useEffect(() => {
+    if (!accountId && !transaction?.account && !form.account && defaultAccount) {
+      setForm((prev) => ({ ...prev, account: defaultAccount._id }));
+    }
+  }, [defaultAccount?._id]);
 
   const [createTransaction] = useCreateTransactionMutation({
     fixedCacheKey: "create-transaction",
@@ -75,13 +85,15 @@ const TransactionForm = ({
           body: { ...body, account: transaction.account },
         }).unwrap();
       } else {
-        await createTransaction({ ...body, account: accountId! }).unwrap();
+        await createTransaction({ ...body, account: accountId ?? form.account }).unwrap();
       }
       onClose();
     } catch {
       // error visible via fixedCacheKey in TransactionList
     }
   };
+
+  const accountOptions = accounts.map((a) => ({ value: a._id, label: a.name }));
 
   return (
     <Form
@@ -108,6 +120,17 @@ const TransactionForm = ({
         },
       ]}
     >
+      {!accountId && (
+        <FormInput
+          type="select"
+          id="account"
+          label="Account"
+          placeholder="Select account"
+          value={form.account}
+          optionsArray={accountOptions}
+          handleChange={handleChange}
+        />
+      )}
       <CategoryPicker
         categories={filteredCategories}
         value={effectiveCategory}
