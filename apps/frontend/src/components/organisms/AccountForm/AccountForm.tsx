@@ -1,59 +1,84 @@
-import { useState } from 'react'
-import { CURRENCIES } from 'shared'
-import type { Account } from '@/types'
-import Input from '@/components/atoms/Input/Input'
-import SelectOption from '@/components/atoms/SelectOption/SelectOption'
-import Checkbox from '@/components/atoms/Checkbox/Checkbox'
-import FormActions from '@/components/molecules/FormActions/FormActions'
-import { useCreateAccountMutation, useUpdateAccountMutation, useDeleteAccountMutation } from '@/services/accountApi'
-import styles from './AccountForm.module.css'
+import { useState } from "react";
+import { CURRENCIES } from "shared";
+import type { Account } from "@/types";
+import Checkbox from "@/components/atoms/Checkbox/Checkbox";
+import FormActions from "@/components/molecules/FormActions/FormActions";
+import Form from "../Form/Form";
+import {
+  useCreateAccountMutation,
+  useUpdateAccountMutation,
+  useDeleteAccountMutation,
+} from "@/services/accountApi";
 
 interface AccountFormProps {
-  account?: Account
-  onClose: () => void
+  account?: Account;
+  onClose: () => void;
 }
 
-const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, label: c }))
-
 const AccountForm = ({ account, onClose }: AccountFormProps) => {
-  const [name, setName] = useState(account?.name ?? '')
-  const [currency, setCurrency] = useState<Account['currency']>(account?.currency ?? 'PLN')
-  const [isDefault, setIsDefault] = useState(account?.isDefault ?? false)
+  const [form, setForm] = useState({
+    name: account?.name ?? "",
+    currency: account?.currency ?? "PLN",
+  });
+  const [isDefault, setIsDefault] = useState(account?.isDefault ?? false);
 
-  const [createAccount] = useCreateAccountMutation()
-  const [updateAccount] = useUpdateAccountMutation()
-  const [deleteAccount] = useDeleteAccountMutation()
+  const [createAccount] = useCreateAccountMutation();
+  const [updateAccount] = useUpdateAccountMutation();
+  const [deleteAccount] = useDeleteAccountMutation();
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (account) {
-      await updateAccount({ id: account._id, body: { name, currency, isDefault } })
+      await updateAccount({
+        id: account._id,
+        body: { name: form.name, currency: form.currency, isDefault },
+      });
     } else {
-      await createAccount({ name, currency })
+      await createAccount({ name: form.name, currency: form.currency });
     }
-    onClose()
-  }
+    onClose();
+  };
 
   const handleDelete = async () => {
-    if (!account) return
-    await deleteAccount({ id: account._id })
-    onClose()
-  }
+    if (!account) return;
+    await deleteAccount({ id: account._id });
+    onClose();
+  };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <Input
-        type="text"
-        placeholder="Account name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <SelectOption
-        value={currency}
-        options={CURRENCY_OPTIONS}
-        onChange={(e) => setCurrency(e.target.value as Account['currency'])}
-      />
+    <Form
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      inputsArray={[
+        {
+          type: "text",
+          id: "name",
+          label: "Name",
+          placeholder: "Account name",
+          handleChange,
+          value: form.name,
+        },
+      ]}
+      selectsArray={[
+        {
+          type: "select",
+          id: "currency",
+          label: "Currency",
+          placeholder: "Select currency",
+          handleChange,
+          value: form.currency,
+          optionsArray: [...CURRENCIES].map((c) => ({ value: c, label: c })),
+        },
+      ]}
+    >
       <Checkbox
         id="isDefault"
         label="Set as default account"
@@ -63,10 +88,10 @@ const AccountForm = ({ account, onClose }: AccountFormProps) => {
       <FormActions
         onCancel={onClose}
         onDelete={account ? handleDelete : undefined}
-        submitLabel={account ? 'Save' : 'Create'}
+        submitLabel={account ? "Save" : "Create"}
       />
-    </form>
-  )
-}
+    </Form>
+  );
+};
 
-export default AccountForm
+export default AccountForm;

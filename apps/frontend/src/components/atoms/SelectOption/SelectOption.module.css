@@ -22,7 +22,16 @@
   border-bottom-color: var(--color-neon);
   border-left-color: var(--color-neon);
   background: color-mix(in srgb, var(--color-neon) 6%, transparent);
-  box-shadow: inset 0 0 18px color-mix(in srgb, var(--color-neon) 8%, transparent);
+  box-shadow: inset 0 0 18px
+    color-mix(in srgb, var(--color-neon) 8%, transparent);
+}
+
+:global([data-theme="dark"]) .input {
+  color-scheme: dark;
+}
+
+:global([data-theme="light"]) .input {
+  color-scheme: light;
 }
 
 .error {
@@ -34,5 +43,6 @@
   border-bottom-color: var(--color-danger);
   border-left-color: var(--color-danger);
   background: color-mix(in srgb, var(--color-danger) 5%, transparent);
-  box-shadow: inset 0 0 18px color-mix(in srgb, var(--color-danger) 6%, transparent);
+  box-shadow: inset 0 0 18px
+    color-mix(in srgb, var(--color-danger) 6%, transparent);
 }

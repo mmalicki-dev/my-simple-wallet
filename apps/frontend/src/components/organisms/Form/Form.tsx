@@ -16,7 +16,7 @@ type BaseProps = {
 };
 type TextProps = BaseProps & { type: "text" | "email" | "color" | "date" };
 type TextareaProps = BaseProps & { type: "textarea" };
-type SelectProps = BaseProps & { type: "select"; optionsArray: string[] };
+type SelectProps = BaseProps & { type: "select"; optionsArray: { value: string; label: string }[] };
 
 type FormProps = {
   handleChange: (

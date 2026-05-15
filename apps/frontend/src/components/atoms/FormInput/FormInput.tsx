@@ -1,33 +1,25 @@
-import styles from "./FormInput.module.css";
+import CustomSelect from '@/components/atoms/CustomSelect/CustomSelect'
+import type { SelectOption } from '@/components/atoms/CustomSelect/CustomSelect'
+import styles from './FormInput.module.css'
 
 type BaseProps = {
-  id: string;
-  label: string;
-  placeholder: string;
-  value: string;
-  isOptional?: boolean;
+  id: string
+  label: string
+  placeholder: string
+  value: string
+  isOptional?: boolean
   handleChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => void;
-};
-type InputProps = BaseProps & { type: "text" | "email" | "date" | "color" };
-type TextareaProps = BaseProps & { type: "textarea" };
-type SelectProps = BaseProps & { type: "select"; optionsArray: string[] };
-type FormProps = InputProps | TextareaProps | SelectProps;
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => void
+}
+type InputProps = BaseProps & { type: 'text' | 'email' | 'date' | 'color' }
+type TextareaProps = BaseProps & { type: 'textarea' }
+type SelectProps = BaseProps & { type: 'select'; optionsArray: SelectOption[] }
+type FormInputProps = InputProps | TextareaProps | SelectProps
 
-const FormInput = (props: FormProps) => {
-  const {
-    id,
-    type,
-    label,
-    placeholder,
-    value,
-    isOptional = false,
-    handleChange,
-  } = props;
-  const optionsArray = props.type === "select" ? props.optionsArray : undefined;
+const FormInput = (props: FormInputProps) => {
+  const { id, type, label, placeholder, value, isOptional = false, handleChange } = props
+  const optionsArray = props.type === 'select' ? props.optionsArray : undefined
 
   return (
     <div className={styles.field}>
@@ -35,10 +27,7 @@ const FormInput = (props: FormProps) => {
         {label}
         {isOptional && <span className={styles.optional}> (optional)</span>}
       </label>
-      {(type === "text" ||
-        type === "email" ||
-        type === "date" ||
-        type === "color") && (
+      {(type === 'text' || type === 'email' || type === 'date' || type === 'color') && (
         <input
           id={id}
           name={id}
@@ -51,28 +40,24 @@ const FormInput = (props: FormProps) => {
           autoComplete={id}
         />
       )}
-      {type === "select" && (
-        <select
+      {type === 'select' && (
+        <CustomSelect
           id={id}
-          name={id}
           value={value}
-          required={isOptional}
-          onChange={handleChange}
-          className={styles.select}
-        >
-          <option value="">{placeholder}</option>
-          {optionsArray?.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
+          options={optionsArray ?? []}
+          placeholder={placeholder}
+          onChange={(val) =>
+            handleChange({
+              target: { name: id, value: val },
+            } as React.ChangeEvent<HTMLSelectElement>)
+          }
+        />
       )}
-      {type === "textarea" && (
+      {type === 'textarea' && (
         <textarea
           id={id}
           name={id}
-          required={isOptional}
+          required={!isOptional}
           rows={4}
           value={value}
           onChange={handleChange}
@@ -81,7 +66,7 @@ const FormInput = (props: FormProps) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default FormInput;
+export default FormInput

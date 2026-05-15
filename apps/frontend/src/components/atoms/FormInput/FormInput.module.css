@@ -63,6 +63,14 @@
   appearance: auto;
 }
 
+:global([data-theme="dark"]) .select {
+  color-scheme: dark;
+}
+
+:global([data-theme="light"]) .select {
+  color-scheme: light;
+}
+
 .textarea {
   resize: vertical;
   min-height: 5rem;
