@@ -1,5 +1,8 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { TransactionType, TransactionStatus } from "../../../../packages/shared/dist/index.js";
+import {
+  TransactionType,
+  TransactionStatus,
+} from "../../../../packages/shared/dist/index.js";
 
 export interface ITransaction extends Document {
   user: mongoose.Types.ObjectId;
@@ -33,7 +36,7 @@ const TransactionSchema = new Schema<ITransaction>(
     },
     type: {
       type: String,
-      enum: ["income", "expense"],
+      enum: ["income", "expense"] satisfies TransactionType[],
       required: true,
     },
     category: {
