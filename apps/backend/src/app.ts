@@ -13,6 +13,7 @@ import { errorHandler } from "./api/middlewares/errorMiddleware.js";
 
 const app = express();
 
+app.disable("x-powered-by");
 app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(morgan(env.NODE_ENV === "development" ? "dev" : "combined"));
