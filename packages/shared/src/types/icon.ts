@@ -58,6 +58,8 @@ export const ICON_NAMES = [
   "utensils",
   "sun",
   "moon",
+  "document-edit",
+  "groupes",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];

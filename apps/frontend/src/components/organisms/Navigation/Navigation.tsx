@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import Logo from "@/components/atoms/Logo/Logo";
 import NavItem from "@/components/molecules/NavItem/NavItem";
+import type { IconName } from "shared";
 import Icon from "@/components/atoms/Icon/Icon";
 import Modal from "@/components/templates/Modal/Modal";
 import TransactionForm from "@/components/organisms/TransactionForm/TransactionForm";
@@ -76,8 +77,28 @@ const Navigation = () => {
               <span className={styles.fabLabel}>{isAddingTransaction ? "Close" : "Add"}</span>
             </button>
           </li>
-          <li className={styles.listItem}>
+          <li className={`${styles.listItem} ${styles.userSection}`}>
             <NavItem as="link" to={`${base}/user`} icon="user-id" label="User" />
+            <ul className={styles.subList}>
+              {[
+                { to: `${base}/user/profile`, label: "Profile", icon: "document-edit" },
+                { to: `${base}/user/accounts`, label: "Accounts", icon: "wallet" },
+                { to: `${base}/user/categories`, label: "Categories", icon: "document-edit" },
+                { to: `${base}/user/recurring-payments`, label: "Recurring", icon: "repeat" },
+              ].map(({ to, label, icon }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) =>
+                      isActive ? `${styles.subLink} ${styles.subLinkActive}` : styles.subLink
+                    }
+                  >
+                    <Icon name={icon as IconName} className={styles.subLinkIcon} />
+                    <span>{label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </li>
           <li className={styles.listItem}>
             <NavItem
