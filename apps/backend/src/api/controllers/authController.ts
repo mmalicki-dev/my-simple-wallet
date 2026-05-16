@@ -16,6 +16,7 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  CURRENCIES,
 } from "../../../../../packages/shared/dist/index.js";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
 
@@ -105,9 +106,12 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     const expiresAt = new Date(
       Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
     );
+    const device = req.headers["user-agent"] ?? "unknown";
     user.refreshTokens = [
-      ...user.refreshTokens.filter((t) => t.expiresAt > new Date()),
-      { token: refreshToken, expiresAt },
+      ...user.refreshTokens.filter(
+        (t) => t.expiresAt > new Date() && t.device !== device,
+      ),
+      { token: refreshToken, expiresAt, device },
     ];
     await user.save();
     res.cookie("refreshToken", refreshToken, {
@@ -196,7 +200,10 @@ export const updateProfile: RequestHandler = asyncHandler(async (req, res) => {
   if (!user) throw new AppError("User not found", 404);
 
   if (name && typeof name === "string") user.name = name.trim();
-  if (totalBalanceCurrency && typeof totalBalanceCurrency === "string")
+  if (
+    totalBalanceCurrency &&
+    (CURRENCIES as readonly string[]).includes(totalBalanceCurrency)
+  )
     user.totalBalanceCurrency = totalBalanceCurrency;
 
   await user.save();

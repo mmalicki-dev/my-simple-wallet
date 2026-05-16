@@ -5,6 +5,7 @@ import { CURRENCIES, Currency } from "../../../../packages/shared/dist/index.js"
 export interface IRefreshToken {
   token: string;
   expiresAt: Date;
+  device: string;
 }
 
 export interface IUser extends Document {
@@ -84,6 +85,7 @@ const UserSchema = new Schema<IUser>(
       {
         token: { type: String, required: true },
         expiresAt: { type: Date, required: true },
+        device: { type: String, default: "unknown" },
       },
     ],
   },
