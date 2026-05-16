@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { register, login, getMe, verifyEmail, forgotPassword, resetPassword, refresh, logout, updateProfile, requestEmailChange, confirmEmailChange } from '../controllers/authController.js'
+import { register, login, getMe, verifyEmail, forgotPassword, resetPassword, refresh, logout, updateProfile, requestEmailChange, confirmEmailChange, getSessions, deleteSession } from '../controllers/authController.js'
 import { protect } from '../middlewares/authMiddleware.js'
 
 const router = Router()
@@ -15,5 +15,7 @@ router.post('/logout', logout)
 router.put('/profile', protect, updateProfile)
 router.post('/change-email', protect, requestEmailChange)
 router.get('/confirm-email-change', confirmEmailChange)
+router.get('/sessions', protect, getSessions)
+router.delete('/sessions/:id', protect, deleteSession)
 
 export default router

@@ -1,11 +1,16 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { CURRENCIES, Currency } from "../../../../packages/shared/dist/index.js";
+import {
+  CURRENCIES,
+  Currency,
+} from "../../../../packages/shared/dist/index.js";
 
 export interface IRefreshToken {
+  _id?: mongoose.Types.ObjectId;
   token: string;
   expiresAt: Date;
-  device: string;
+  deviceID: string;
+  userAgent: string;
 }
 
 export interface IUser extends Document {
@@ -85,7 +90,8 @@ const UserSchema = new Schema<IUser>(
       {
         token: { type: String, required: true },
         expiresAt: { type: Date, required: true },
-        device: { type: String, default: "unknown" },
+        deviceID: { type: String, default: crypto.randomUUID() },
+        userAgent: { type: String, default: "unknown" },
       },
     ],
   },

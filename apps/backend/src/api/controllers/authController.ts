@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import mongoose from "mongoose";
 import { UserModel, CategoryModel } from "../../models/index.js";
 import env from "../../config/env.js";
@@ -106,19 +106,27 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
     const expiresAt = new Date(
       Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
     );
-    const device = req.headers["user-agent"] ?? "unknown";
+    const deviceID = req.cookies.deviceID ?? randomUUID();
+    const userAgent = req.headers["user-agent"] ?? "unknown";
     user.refreshTokens = [
       ...user.refreshTokens.filter(
-        (t) => t.expiresAt > new Date() && t.device !== device,
+        (t) => t.expiresAt > new Date() && t.deviceID !== deviceID,
       ),
-      { token: refreshToken, expiresAt, device },
+      { token: refreshToken, expiresAt, deviceID, userAgent },
     ];
     await user.save();
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
+    res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
+      })
+      .cookie("deviceID", deviceID, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        maxAge: 400 * 24 * 60 * 60 * 1000,
+        sameSite: "strict",
+      });
   }
 
   const accessToken = jwt.sign(
@@ -341,4 +349,34 @@ export const logout: RequestHandler = asyncHandler(async (req, res) => {
 
   res.clearCookie("refreshToken");
   ok(res, undefined, "Logged out successfully");
+});
+
+export const getSessions: RequestHandler = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new AppError("User not found", 404);
+
+  const now = new Date();
+  const sessions = user.refreshTokens
+    .filter((t) => t.expiresAt > now)
+    .map((t) => ({
+      id: t._id,
+      deviceID: t.deviceID,
+      userAgent: t.userAgent,
+      expiresAt: t.expiresAt,
+    }));
+
+  ok(res, sessions, "Sessions retrieved");
+});
+
+export const deleteSession: RequestHandler = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new AppError("User not found", 404);
+
+  const { id } = req.params;
+  user.refreshTokens = user.refreshTokens.filter(
+    (t) => t._id?.toString() !== id,
+  );
+  await user.save();
+
+  ok(res, undefined, "Session deleted");
 });
