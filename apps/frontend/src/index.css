@@ -35,6 +35,29 @@
   --color-account-credit: #d97706;
 }
 
+@keyframes sectionGlow {
+  0% {
+    background: none;
+
+    box-shadow: none;
+  }
+  25% {
+    background: color-mix(in srgb, var(--color-neon) 15%, transparent);
+
+    box-shadow: 0 0 22px 6px
+      color-mix(in srgb, var(--color-neon) 50%, transparent);
+  }
+  100% {
+    background: none;
+    box-shadow: none;
+  }
+}
+
+.section-glow {
+  animation: sectionGlow 1.4s 0.5s ease-out forwards;
+  border-radius: 0.5rem;
+}
+
 * {
   box-sizing: border-box;
 }

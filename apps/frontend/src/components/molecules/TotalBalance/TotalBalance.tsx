@@ -26,7 +26,7 @@ const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
       {!isError && !isLoading && (
         <ActionPanel
           onlyRightBorder
-          onEdit={() => navigate(`/${lang}/user/profile`)}
+          onEdit={() => navigate(`/${lang}/user/profile#preferences`)}
         >
           <Amount
             value={total!}

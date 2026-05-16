@@ -30,7 +30,7 @@ const UserPreferencesBlock = () => {
   };
 
   return (
-    <UserBlockWrapper title="Preferences">
+    <UserBlockWrapper title="Preferences" id="preferences">
       <div className={styles.controls}>
         <ThemeToggle />
         <LanguageSwitcher />

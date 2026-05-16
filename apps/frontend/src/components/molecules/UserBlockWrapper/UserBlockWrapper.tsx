@@ -4,11 +4,12 @@ import styles from './UserBlockWrapper.module.css'
 interface UserBlockWrapperProps {
   title: string
   children: ReactNode
+  id?: string
 }
 
-const UserBlockWrapper = ({ title, children }: UserBlockWrapperProps) => {
+const UserBlockWrapper = ({ title, children, id }: UserBlockWrapperProps) => {
   return (
-    <section className={styles.block}>
+    <section id={id} className={styles.block}>
       <h2 className={styles.title}>{title}</h2>
       {children}
     </section>
