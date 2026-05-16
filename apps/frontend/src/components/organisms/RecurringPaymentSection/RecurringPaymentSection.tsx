@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { RecurringPayment, RecurringPaymentType } from '@/types'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
@@ -11,6 +12,20 @@ const RecurringPaymentSection = () => {
   const { data: payments = [], isLoading } = useGetRecurringPaymentsQuery()
   const [selected, setSelected] = useState<RecurringPayment | null>(null)
   const [addingType, setAddingType] = useState<RecurringPaymentType | null>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const editId = searchParams.get('edit')
+    if (editId && payments.length > 0) {
+      const payment = payments.find((p) => p._id === editId)
+      if (payment) setSelected(payment)
+    }
+  }, [searchParams, payments])
+
+  const handleCloseEdit = () => {
+    setSelected(null)
+    setSearchParams({}, { replace: true })
+  }
 
   if (isLoading) return <Spinner />
 
@@ -37,11 +52,11 @@ const RecurringPaymentSection = () => {
       </Modal>
       <Modal
         isOpen={!!selected}
-        onClose={() => setSelected(null)}
+        onClose={handleCloseEdit}
         title="Edit Recurring Payment"
       >
         {selected && (
-          <RecurringPaymentForm payment={selected} onClose={() => setSelected(null)} />
+          <RecurringPaymentForm payment={selected} onClose={handleCloseEdit} />
         )}
       </Modal>
       <UserSectionList title="Subscriptions" onAdd={() => setAddingType("subscription")}>

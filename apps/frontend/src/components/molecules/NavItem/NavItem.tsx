@@ -15,7 +15,7 @@ type NavItemProps =
 const NavItem = (props: NavItemProps) => {
   if (props.as === "button") {
     return (
-      <button type="button" className={styles.item} onClick={props.onClick}>
+      <button type="button" className={styles.item} onClick={props.onClick} title={props.label}>
         <Icon name={props.icon} className={styles.icon} />
         <span className={styles.label}>{props.label}</span>
       </button>
@@ -24,6 +24,7 @@ const NavItem = (props: NavItemProps) => {
   return (
     <NavLink
       to={props.to}
+      title={props.label}
       className={({ isActive }) =>
         isActive ? `${styles.item} ${styles.active}` : `${styles.item}`
       }

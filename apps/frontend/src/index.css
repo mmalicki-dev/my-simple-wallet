@@ -2,6 +2,7 @@
   --font-heading: "Playfair Display", serif;
   --font-body:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --nav-height: 5rem;
   --neon-shadow: 0 0 1rem var(--color-neon), inset 0 0 1rem var(--color-neon);
 }
 

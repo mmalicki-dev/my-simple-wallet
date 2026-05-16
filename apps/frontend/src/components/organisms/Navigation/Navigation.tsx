@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "@/components/atoms/Logo/Logo";
 import NavItem from "@/components/molecules/NavItem/NavItem";
 import Icon from "@/components/atoms/Icon/Icon";
@@ -19,6 +19,11 @@ const Navigation = () => {
   const navigate = useNavigate();
   const [logoutMutation] = useLogoutMutation();
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsAddingTransaction(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await logoutMutation()
@@ -62,12 +67,13 @@ const Navigation = () => {
           <li className={styles.fabItem}>
             <button
               type="button"
-              className={styles.fab}
-              onClick={() => setIsAddingTransaction(true)}
-              aria-label="Add transaction"
+              className={`${styles.fab}${isAddingTransaction ? ` ${styles.fabActive}` : ""}`}
+              onClick={() => setIsAddingTransaction((v) => !v)}
+              aria-label={isAddingTransaction ? "Close" : "Add transaction"}
+              title={isAddingTransaction ? "Close" : "Add transaction"}
             >
               <Icon name="add-circle" className={styles.fabIcon} />
-              <span className={styles.fabLabel}>Add</span>
+              <span className={styles.fabLabel}>{isAddingTransaction ? "Close" : "Add"}</span>
             </button>
           </li>
           <li className={styles.listItem}>

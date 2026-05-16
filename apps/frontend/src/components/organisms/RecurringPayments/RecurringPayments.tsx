@@ -1,9 +1,7 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import type { RecurringPayment, RecurringPaymentType } from "@/types";
 import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
 import RecurringPaymentBlock from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
-import RecurringPaymentForm from "@/components/organisms/RecurringPaymentForm/RecurringPaymentForm";
 import Spinner from "@/components/atoms/Spinner/Spinner";
 import Icon from "@/components/atoms/Icon/Icon";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
@@ -12,38 +10,25 @@ import styles from "./RecurringPayments.module.css";
 interface SectionProps {
   type: RecurringPaymentType;
   payments: RecurringPayment[];
-  selected: RecurringPayment | null;
   onSelect: (payment: RecurringPayment) => void;
-  onClose: () => void;
 }
 
-const RecurringPaymentSection = ({
-  type,
-  payments,
-  selected,
-  onSelect,
-  onClose,
-}: SectionProps) => (
+const RecurringPaymentSection = ({ type, payments, onSelect }: SectionProps) => (
   <HudPanel>
-    {selected?.type === type ? (
-      <RecurringPaymentForm payment={selected} onClose={onClose} />
-    ) : (
-      <RecurringPaymentBlock
-        type={type}
-        payments={payments}
-        onItemClick={onSelect}
-      />
-    )}
+    <RecurringPaymentBlock type={type} payments={payments} onItemClick={onSelect} />
   </HudPanel>
 );
 
 const RecurringPayments = () => {
   const { data = [], isLoading } = useGetRecurringPaymentsQuery();
-  const [selected, setSelected] = useState<RecurringPayment | null>(null);
   const { lang = "en" } = useParams();
+  const navigate = useNavigate();
 
   const loans = data.filter((p) => p.type === "loan");
   const subscriptions = data.filter((p) => p.type === "subscription");
+
+  const handleSelect = (payment: RecurringPayment) =>
+    navigate(`/${lang}/user/recurring-payments?edit=${payment._id}`);
 
   if (isLoading) return <Spinner />;
 
@@ -64,22 +49,10 @@ const RecurringPayments = () => {
   return (
     <>
       {loans.length > 0 && (
-        <RecurringPaymentSection
-          type="loan"
-          payments={loans}
-          selected={selected}
-          onSelect={setSelected}
-          onClose={() => setSelected(null)}
-        />
+        <RecurringPaymentSection type="loan" payments={loans} onSelect={handleSelect} />
       )}
       {subscriptions.length > 0 && (
-        <RecurringPaymentSection
-          type="subscription"
-          payments={subscriptions}
-          selected={selected}
-          onSelect={setSelected}
-          onClose={() => setSelected(null)}
-        />
+        <RecurringPaymentSection type="subscription" payments={subscriptions} onSelect={handleSelect} />
       )}
     </>
   );
