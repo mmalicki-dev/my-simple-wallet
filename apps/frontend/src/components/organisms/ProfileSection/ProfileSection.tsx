@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import UserInfoBlock from "@/components/organisms/UserInfoBlock/UserInfoBlock";
 import UserPreferencesBlock from "@/components/organisms/UserPreferencesBlock/UserPreferencesBlock";
 import UserSecurityBlock from "@/components/organisms/UserSecurityBlock/UserSecurityBlock";
+import UserDevicesBlock from "@/components/organisms/UserDevicesBlock/UserDevicesBlock";
 import styles from "./ProfileSection.module.css";
 
 const ProfileSection = () => {
@@ -23,6 +24,7 @@ const ProfileSection = () => {
       <UserInfoBlock />
       <UserPreferencesBlock />
       <UserSecurityBlock />
+      <UserDevicesBlock />
     </div>
   );
 };

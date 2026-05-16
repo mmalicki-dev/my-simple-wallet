@@ -57,6 +57,6 @@ const baseQuery: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery,
-  tagTypes: ["Transaction", "Account", "Category", "RecurringPayment"],
+  tagTypes: ["Transaction", "Account", "Category", "RecurringPayment", "Session"],
   endpoints: () => ({}),
 });

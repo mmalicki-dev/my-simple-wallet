@@ -6,6 +6,7 @@ import type {
   ResetPassRequest,
   ForgotPassRequest,
   LoginRequest,
+  Session,
 } from "@/types";
 
 export const authApi = api.injectEndpoints({
@@ -44,6 +45,14 @@ export const authApi = api.injectEndpoints({
     confirmEmailChange: builder.mutation<void, { token: string }>({
       query: ({ token }) => ({ url: `/auth/confirm-email-change?token=${token}`, method: "GET" }),
     }),
+    getSessions: builder.query<Session[], void>({
+      query: () => "/auth/sessions",
+      providesTags: ["Session"],
+    }),
+    deleteSession: builder.mutation<void, string>({
+      query: (id) => ({ url: `/auth/sessions/${id}`, method: "DELETE" }),
+      invalidatesTags: ["Session"],
+    }),
   }),
 });
 
@@ -58,4 +67,6 @@ export const {
   useRequestEmailChangeMutation,
   useVerifyEmailMutation,
   useConfirmEmailChangeMutation,
+  useGetSessionsQuery,
+  useDeleteSessionMutation,
 } = authApi;

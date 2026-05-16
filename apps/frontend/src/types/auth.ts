@@ -2,6 +2,13 @@ import type { User } from "shared";
 
 export type { User as UserResponse };
 
+export interface Session {
+  id: string;
+  deviceID: string;
+  userAgent: string;
+  expiresAt: string;
+}
+
 export interface LoginResponse {
   accessToken: string;
   user: User;
