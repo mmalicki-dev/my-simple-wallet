@@ -32,7 +32,7 @@ const TransactionForm = ({
   const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
 
   const [form, setForm] = useState({
-    type: (transaction?.type ?? "expense") as TransactionType,
+    type: transaction?.type ?? "expense",
     amount: String(transaction?.amount ?? ""),
     category: transaction?.category ?? "",
     description: transaction?.description ?? "",
@@ -41,7 +41,12 @@ const TransactionForm = ({
   });
 
   useEffect(() => {
-    if (!accountId && !transaction?.account && !form.account && defaultAccount) {
+    if (
+      !accountId &&
+      !transaction?.account &&
+      !form.account &&
+      defaultAccount
+    ) {
       setForm((prev) => ({ ...prev, account: defaultAccount._id }));
     }
   }, [defaultAccount?._id]);
@@ -66,7 +71,11 @@ const TransactionForm = ({
 
   const handleTypeChange = (next: TransactionType) => {
     const firstOfType = categories.find((c) => c.type === next);
-    setForm((prev) => ({ ...prev, type: next, category: firstOfType?._id ?? "" }));
+    setForm((prev) => ({
+      ...prev,
+      type: next,
+      category: firstOfType?._id ?? "",
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,7 +94,10 @@ const TransactionForm = ({
           body: { ...body, account: transaction.account },
         }).unwrap();
       } else {
-        await createTransaction({ ...body, account: accountId ?? form.account }).unwrap();
+        await createTransaction({
+          ...body,
+          account: accountId ?? form.account,
+        }).unwrap();
       }
       onClose();
     } catch {
