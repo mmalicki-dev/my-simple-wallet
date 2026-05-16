@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { Account } from '@/types'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
@@ -11,6 +12,20 @@ const AccountSection = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery()
   const [selected, setSelected] = useState<Account | null>(null)
   const [isAdding, setIsAdding] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const editId = searchParams.get('edit')
+    if (editId && accounts.length > 0) {
+      const account = accounts.find((a) => a._id === editId)
+      if (account) setSelected(account)
+    }
+  }, [searchParams, accounts])
+
+  const handleCloseEdit = () => {
+    setSelected(null)
+    setSearchParams({}, { replace: true })
+  }
 
   if (isLoading) return <Spinner />
 
@@ -25,11 +40,11 @@ const AccountSection = () => {
       </Modal>
       <Modal
         isOpen={!!selected}
-        onClose={() => setSelected(null)}
+        onClose={handleCloseEdit}
         title="Edit Account"
       >
         {selected && (
-          <AccountForm account={selected} onClose={() => setSelected(null)} />
+          <AccountForm account={selected} onClose={handleCloseEdit} />
         )}
       </Modal>
       <UserSectionList title="Accounts" onAdd={() => setIsAdding(true)}>

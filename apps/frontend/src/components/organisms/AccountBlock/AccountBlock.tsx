@@ -34,7 +34,7 @@ const AccountBlock = () => {
             key={account._id}
             account={account}
             onViewMore={() => navigate(`/${lang}/accounts/${account._id}`)}
-            onEdit={() => navigate(`/${lang}/user/accounts`)}
+            onEdit={() => navigate(`/${lang}/user/accounts?edit=${account._id}`)}
           />
         ))}
       </ul>
