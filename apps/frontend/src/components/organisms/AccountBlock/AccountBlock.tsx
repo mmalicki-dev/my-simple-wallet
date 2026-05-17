@@ -6,7 +6,12 @@ import { useGetAccountsQuery } from "@/services";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 import styles from "./AccountBlock.module.css";
 
-const AccountBlock = () => {
+interface AccountBlockProps {
+  selectedAccountId?: string;
+  onSelectAccount?: (id: string) => void;
+}
+
+const AccountBlock = ({ selectedAccountId, onSelectAccount }: AccountBlockProps) => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
   const { lang = "en" } = useParams();
   const navigate = useNavigate();
@@ -35,6 +40,8 @@ const AccountBlock = () => {
             account={account}
             onViewMore={() => navigate(`/${lang}/accounts/${account._id}`)}
             onEdit={() => navigate(`/${lang}/user/accounts?edit=${account._id}`)}
+            onSelect={() => onSelectAccount?.(account._id)}
+            isSelected={selectedAccountId === account._id}
           />
         ))}
       </ul>

@@ -8,6 +8,8 @@ interface AccountItemProps {
   onViewMore?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onSelect?: () => void;
+  isSelected?: boolean;
 }
 
 const AccountItem = ({
@@ -15,16 +17,29 @@ const AccountItem = ({
   onViewMore,
   onEdit,
   onDelete,
+  onSelect,
+  isSelected,
 }: AccountItemProps) => {
   return (
-    <li className={styles.item}>
+    <li
+      className={[styles.item, isSelected ? styles.selected : undefined]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <ActionPanel
         className={styles.account}
         onViewMore={onViewMore}
         onEdit={onEdit}
         onDelete={onDelete}
       >
-        <div className={styles.content}>
+        <button
+          type="button"
+          className={styles.content}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect?.();
+          }}
+        >
           <div className={styles.info}>
             <span className={styles.name}>{account.name}</span>
             <Amount
@@ -36,7 +51,7 @@ const AccountItem = ({
           <span className={[styles.type, styles[account.type]].join(" ")}>
             {account.type.toUpperCase()}
           </span>
-        </div>
+        </button>
       </ActionPanel>
     </li>
   );

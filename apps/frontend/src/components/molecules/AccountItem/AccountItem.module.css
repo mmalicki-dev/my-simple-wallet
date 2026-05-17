@@ -17,6 +17,20 @@
   width: 100%;
   text-align: left;
   padding-right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.selected {
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-neon) 20%, transparent),
+    transparent
+  );
+  border-radius: 2px;
 }
 
 .info {

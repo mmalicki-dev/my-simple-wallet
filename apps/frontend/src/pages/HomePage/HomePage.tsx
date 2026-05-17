@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { useGetAccountsQuery } from "@/services/accountApi";
@@ -15,6 +16,13 @@ const HomePage = () => {
   const totalBalanceCurrency = useSelector(
     (state: RootState) => state.auth.user?.totalBalanceCurrency,
   );
+  const [selectedAccountId, setSelectedAccountId] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (selectedAccountId || accounts.length === 0) return;
+    const def = accounts.find((a) => a.isDefault) ?? accounts[0];
+    setSelectedAccountId(def._id);
+  }, [accounts, selectedAccountId]);
 
   return (
     <>
@@ -36,12 +44,15 @@ const HomePage = () => {
                 </HudPanel>
               )}
               <HudPanel>
-                <AccountBlock />
+                <AccountBlock
+                  selectedAccountId={selectedAccountId}
+                  onSelectAccount={setSelectedAccountId}
+                />
               </HudPanel>
               <RecurringPayments />
             </div>
             <div className={styles.rightColumn}>
-              <HomeRightPanel />
+              <HomeRightPanel accountId={selectedAccountId} />
             </div>
           </>
         )}

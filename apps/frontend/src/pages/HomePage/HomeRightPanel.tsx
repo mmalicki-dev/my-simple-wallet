@@ -17,18 +17,22 @@ const currentMonthRange = () => {
   return { from: isoDate(from), to: isoDate(today) };
 };
 
-const HomeRightPanel = () => {
+interface HomeRightPanelProps {
+  accountId?: string;
+}
+
+const HomeRightPanel = ({ accountId }: HomeRightPanelProps) => {
   const { data: accounts = [] } = useGetAccountsQuery();
-  const defaultAccount = useMemo(
-    () => accounts.find((a) => a.isDefault) ?? accounts[0],
-    [accounts],
+  const currency = useMemo(
+    () => accounts.find((a) => a._id === accountId)?.currency ?? "USD",
+    [accounts, accountId],
   );
 
   const { from, to } = currentMonthRange();
 
   const { data: txData, isLoading: txLoading } = useGetTransactionsQuery(
-    { from, to, accountId: defaultAccount?._id },
-    { skip: !defaultAccount },
+    { from, to, accountId },
+    { skip: !accountId },
   );
 
   const { data: categories = [], isLoading: categoriesLoading } =
@@ -44,20 +48,20 @@ const HomeRightPanel = () => {
     [txData],
   );
 
-  const recentTransactions = allTransactions.slice(0, 8);
-
   return (
     <div className={styles.panel}>
-      <HudPanel>
+      <HudPanel className={styles.txPanel}>
         <PanelLabel label="Recent Transactions" />
         {txLoading ? (
           <Spinner />
         ) : (
-          <TransactionList
-            transactions={recentTransactions}
-            currency={defaultAccount?.currency ?? "USD"}
-            isLoading={false}
-          />
+          <div className={styles.txScroll}>
+            <TransactionList
+              transactions={allTransactions}
+              currency={currency}
+              isLoading={false}
+            />
+          </div>
         )}
       </HudPanel>
 
