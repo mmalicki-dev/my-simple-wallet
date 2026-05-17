@@ -7,6 +7,7 @@ import styles from "./RecurringPaymentItem.module.css";
 interface RecurringPaymentItemProps {
   payment: RecurringPayment;
   currency: Currency;
+  accountName: string;
   onViewMore?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -15,6 +16,7 @@ interface RecurringPaymentItemProps {
 const RecurringPaymentItem = ({
   payment,
   currency,
+  accountName,
   onViewMore,
   onEdit,
   onDelete,
@@ -33,7 +35,7 @@ const RecurringPaymentItem = ({
           <div className={styles.info}>
             <span className={styles.name}>{payment.name}</span>
             <span className={styles.meta}>
-              {payment.billingCycle} · due {dueDate}
+              {payment.billingCycle} · due {dueDate} · {accountName}
             </span>
           </div>
           <Amount

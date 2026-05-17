@@ -1,5 +1,9 @@
 import { useSelector } from "react-redux";
-import type { BillingCycle, RecurringPayment, RecurringPaymentType } from "@/types";
+import type {
+  BillingCycle,
+  RecurringPayment,
+  RecurringPaymentType,
+} from "@/types";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import { useGetExchangeRatesQuery } from "@/services/exchangeRateApi";
 import { useGetRecurringPaymentsQuery } from "@/services";
@@ -33,19 +37,26 @@ const RecurringPaymentBlock = ({
   onItemClick,
 }: RecurringPaymentBlockProps) => {
   const { isLoading: paymentsLoading } = useGetRecurringPaymentsQuery();
-  const { data: accounts = [], isLoading: accountsLoading } = useGetAccountsQuery();
-  const baseCurrency = useSelector((state: RootState) => state.auth.user?.totalBalanceCurrency);
+  const { data: accounts = [], isLoading: accountsLoading } =
+    useGetAccountsQuery();
+  const baseCurrency = useSelector(
+    (state: RootState) => state.auth.user?.totalBalanceCurrency,
+  );
 
   const active = payments.filter((p) => p.isActive);
   const activeCurrencies = [
-    ...new Set(active.map((p) => accounts.find((a) => a._id === p.account)?.currency ?? "USD")),
+    ...new Set(
+      active.map(
+        (p) => accounts.find((a) => a._id === p.account)?.currency ?? "USD",
+      ),
+    ),
   ];
   const allSameCurrency =
     activeCurrencies.length === 1 && activeCurrencies[0] === baseCurrency;
 
   const { data: ratesData, isLoading: ratesLoading } = useGetExchangeRatesQuery(
     baseCurrency ?? "USD",
-    { skip: !baseCurrency || allSameCurrency || active.length === 0 }
+    { skip: !baseCurrency || allSameCurrency || active.length === 0 },
   );
 
   if (paymentsLoading || accountsLoading) return <SkeletonLoader count={2} />;
@@ -54,7 +65,8 @@ const RecurringPaymentBlock = ({
 
   const monthlyTotal = active.reduce((sum, p) => {
     const monthly = p.amount * MONTHLY_FACTOR[p.billingCycle];
-    const currency = accounts.find((a) => a._id === p.account)?.currency ?? "USD";
+    const currency =
+      accounts.find((a) => a._id === p.account)?.currency ?? "USD";
     if (currency === displayCurrency) return sum + monthly;
     const rate = ratesData?.rates[currency];
     return rate ? sum + monthly / rate : sum + monthly;
@@ -74,7 +86,12 @@ const RecurringPaymentBlock = ({
           <RecurringPaymentItem
             key={payment._id}
             payment={payment}
-            currency={accounts.find((a) => a._id === payment.account)?.currency ?? "USD"}
+            currency={
+              accounts.find((a) => a._id === payment.account)?.currency ?? "USD"
+            }
+            accountName={
+              accounts.find((a) => a._id === payment.account)?.name ?? "unknown"
+            }
             onEdit={() => onItemClick(payment)}
           />
         ))}
