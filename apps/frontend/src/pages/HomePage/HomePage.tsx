@@ -6,8 +6,9 @@ import AccountBlock from "@/components/organisms/AccountBlock/AccountBlock";
 import RecurringPayments from "@/components/organisms/RecurringPayments/RecurringPayments";
 import TotalBalance from "@/components/molecules/TotalBalance/TotalBalance";
 import Spinner from "@/components/atoms/Spinner/Spinner";
-import styles from "./HomePage.module.css";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
+import HomeRightPanel from "./HomeRightPanel";
+import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
@@ -25,18 +26,23 @@ const HomePage = () => {
           <Spinner />
         ) : (
           <>
-            {totalBalanceCurrency && (
+            <div className={styles.leftColumn}>
+              {totalBalanceCurrency && (
+                <HudPanel>
+                  <TotalBalance
+                    accounts={accounts}
+                    baseCurrency={totalBalanceCurrency}
+                  />
+                </HudPanel>
+              )}
               <HudPanel>
-                <TotalBalance
-                  accounts={accounts}
-                  baseCurrency={totalBalanceCurrency}
-                />
+                <AccountBlock />
               </HudPanel>
-            )}
-            <HudPanel>
-              <AccountBlock />
-            </HudPanel>
-            <RecurringPayments />
+              <RecurringPayments />
+            </div>
+            <div className={styles.rightColumn}>
+              <HomeRightPanel />
+            </div>
           </>
         )}
       </div>

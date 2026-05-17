@@ -4,6 +4,16 @@
   gap: 3rem;
 }
 
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.rightColumn {
+  display: none;
+}
+
 .glassWrapper {
   padding: 1rem 2rem;
   clip-path: polygon(
@@ -14,4 +24,19 @@
     12px 100%,
     0 calc(100% - 12px)
   );
+}
+
+@media (min-width: 1000px) {
+  .page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .rightColumn {
+    display: block;
+    position: sticky;
+    top: 0;
+  }
 }
