@@ -10,3 +10,17 @@
   align-items: center;
   justify-content: center;
 }
+
+@media (min-width: 1000px) {
+  .viewer {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    min-height: calc(100vh - 8rem);
+  }
+
+  .chartPanel {
+    flex: 1;
+    align-self: stretch;
+  }
+}
