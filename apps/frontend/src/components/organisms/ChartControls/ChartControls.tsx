@@ -1,7 +1,7 @@
-import type { IconName } from "shared";
+import type { IconName, Currency } from "shared";
 import type { Account } from "@/types";
 import Icon from "@/components/atoms/Icon/Icon";
-import ChartButton from "@/components/atoms/ChartButton/ChartButton";
+import ChartOption from "@/components/atoms/ChartOption/ChartOption";
 import ChartControlsItem from "@/components/molecules/ChartControlsItem/ChartControlsItem";
 import ChartDatePicker from "@/components/molecules/ChartDatePicker/ChartDatePicker";
 import styles from "./ChartControls.module.css";
@@ -11,7 +11,8 @@ export type DataType = "balance" | "categories" | "cashflow";
 export type ChartType = "bar" | "pie" | "line";
 
 export interface ChartConfig {
-  accountId: string | null;
+  accountIds: string[];
+  currency: Currency;
   period: Period;
   customFrom: string;
   customTo: string;
@@ -27,10 +28,10 @@ interface ChartControlsProps {
 }
 
 const PERIODS: { value: Period; label: string }[] = [
-  { value: "month", label: "Month" },
-  { value: "3months", label: "3M" },
-  { value: "6months", label: "6M" },
-  { value: "year", label: "Year" },
+  { value: "month", label: "Last month" },
+  { value: "3months", label: "Last 3 months" },
+  { value: "6months", label: "Last 6 months" },
+  { value: "year", label: "Last year" },
   { value: "custom", label: "Custom" },
 ];
 
@@ -68,75 +69,111 @@ const ChartControls = ({
     onChange({ dataType, chartType });
   };
 
+  const toggleAccount = (id: string) => {
+    const ids = config.accountIds.includes(id)
+      ? config.accountIds.filter((a) => a !== id)
+      : [...config.accountIds, id];
+    onChange({ accountIds: ids });
+  };
+
+  const availableCurrencies = [
+    ...new Set(accounts.map((a) => a.currency)),
+  ] as Currency[];
+
   return (
     <div className={styles.controls}>
       <ChartControlsItem label="Account">
         {accountsLoading ? (
           <div className={styles.placeholder} />
-        ) : accounts.map((acc) => (
-          <ChartButton
-            key={acc._id}
-            active={acc._id === config.accountId}
-            onClick={() => onChange({ accountId: acc._id })}
+        ) : (
+          accounts.map((acc) => (
+            <ChartOption
+              key={acc._id}
+              type="checkbox"
+              name="account"
+              checked={config.accountIds.includes(acc._id)}
+              onChange={() => toggleAccount(acc._id)}
+            >
+              {acc.name}
+            </ChartOption>
+          ))
+        )}
+      </ChartControlsItem>
+
+      {availableCurrencies.length > 1 && (
+        <ChartControlsItem label="Currency">
+          {availableCurrencies.map((cur) => (
+            <ChartOption
+              key={cur}
+              type="radio"
+              name="currency"
+              checked={config.currency === cur}
+              onChange={() => onChange({ currency: cur })}
+            >
+              {cur}
+            </ChartOption>
+          ))}
+        </ChartControlsItem>
+      )}
+
+      <ChartControlsItem label="Data" role="radiogroup" aria-label="Data">
+        {DATA_TYPES.map(({ value, label }) => (
+          <ChartOption
+            key={value}
+            type="radio"
+            name="dataType"
+            checked={config.dataType === value}
+            onChange={() => handleDataTypeChange(value)}
           >
-            {acc.name}
-          </ChartButton>
+            {label}
+          </ChartOption>
         ))}
       </ChartControlsItem>
 
       <ChartControlsItem
-        label="Period"
+        label="Chart"
         role="radiogroup"
-        aria-label="Period"
-        footer={config.period === "custom" && (
-          <ChartDatePicker
-            from={config.customFrom}
-            to={config.customTo}
-            onFromChange={(customFrom) => onChange({ customFrom })}
-            onToChange={(customTo) => onChange({ customTo })}
-          />
-        )}
+        aria-label="Chart type"
       >
-        {PERIODS.map(({ value, label }) => (
-          <ChartButton
-            key={value}
-            active={config.period === value}
-            onClick={() => onChange({ period: value })}
-          >
-            {label}
-          </ChartButton>
-        ))}
-      </ChartControlsItem>
-
-      <ChartControlsItem label="Data" role="radiogroup" aria-label="Data">
-        {DATA_TYPES.map(({ value, label }) => (
-          <ChartButton
-            key={value}
-            active={config.dataType === value}
-            onClick={() => handleDataTypeChange(value)}
-          >
-            {label}
-          </ChartButton>
-        ))}
-      </ChartControlsItem>
-
-      <ChartControlsItem label="Chart" role="radiogroup" aria-label="Chart type">
         {CHART_TYPES.map(({ value, icon, label }) => {
           const disabled = !allowedCharts.includes(value);
           return (
-            <ChartButton
+            <ChartOption
               key={value}
-              active={config.chartType === value}
+              type="radio"
+              name="chartType"
+              checked={config.chartType === value}
+              onChange={() => onChange({ chartType: value })}
               disabled={disabled}
-              ariaLabel={label}
-              title={disabled ? `${label} not available for this data` : label}
-              onClick={() => onChange({ chartType: value })}
             >
               <Icon name={icon} className={styles.icon} />
-            </ChartButton>
+              {label}
+            </ChartOption>
           );
         })}
       </ChartControlsItem>
+
+      <ChartControlsItem label="Period" role="radiogroup" aria-label="Period">
+        {PERIODS.map(({ value, label }) => (
+          <ChartOption
+            key={value}
+            type="radio"
+            name="period"
+            checked={config.period === value}
+            onChange={() => onChange({ period: value })}
+          >
+            {label}
+          </ChartOption>
+        ))}
+      </ChartControlsItem>
+      {config.period === "custom" && (
+        <ChartDatePicker
+          from={config.customFrom}
+          to={config.customTo}
+          onFromChange={(customFrom) => onChange({ customFrom })}
+          onToChange={(customTo) => onChange({ customTo })}
+        />
+      )}
     </div>
   );
 };

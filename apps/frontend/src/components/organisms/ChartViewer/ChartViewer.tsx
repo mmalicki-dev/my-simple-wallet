@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import { useGetTransactionsQuery } from "@/services/transactionApi";
 import { useGetCategoriesQuery } from "@/services/categoryApi";
@@ -56,17 +58,18 @@ const getPresetRange = (
 // ============================================================
 // Component
 // ============================================================
-const initialConfig: ChartConfig = {
-  accountId: null,
-  period: "month",
-  customFrom: monthAgoIso(),
-  customTo: todayIso(),
-  dataType: "balance",
-  chartType: "line",
-};
-
 const ChartViewer = () => {
-  const [config, setConfig] = useState<ChartConfig>(initialConfig);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [config, setConfig] = useState<ChartConfig>({
+    accountIds: [],
+    currency: user?.totalBalanceCurrency ?? "EUR",
+    period: "month",
+    customFrom: monthAgoIso(),
+    customTo: todayIso(),
+    dataType: "balance",
+    chartType: "line",
+  });
 
   const updateConfig = (next: Partial<ChartConfig>) =>
     setConfig((c) => ({ ...c, ...next }));
@@ -75,24 +78,31 @@ const ChartViewer = () => {
     useGetAccountsQuery();
 
   useEffect(() => {
-    if (config.accountId || accounts.length === 0) return;
-    const initial = accounts.find((a) => a.isDefault) ?? accounts[0];
-    setConfig((c) => ({ ...c, accountId: initial._id }));
-  }, [accounts, config.accountId]);
+    if (config.accountIds.length > 0 || accounts.length === 0) return;
+    const defaultAccount = accounts.find((a) => a.isDefault) ?? accounts[0];
+    setConfig((c) => ({
+      ...c,
+      accountIds: [defaultAccount._id],
+      currency: c.currency === "EUR" && !user?.totalBalanceCurrency
+        ? defaultAccount.currency
+        : c.currency,
+    }));
+  }, [accounts, config.accountIds.length, user?.totalBalanceCurrency]);
 
   const { from, to } =
     config.period === "custom"
       ? { from: config.customFrom, to: config.customTo }
       : getPresetRange(config.period);
 
-  const { data: txData, isLoading: txLoading } =
-    useGetTransactionsQuery(
-      config.accountId
-        ? { from, to, accountId: config.accountId }
-        : { from, to },
-      { skip: !config.accountId },
-    );
-  const transactions = txData?.transactions.filter((t) => t.status === "posted") ?? [];
+  const { data: txData, isLoading: txLoading } = useGetTransactionsQuery(
+    { from, to },
+    { skip: config.accountIds.length === 0 },
+  );
+
+  const transactions =
+    txData?.transactions.filter(
+      (t) => t.status === "posted" && config.accountIds.includes(t.account),
+    ) ?? [];
 
   const { data: categories = [], isLoading: categoriesLoading } =
     useGetCategoriesQuery();

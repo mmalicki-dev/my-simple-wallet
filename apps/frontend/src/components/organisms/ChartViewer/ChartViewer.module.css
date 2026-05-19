@@ -1,7 +1,7 @@
 .viewer {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1.5rem;
 }
 
 .chartPanel {
@@ -15,8 +15,7 @@
   .viewer {
     flex-direction: row;
     align-items: center;
-    gap: 2rem;
-    min-height: calc(100vh - 8rem);
+    height: 100%;
   }
 
   .chartPanel {
