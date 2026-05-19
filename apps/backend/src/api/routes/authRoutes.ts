@@ -14,6 +14,7 @@ import {
   confirmEmailChange,
   getSessions,
   deleteSession,
+  deleteUser,
 } from "../controllers/authController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -33,5 +34,6 @@ router.post("/change-email", protect, requestEmailChange);
 router.get("/confirm-email-change", confirmEmailChange);
 router.get("/sessions", protect, getSessions);
 router.delete("/sessions/:id", protect, deleteSession);
+router.delete("/delete-user", protect, deleteUser);
 
 export default router;

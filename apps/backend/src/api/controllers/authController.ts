@@ -2,7 +2,13 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { randomBytes, randomUUID } from "node:crypto";
 import mongoose from "mongoose";
-import { UserModel, CategoryModel } from "../../models/index.js";
+import {
+  UserModel,
+  CategoryModel,
+  TransactionModel,
+  AccountModel,
+  RecurringPaymentModel,
+} from "../../models/index.js";
 import env from "../../config/env.js";
 import {
   sendVerificationEmail,
@@ -431,4 +437,33 @@ export const deleteSession: RequestHandler = asyncHandler(async (req, res) => {
   await user.save();
 
   ok(res, undefined, "Session deleted");
+});
+
+export const deleteUser: RequestHandler = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new AppError("User not found", 404);
+
+  if (!(await user.comparePassword(req.body.password)))
+    throw new AppError("Unauthorized", 401);
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    await CategoryModel.deleteMany({ user: req.user!.id }, { session });
+    await RecurringPaymentModel.deleteMany({ user: req.user!.id }, { session });
+    await TransactionModel.deleteMany({ user: req.user!.id }, { session });
+    await AccountModel.deleteMany({ user: req.user!.id }, { session });
+    await UserModel.findByIdAndDelete(req.user!._id, { session });
+    await session.commitTransaction();
+    res.clearCookie("refreshToken");
+    res.clearCookie("deviceID");
+
+    ok(res, undefined, "User and all data deleted");
+  } catch (err) {
+    await session.abortTransaction();
+    throw err;
+  } finally {
+    session.endSession();
+  }
 });
