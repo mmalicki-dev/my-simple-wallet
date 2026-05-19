@@ -8,12 +8,14 @@ import Modal from "@/components/templates/Modal/Modal";
 import TransactionForm from "@/components/organisms/TransactionForm/TransactionForm";
 import HudPanel from "@/components/templates/HudPanel/HudPanel";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";
+import Chart from "@/components/organisms/Chart/Chart";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import {
   useGetTransactionsQuery,
   useDeleteTransactionMutation,
 } from "@/services/transactionApi";
 import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
+import { useGetCategoriesQuery } from "@/services/categoryApi";
 import styles from "./AccountPage.module.css";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 
@@ -51,6 +53,8 @@ const AccountPage = () => {
   const hasMore = txData?.hasMore ?? true;
   const isLoadingMore = txFetching && !txLoading;
 
+  const { data: categories = [] } = useGetCategoriesQuery();
+
   const { data: recurringPayments = [] } = useGetRecurringPaymentsQuery();
   const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59);
   const recurringScheduled: Transaction[] = recurringPayments
@@ -76,6 +80,8 @@ const AccountPage = () => {
     ...transactions.filter((t) => t.status === "scheduled"),
     ...recurringScheduled,
   ];
+
+  const postedTransactions = transactions.filter((t) => t.status === "posted");
 
   const prevCountRef = useRef<number | null>(null);
   useEffect(() => {
@@ -133,8 +139,12 @@ const AccountPage = () => {
           />
         )}
       </Modal>
+
       <div className={styles.page}>
-        <BackButton />
+        <div className={styles.back}>
+          <BackButton />
+        </div>
+
         <div className={styles.header}>
           {isLoading && (
             <>
@@ -163,32 +173,53 @@ const AccountPage = () => {
             </>
           )}
         </div>
-        {!isLoading && scheduledTransactions.length > 0 && (
-          <HudPanel>
-            <PanelLabel label="Scheduled" />
-            <TransactionList
-              transactions={scheduledTransactions}
-              currency={account.currency}
-              onTransactionClick={(t) => {
-                if (!recurringIds.has(t._id)) setSelectedTransaction(t);
-              }}
-            />
-          </HudPanel>
-        )}
-        <HudPanel>
-          <PanelLabel label="Posted" />
-          {isLoading && <SkeletonLoader />}
 
-          {!isLoading && (
-            <TransactionList
-              transactions={transactions.filter((t) => t.status === "posted")}
-              currency={account.currency}
-              onTransactionClick={setSelectedTransaction}
-              onLoadMore={hasMore ? handleLoadMore : undefined}
-              isLoadingMore={isLoadingMore}
-            />
+        <div className={styles.left}>
+          <HudPanel className={styles.postedPanel}>
+            <PanelLabel label="Posted" />
+            {isLoading && <SkeletonLoader />}
+            {!isLoading && (
+              <div className={styles.scrollArea}>
+                <TransactionList
+                  transactions={postedTransactions}
+                  currency={account.currency}
+                  onTransactionClick={setSelectedTransaction}
+                  onLoadMore={hasMore ? handleLoadMore : undefined}
+                  isLoadingMore={isLoadingMore}
+                />
+              </div>
+            )}
+          </HudPanel>
+        </div>
+
+        <div className={styles.right}>
+          {!isLoading && scheduledTransactions.length > 0 && (
+            <HudPanel className={styles.scheduledPanel}>
+              <PanelLabel label="Scheduled" />
+              <div className={styles.scrollArea}>
+                <TransactionList
+                  transactions={scheduledTransactions}
+                  currency={account.currency}
+                  onTransactionClick={(t) => {
+                    if (!recurringIds.has(t._id)) setSelectedTransaction(t);
+                  }}
+                />
+              </div>
+            </HudPanel>
           )}
-        </HudPanel>
+          <HudPanel className={styles.chartPanel}>
+            <PanelLabel label="Balance" />
+            {!isLoading && (
+              <Chart
+                transactions={postedTransactions}
+                categories={categories}
+                dataType="balance"
+                chartType="line"
+              />
+            )}
+            {isLoading && <SkeletonLoader />}
+          </HudPanel>
+        </div>
       </div>
     </>
   );

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import Button from '@/components/atoms/Button/Button'
+import HoloButton from '@/components/atoms/HoloButton/HoloButton'
 
 const BackButton = () => {
   const navigate = useNavigate()
   return (
-    <Button variant="ghost" onClick={() => navigate(-1)}>← Back</Button>
+    <HoloButton onClick={() => navigate(-1)}>← Back</HoloButton>
   )
 }
 

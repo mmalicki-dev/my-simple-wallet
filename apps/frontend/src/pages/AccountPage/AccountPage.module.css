@@ -53,3 +53,78 @@
 .addBtn:hover {
   color: var(--color-neon);
 }
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chartPanel {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 1000px) {
+  .page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "back   back"
+      "header header"
+      "left   right";
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .back   { grid-area: back; }
+  .header { grid-area: header; }
+
+  .left {
+    grid-area: left;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .right {
+    grid-area: right;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 0;
+  }
+
+  /* Posted panel fills the full left column */
+  .postedPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Scheduled panel is capped so it doesn't push the chart out */
+  .scheduledPanel {
+    flex: 0 0 auto;
+    max-height: 45%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Chart fills remaining space in right column */
+  .chartPanel {
+    flex: 1;
+    min-height: 180px;
+  }
+
+  /* Scrollable content area inside a panel */
+  .scrollArea {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+}
