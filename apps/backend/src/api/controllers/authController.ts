@@ -207,8 +207,8 @@ export const changePassword: RequestHandler = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(req.user!.id);
   if (!user) throw new AppError("User not found", 404);
 
-  if (await user.comparePassword(oldPassword))
-    throw new AppError("Old password don't match", 400);
+  if (!(await user.comparePassword(oldPassword)))
+    throw new AppError("Old password doesn't match", 400);
 
   user.password = result.data.password;
   user.refreshTokens = [];

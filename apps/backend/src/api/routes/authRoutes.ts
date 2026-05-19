@@ -24,7 +24,7 @@ router.get("/verify-email", verifyEmail);
 router.post("/login", login);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
-router.post("/change-password", changePassword);
+router.post("/change-password", protect, changePassword);
 router.get("/me", protect, getMe);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
