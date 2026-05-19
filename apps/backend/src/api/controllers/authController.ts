@@ -281,6 +281,8 @@ export const confirmEmailChange: RequestHandler = asyncHandler(
 
 export const refresh: RequestHandler = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+  const deviceID = req.cookies.deviceID;
+
   if (!refreshToken || typeof refreshToken !== "string")
     throw new AppError("Refresh token required", 400);
 
@@ -297,7 +299,7 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
   if (!user) throw new AppError("User not found", 404);
 
   const stored = user.refreshTokens.find(
-    (t) => t.token === refreshToken && t.expiresAt > new Date(),
+    (t) => t.token === refreshToken && t.expiresAt > new Date() && t.deviceID === deviceID,
   );
   if (!stored) throw new AppError("Invalid or expired refresh token", 401);
 
@@ -324,8 +326,14 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
 
 export const logout: RequestHandler = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+  const deviceID = req.cookies.deviceID;
 
   if (!refreshToken || typeof refreshToken !== "string") {
+    ok(res, undefined, "Logged out successfully");
+    return;
+  }
+
+  if (!deviceID || typeof deviceID !== "string") {
     ok(res, undefined, "Logged out successfully");
     return;
   }
