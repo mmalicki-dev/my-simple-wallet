@@ -192,6 +192,26 @@ export const resetPassword: RequestHandler = asyncHandler(async (req, res) => {
   user.password = result.data.password;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
+  user.refreshTokens = [];
+  await user.save();
+
+  ok(res, undefined, "Password reset successfully");
+});
+
+export const changePassword: RequestHandler = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const result = validate(resetPasswordSchema, { password: newPassword });
+
+  if (!result.success) throw new AppError(result.error, 400);
+
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new AppError("User not found", 404);
+
+  if (await user.comparePassword(oldPassword))
+    throw new AppError("Old password don't match", 400);
+
+  user.password = result.data.password;
+  user.refreshTokens = [];
   await user.save();
 
   ok(res, undefined, "Password reset successfully");
@@ -299,7 +319,10 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
   if (!user) throw new AppError("User not found", 404);
 
   const stored = user.refreshTokens.find(
-    (t) => t.token === refreshToken && t.expiresAt > new Date() && t.deviceID === deviceID,
+    (t) =>
+      t.token === refreshToken &&
+      t.expiresAt > new Date() &&
+      t.deviceID === deviceID,
   );
   if (!stored) throw new AppError("Invalid or expired refresh token", 401);
 
