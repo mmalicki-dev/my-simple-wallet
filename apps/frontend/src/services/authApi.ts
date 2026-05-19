@@ -56,6 +56,9 @@ export const authApi = api.injectEndpoints({
     changePassword: builder.mutation<void, { oldPassword: string; newPassword: string }>({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
     }),
+    deleteUser: builder.mutation<void, { password: string }>({
+      query: (body) => ({ url: "/auth/delete-user", method: "DELETE", body }),
+    }),
   }),
 });
 
@@ -73,4 +76,5 @@ export const {
   useGetSessionsQuery,
   useDeleteSessionMutation,
   useChangePasswordMutation,
+  useDeleteUserMutation,
 } = authApi;
