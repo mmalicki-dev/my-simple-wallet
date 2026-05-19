@@ -374,7 +374,7 @@ export const deleteSession: RequestHandler = asyncHandler(async (req, res) => {
 
   const { id } = req.params;
   user.refreshTokens = user.refreshTokens.filter(
-    (t) => t._id?.toString() !== id,
+    (t) => t._id?.toHexString() !== id,
   );
   await user.save();
 

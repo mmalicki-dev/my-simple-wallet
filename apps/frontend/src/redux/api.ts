@@ -19,7 +19,7 @@ const rawBaseQuery = fetchBaseQuery({
 
 const unwrap = (result: Awaited<ReturnType<typeof rawBaseQuery>>) => {
   if (result.data && typeof result.data === "object" && "data" in result.data) {
-    result.data = (result.data as { data: unknown }).data;
+    result.data = result.data.data;
   }
   return result;
 };
@@ -57,6 +57,12 @@ const baseQuery: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery,
-  tagTypes: ["Transaction", "Account", "Category", "RecurringPayment", "Session"],
+  tagTypes: [
+    "Transaction",
+    "Account",
+    "Category",
+    "RecurringPayment",
+    "Session",
+  ],
   endpoints: () => ({}),
 });
