@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import styles from "./ChartButton.module.css";
+import styles from "./HoloButton.module.css";
 
-interface ChartButtonProps {
+interface HoloButtonProps {
   active: boolean;
   disabled?: boolean;
   onClick: () => void;
@@ -13,14 +13,14 @@ interface ChartButtonProps {
 const cx = (...classes: (string | false | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
-const ChartButton = ({
+const HoloButton = ({
   active,
   disabled = false,
   onClick,
   ariaLabel,
   title,
   children,
-}: ChartButtonProps) => (
+}: HoloButtonProps) => (
   <div className={styles.outer}>
     <button
       type="button"
@@ -47,4 +47,4 @@ const ChartButton = ({
   </div>
 );
 
-export default ChartButton;
+export default HoloButton;
