@@ -1,42 +1,50 @@
 import type { ReactNode } from "react";
+import Spinner from "@/components/atoms/Spinner/Spinner";
 import styles from "./HoloButton.module.css";
 
 interface HoloButtonProps {
-  active: boolean;
+  children: ReactNode;
+  active?: boolean;
   disabled?: boolean;
-  onClick: () => void;
+  type?: "button" | "submit" | "reset";
+  variant?: "default" | "danger";
+  isLoading?: boolean;
+  onClick?: () => void;
   ariaLabel?: string;
   title?: string;
-  children: ReactNode;
 }
 
 const cx = (...classes: (string | false | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
 const HoloButton = ({
+  children,
   active,
   disabled = false,
+  type = "button",
+  variant = "default",
+  isLoading = false,
   onClick,
   ariaLabel,
   title,
-  children,
 }: HoloButtonProps) => (
-  <div className={styles.outer}>
+  <div className={cx(styles.outer, variant === "danger" && styles.danger)}>
     <button
-      type="button"
-      role="radio"
-      aria-checked={active}
+      type={type}
+      {...(active === undefined
+        ? {}
+        : { role: "radio", "aria-checked": active })}
       aria-label={ariaLabel}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       title={title}
       onClick={onClick}
       className={cx(
         styles["btn-sci-holo"],
         active && styles.active,
-        disabled && styles.disabled,
+        (disabled || isLoading) && styles.disabled,
       )}
     >
-      {children}
+      {isLoading ? <Spinner className={styles.spinnerIcon} /> : children}
     </button>
     <span className={`${styles.corner} ${styles.tl}`} aria-hidden="true" />
     <span className={`${styles.corner} ${styles.tm}`} aria-hidden="true" />

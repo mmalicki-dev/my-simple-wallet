@@ -6,7 +6,7 @@ import { CURRENCIES } from "shared";
 import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
 import FormField from "@/components/molecules/FormField/FormField";
 import SelectOption from "@/components/atoms/SelectOption/SelectOption";
-import Button from "@/components/atoms/Button/Button";
+import HoloButton from "@/components/atoms/HoloButton/HoloButton";
 import ThemeToggle from "@/components/atoms/ThemeToggle/ThemeToggle";
 import LanguageSwitcher from "@/components/atoms/LanguageSwitcher/LanguageSwitcher";
 import { useUpdateProfileMutation } from "@/services/authApi";
@@ -44,9 +44,9 @@ const UserPreferencesBlock = () => {
             onChange={(e) => setTotalBalanceCurrency(e.target.value)}
           />
         </FormField>
-        <Button type="submit" isLoading={isLoading}>
+        <HoloButton type="submit" isLoading={isLoading}>
           Save
-        </Button>
+        </HoloButton>
       </form>
     </UserBlockWrapper>
   );

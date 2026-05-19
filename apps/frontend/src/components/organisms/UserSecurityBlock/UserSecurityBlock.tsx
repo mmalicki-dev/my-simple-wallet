@@ -2,7 +2,7 @@ import { useState } from 'react'
 import UserBlockWrapper from '@/components/molecules/UserBlockWrapper/UserBlockWrapper'
 import FormField from '@/components/molecules/FormField/FormField'
 import PasswordInput from '@/components/molecules/PasswordInput/PasswordInput'
-import Button from '@/components/atoms/Button/Button'
+import HoloButton from '@/components/atoms/HoloButton/HoloButton'
 import styles from './UserSecurityBlock.module.css'
 
 const UserSecurityBlock = () => {
@@ -33,9 +33,9 @@ const UserSecurityBlock = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
       </FormField>
-      <Button>Change Password</Button>
+      <HoloButton>Change Password</HoloButton>
       <div className={styles.danger}>
-        <Button variant="danger">Delete Account</Button>
+        <HoloButton variant="danger">Delete Account</HoloButton>
       </div>
     </UserBlockWrapper>
   )

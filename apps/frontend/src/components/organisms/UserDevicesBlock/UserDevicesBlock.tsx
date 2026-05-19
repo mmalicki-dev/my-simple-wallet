@@ -1,5 +1,5 @@
 import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
-import Button from "@/components/atoms/Button/Button";
+import HoloButton from "@/components/atoms/HoloButton/HoloButton";
 import { useGetSessionsQuery, useDeleteSessionMutation } from "@/services/authApi";
 import type { Session } from "@/types";
 import styles from "./UserDevicesBlock.module.css";
@@ -41,13 +41,13 @@ const DeviceRow = ({ session }: { session: Session }) => {
         <span className={styles.name}>{parseUserAgent(session.userAgent)}</span>
         <span className={styles.expiry}>Expires {formatExpiry(session.expiresAt)}</span>
       </div>
-      <Button
+      <HoloButton
         variant="danger"
         disabled={isLoading}
         onClick={() => deleteSession(session.id)}
       >
         Revoke
-      </Button>
+      </HoloButton>
     </div>
   );
 };

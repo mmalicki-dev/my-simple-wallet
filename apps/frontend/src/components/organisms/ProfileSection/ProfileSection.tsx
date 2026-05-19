@@ -23,8 +23,8 @@ const ProfileSection = () => {
     <div className={styles.sections}>
       <UserInfoBlock />
       <UserPreferencesBlock />
-      <UserSecurityBlock />
       <UserDevicesBlock />
+      <UserSecurityBlock />
     </div>
   );
 };
