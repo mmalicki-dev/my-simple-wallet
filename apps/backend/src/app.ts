@@ -1,5 +1,6 @@
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
 import express from "express";
 import cookieParser from "cookie-parser";
 
@@ -14,6 +15,7 @@ import { errorHandler } from "./api/middlewares/errorMiddleware.js";
 const app = express();
 
 app.disable("x-powered-by");
+app.use(helmet());
 app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(morgan(env.NODE_ENV === "development" ? "dev" : "combined"));
