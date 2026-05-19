@@ -9,10 +9,12 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-neon);
-  text-shadow: 0 0 8px color-mix(in srgb, var(--color-neon) 55%, transparent);
+  color: var(--color-account-credit);
+  text-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-account-credit) 55%, transparent);
   padding-bottom: 0.6rem;
   padding-left: 0.6rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-neon) 22%, transparent);
-  border-left: 2px solid var(--color-neon);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-account-credit) 22%, transparent);
+  border-left: 2px solid var(--color-account-credit);
 }

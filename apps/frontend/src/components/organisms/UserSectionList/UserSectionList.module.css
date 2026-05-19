@@ -19,9 +19,10 @@
 }
 
 .addBtn {
-  appearance: none;
-  background: none;
-  border: none;
+  display: flex;
+  max-width: 65px;
+  height: 20px;
+  align-items: center;
   border-left: 2px solid color-mix(in srgb, var(--color-neon) 50%, transparent);
   padding: 0.15rem 0.5rem;
   cursor: pointer;
@@ -31,7 +32,10 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-neon) 70%, var(--color-text-muted));
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .addBtn:hover {

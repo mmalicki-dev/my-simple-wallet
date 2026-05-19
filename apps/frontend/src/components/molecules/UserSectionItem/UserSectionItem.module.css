@@ -3,7 +3,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.4rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-border) 70%, transparent);
   transition: background 0.15s;
 }
 
@@ -51,10 +52,12 @@
 }
 
 .actionBtn {
-  appearance: none;
-  background: none;
-  border: none;
-  border-left: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  display: flex;
+  max-width: 65px;
+  height: 20px;
+  align-items: center;
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-border) 80%, transparent);
   padding: 0.15rem 0.45rem;
   cursor: pointer;
   font-family: inherit;
@@ -63,7 +66,11 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  transition: color 0.15s, border-color 0.15s, background 0.15s, text-shadow 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s,
+    text-shadow 0.15s;
 }
 
 .actionBtn:hover {

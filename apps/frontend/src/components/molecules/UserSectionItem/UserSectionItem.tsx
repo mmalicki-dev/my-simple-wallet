@@ -1,14 +1,21 @@
-import styles from './UserSectionItem.module.css'
+import Icon from "@/components/atoms/Icon/Icon";
+import styles from "./UserSectionItem.module.css";
 
 interface UserSectionItemProps {
-  label: string
-  subtitle?: string
-  indicator?: string
-  onEdit?: () => void
-  onDelete?: () => void
+  label: string;
+  subtitle?: string;
+  indicator?: string;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-const UserSectionItem = ({ label, subtitle, indicator, onEdit, onDelete }: UserSectionItemProps) => {
+const UserSectionItem = ({
+  label,
+  subtitle,
+  indicator,
+  onEdit,
+  onDelete,
+}: UserSectionItemProps) => {
   return (
     <li className={styles.item}>
       {indicator && (
@@ -21,6 +28,7 @@ const UserSectionItem = ({ label, subtitle, indicator, onEdit, onDelete }: UserS
       <div className={styles.actions}>
         {onEdit && (
           <button type="button" className={styles.actionBtn} onClick={onEdit}>
+            <Icon name="pen-edit-round" />
             Edit
           </button>
         )}
@@ -35,7 +43,7 @@ const UserSectionItem = ({ label, subtitle, indicator, onEdit, onDelete }: UserS
         )}
       </div>
     </li>
-  )
-}
+  );
+};
 
-export default UserSectionItem
+export default UserSectionItem;

@@ -1,10 +1,11 @@
-import { ReactNode } from 'react'
-import styles from './UserSectionList.module.css'
+import { ReactNode } from "react";
+import styles from "./UserSectionList.module.css";
+import Icon from "@/components/atoms/Icon/Icon";
 
 interface UserSectionListProps {
-  title: string
-  onAdd?: () => void
-  children: ReactNode
+  title: string;
+  onAdd?: () => void;
+  children: ReactNode;
 }
 
 const UserSectionList = ({ title, onAdd, children }: UserSectionListProps) => {
@@ -14,13 +15,13 @@ const UserSectionList = ({ title, onAdd, children }: UserSectionListProps) => {
         <h2 className={styles.title}>{title}</h2>
         {onAdd && (
           <button type="button" className={styles.addBtn} onClick={onAdd}>
-            + Add
+            <Icon name="add-circle" /> Add
           </button>
         )}
       </div>
       <ul className={styles.list}>{children}</ul>
     </section>
-  )
-}
+  );
+};
 
-export default UserSectionList
+export default UserSectionList;
