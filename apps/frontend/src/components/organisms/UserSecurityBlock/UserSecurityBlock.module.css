@@ -1,3 +1,15 @@
+.error {
+  font-size: 0.85rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.success {
+  font-size: 0.85rem;
+  color: var(--color-success);
+  margin: 0;
+}
+
 .danger {
   margin-top: 1rem;
   padding-top: 1rem;

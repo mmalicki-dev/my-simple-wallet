@@ -53,6 +53,9 @@ export const authApi = api.injectEndpoints({
       query: (id) => ({ url: `/auth/sessions/${id}`, method: "DELETE" }),
       invalidatesTags: ["Session"],
     }),
+    changePassword: builder.mutation<void, { oldPassword: string; newPassword: string }>({
+      query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
+    }),
   }),
 });
 
@@ -69,4 +72,5 @@ export const {
   useConfirmEmailChangeMutation,
   useGetSessionsQuery,
   useDeleteSessionMutation,
+  useChangePasswordMutation,
 } = authApi;
