@@ -332,6 +332,27 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
     { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"] },
   );
 
+  const newRefreshToken = jwt.sign(
+    { userId: user._id, email: user.email },
+    env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+    },
+  );
+
+  const expiresAt = new Date(
+    Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
+  );
+
+  stored.token = newRefreshToken;
+  stored.expiresAt = expiresAt;
+  await user.save();
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
   ok(
     res,
     {
