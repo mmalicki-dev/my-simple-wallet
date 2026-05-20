@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 import type {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import type { RootState } from "./store";
-import { setCredentials, logout } from "./slices/authSlice";
+import { logout } from "./slices/authSlice";
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: `${import.meta.env.VITE_API_URL ?? "http://localhost:3000"}/api`,
-  credentials: "include",
+  baseUrl: `${process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000"}/api`,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.accessToken;
+    const token = (getState() as RootState).auth.token;
     if (token) headers.set("Authorization", `Bearer ${token}`);
     return headers;
   },
@@ -32,23 +32,8 @@ const baseQuery: BaseQueryFn<
   let result = unwrap(await rawBaseQuery(args, queryApi, extra));
 
   if (result.error?.status === 401) {
-    const refreshResult = await rawBaseQuery(
-      { url: "/auth/refresh", method: "POST" },
-      queryApi,
-      extra,
-    );
-
-    if (refreshResult.data) {
-      const { accessToken } = (
-        refreshResult.data as { data: { accessToken: string } }
-      ).data;
-      const user = (queryApi.getState() as RootState).auth.user!;
-      queryApi.dispatch(setCredentials({ user, accessToken }));
-      result = unwrap(await rawBaseQuery(args, queryApi, extra));
-    } else {
-      queryApi.dispatch(logout());
-      queryApi.dispatch(api.util.resetApiState());
-    }
+    queryApi.dispatch(logout());
+    queryApi.dispatch(api.util.resetApiState());
   }
 
   return result;

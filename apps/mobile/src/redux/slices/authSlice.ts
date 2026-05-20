@@ -3,13 +3,13 @@ import type { User } from "shared";
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
+  token: string | null;
   isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: null,
+  token: null,
   isAuthenticated: false,
 };
 
@@ -22,12 +22,12 @@ const authSlice = createSlice({
       action: PayloadAction<{ user: User; accessToken: string }>,
     ) => {
       state.user = action.payload.user;
-      state.accessToken = action.payload.accessToken;
+      state.token = action.payload.accessToken;
       state.isAuthenticated = true;
     },
     logout: (state) => {
       state.user = null;
-      state.accessToken = null;
+      state.token = null;
       state.isAuthenticated = false;
     },
   },
