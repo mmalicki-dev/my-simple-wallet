@@ -5,7 +5,7 @@ import type {
   CreateTransactionRequest,
   UpdateTransactionRequest,
   DeleteTransactionRequest,
-} from "@/types";
+} from "shared";
 
 export const transactionApi = api.injectEndpoints({
   endpoints: (builder) => ({

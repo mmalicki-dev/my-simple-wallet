@@ -7,7 +7,7 @@ import type {
   ForgotPassRequest,
   LoginRequest,
   Session,
-} from "@/types";
+} from "shared";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({

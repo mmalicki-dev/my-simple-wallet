@@ -13,7 +13,7 @@ import {
   Line,
   CartesianGrid,
 } from "recharts";
-import type { Transaction, Category } from "@/types";
+import type { Transaction, Category } from "shared";
 import type {
   DataType,
   ChartType,

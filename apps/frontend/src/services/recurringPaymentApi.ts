@@ -4,7 +4,7 @@ import type {
   CreateRecurringPaymentRequest,
   UpdateRecurringPaymentRequest,
   DeleteRecurringPaymentRequest,
-} from "@/types";
+} from "shared";
 
 export const recurringPaymentApi = api.injectEndpoints({
   endpoints: (builder) => ({

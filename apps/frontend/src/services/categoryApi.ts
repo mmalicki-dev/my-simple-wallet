@@ -4,7 +4,7 @@ import type {
   CreateCategoryRequest,
   UpdateCategoryRequest,
   DeleteCategoryRequest,
-} from "@/types";
+} from "shared";
 
 export const categoryApi = api.injectEndpoints({
   endpoints: (builder) => ({

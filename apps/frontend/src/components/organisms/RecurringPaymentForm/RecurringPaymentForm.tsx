@@ -3,7 +3,7 @@ import type {
   RecurringPayment,
   RecurringPaymentType,
   BillingCycle,
-} from "@/types";
+} from "shared";
 import { RECURRING_PAYMENT_TYPES } from "shared";
 import CustomSelect from "@/components/atoms/CustomSelect/CustomSelect";
 import FormInput from "@/components/atoms/FormInput/FormInput";

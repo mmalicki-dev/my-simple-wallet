@@ -1,5 +1,4 @@
-import type { Category } from "@/types";
-import type { CategoryIconName } from "shared";
+import type { Category, CategoryIconName } from "shared";
 import Icon from "@/components/atoms/Icon/Icon";
 import styles from "./CategoryPicker.module.css";
 

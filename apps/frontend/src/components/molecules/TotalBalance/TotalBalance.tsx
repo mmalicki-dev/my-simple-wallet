@@ -1,5 +1,4 @@
-import type { Currency } from "shared";
-import type { Account } from "@/types";
+import type { Currency, Account } from "shared";
 import { useTotalBalance } from "@/hooks";
 import Amount from "@/components/atoms/Amount/Amount";
 import PanelLabel from "@/components/atoms/PanelLabel/PanelLabel";

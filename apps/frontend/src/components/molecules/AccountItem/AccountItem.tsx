@@ -1,4 +1,4 @@
-import type { Account } from "@/types";
+import type { Account } from "shared";
 import Amount from "@/components/atoms/Amount/Amount";
 import ActionPanel from "@/components/molecules/ActionPanel/ActionPanel";
 import styles from "./AccountItem.module.css";

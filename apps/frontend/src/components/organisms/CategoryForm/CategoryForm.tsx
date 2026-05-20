@@ -1,6 +1,5 @@
 import { useState } from "react";
-import type { Category, CreateCategoryRequest } from "@/types";
-import type { TransactionType } from "shared";
+import type { Category, CreateCategoryRequest, TransactionType } from "shared";
 import FormActions from "@/components/molecules/FormActions/FormActions";
 import FormField from "@/components/molecules/FormField/FormField";
 import IconPicker from "@/components/molecules/IconPicker/IconPicker";

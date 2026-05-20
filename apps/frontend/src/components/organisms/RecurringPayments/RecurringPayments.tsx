@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import type { RecurringPayment, RecurringPaymentType } from "@/types";
+import type { RecurringPayment, RecurringPaymentType } from "shared";
 import { useGetRecurringPaymentsQuery } from "@/services/recurringPaymentApi";
 import RecurringPaymentBlock from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
 import Spinner from "@/components/atoms/Spinner/Spinner";

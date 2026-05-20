@@ -4,7 +4,7 @@ import type {
   CreateAccountRequest,
   UpdateAccountRequest,
   DeleteAccountRequest,
-} from "@/types";
+} from "shared";
 
 export const accountApi = api.injectEndpoints({
   endpoints: (builder) => ({

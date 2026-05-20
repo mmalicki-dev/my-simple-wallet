@@ -1,7 +1,7 @@
 import UserBlockWrapper from "@/components/molecules/UserBlockWrapper/UserBlockWrapper";
 import HoloButton from "@/components/atoms/HoloButton/HoloButton";
 import { useGetSessionsQuery, useDeleteSessionMutation } from "@/services/authApi";
-import type { Session } from "@/types";
+import type { Session } from "shared";
 import styles from "./UserDevicesBlock.module.css";
 
 function parseUserAgent(ua: string): string {

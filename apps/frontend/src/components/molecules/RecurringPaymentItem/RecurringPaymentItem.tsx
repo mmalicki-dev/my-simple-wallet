@@ -1,5 +1,4 @@
-import type { Currency } from "shared";
-import type { RecurringPayment } from "@/types";
+import type { Currency, RecurringPayment } from "shared";
 import Amount from "@/components/atoms/Amount/Amount";
 import ActionPanel from "@/components/molecules/ActionPanel/ActionPanel";
 import styles from "./RecurringPaymentItem.module.css";

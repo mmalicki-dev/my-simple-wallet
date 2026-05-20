@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Category, Transaction } from "@/types";
-import type { Currency } from "shared";
+import type { Category, Transaction, Currency } from "shared";
 import TransactionItem from "@/components/molecules/TransactionItem/TransactionItem";
 import SkeletonLoader from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 import {

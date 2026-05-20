@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Category } from "@/types";
+import type { Category } from "shared";
 import UserSectionList from "@/components/organisms/UserSectionList/UserSectionList";
 import UserSectionItem from "@/components/molecules/UserSectionItem/UserSectionItem";
 import CategoryForm from "@/components/organisms/CategoryForm/CategoryForm";

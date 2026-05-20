@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { CURRENCIES } from "shared";
-import type { AccountType, Currency } from "shared";
-import type { Account } from "@/types";
+import type { AccountType, Currency, Account } from "shared";
 import Checkbox from "@/components/atoms/Checkbox/Checkbox";
 import FormActions from "@/components/molecules/FormActions/FormActions";
 import Form from "../Form/Form";

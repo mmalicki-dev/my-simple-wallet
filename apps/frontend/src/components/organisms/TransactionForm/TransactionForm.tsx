@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import type { TransactionType } from "shared";
-import type { Transaction } from "@/types";
+import type { TransactionType, Transaction } from "shared";
 import CategoryPicker from "@/components/molecules/CategoryPicker/CategoryPicker";
 import FormActions from "@/components/molecules/FormActions/FormActions";
 import FormInput from "@/components/atoms/FormInput/FormInput";

@@ -3,7 +3,7 @@ import type {
   BillingCycle,
   RecurringPayment,
   RecurringPaymentType,
-} from "@/types";
+} from "shared";
 import { useGetAccountsQuery } from "@/services/accountApi";
 import { useGetExchangeRatesQuery } from "@/services/exchangeRateApi";
 import { useGetRecurringPaymentsQuery } from "@/services";

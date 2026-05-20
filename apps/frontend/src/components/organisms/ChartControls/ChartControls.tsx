@@ -1,5 +1,4 @@
-import type { IconName, Currency } from "shared";
-import type { Account } from "@/types";
+import type { IconName, Currency, Account } from "shared";
 import Icon from "@/components/atoms/Icon/Icon";
 import ChartOption from "@/components/atoms/ChartOption/ChartOption";
 import ChartControlsItem from "@/components/molecules/ChartControlsItem/ChartControlsItem";

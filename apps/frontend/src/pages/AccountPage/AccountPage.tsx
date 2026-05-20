@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import type { Transaction } from "@/types";
+import type { Transaction } from "shared";
 import TransactionList from "@/components/organisms/TransactionList/TransactionList";
 import BackButton from "@/components/molecules/BackButton/BackButton";
 import Modal from "@/components/templates/Modal/Modal";
