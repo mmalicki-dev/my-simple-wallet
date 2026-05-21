@@ -6,7 +6,7 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import type { RootState } from "./store";
-import { logout } from "./slices/authSlice";
+import { logout, setCredentials } from "./slices/authSlice";
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: `${process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000"}/api`,
@@ -32,8 +32,23 @@ const baseQuery: BaseQueryFn<
   let result = unwrap(await rawBaseQuery(args, queryApi, extra));
 
   if (result.error?.status === 401) {
-    queryApi.dispatch(logout());
-    queryApi.dispatch(api.util.resetApiState());
+    const refreshResult = await rawBaseQuery(
+      { url: "/mobile/auth/refresh", method: "POST" },
+      queryApi,
+      extra,
+    );
+
+    if (refreshResult.data) {
+      const accessToken = (
+        refreshResult.data as { data: { accessToken: string } }
+      ).data.accessToken;
+      const user = (queryApi.getState() as RootState).auth.user!;
+      queryApi.dispatch(setCredentials({ user, accessToken }));
+      result = unwrap(await rawBaseQuery(args, queryApi, extra));
+    } else {
+      queryApi.dispatch(logout());
+      queryApi.dispatch(api.util.resetApiState());
+    }
   }
 
   return result;

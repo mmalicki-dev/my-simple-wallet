@@ -193,6 +193,9 @@ importers:
       expo:
         specifier: ~55.0.25
         version: 55.0.25(@babel/core@7.29.0)(@expo/dom-webview@55.0.6)(react-dom@18.3.1(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@13.6.4)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
+      expo-secure-store:
+        specifier: ^55.0.14
+        version: 55.0.14(expo@55.0.25)
       expo-status-bar:
         specifier: ~55.0.6
         version: 55.0.6(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@13.6.4)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)
@@ -2724,6 +2727,11 @@ packages:
     peerDependenciesMeta:
       react-native-worklets:
         optional: true
+
+  expo-secure-store@55.0.14:
+    resolution: {integrity: sha512-OKp9pDiTa4kgChop8+pTRJGBPhkJUcAxP5c6JbivNr4bmx3I+gKmAj1ov4KOXkY95TpWdHO+GQ4+0BgSY2P3JQ==}
+    peerDependencies:
+      expo: '*'
 
   expo-server@55.0.10:
     resolution: {integrity: sha512-EcCiV902fTP45fbzbZE0VJEqQ50a3mxnKKAccg2RoQGddTJisePh+QREaoeliyT45s8BiF0TworWKyImqzsdhg==}
@@ -8001,6 +8009,10 @@ snapshots:
       invariant: 2.2.4
       react: 19.2.6
       react-native: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@13.6.4)(@types/react@19.2.15)(react@19.2.6)
+
+  expo-secure-store@55.0.14(expo@55.0.25):
+    dependencies:
+      expo: 55.0.25(@babel/core@7.29.0)(@expo/dom-webview@55.0.6)(react-dom@18.3.1(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@13.6.4)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
 
   expo-server@55.0.10: {}
 

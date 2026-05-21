@@ -12,7 +12,7 @@ import type {
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (body) => ({ url: "/auth/login", method: "POST", body }),
+      query: (body) => ({ url: "/mobile/auth/login", method: "POST", body }),
     }),
     getMe: builder.query<UserResponse, void>({
       query: () => "/auth/me",
@@ -31,19 +31,28 @@ export const authApi = api.injectEndpoints({
       }),
     }),
     logout: builder.mutation<void, void>({
-      query: () => ({ url: "/auth/logout", method: "POST" }),
+      query: () => ({ url: "/mobile/auth/logout", method: "POST" }),
     }),
-    updateProfile: builder.mutation<UserResponse, { name?: string; totalBalanceCurrency?: string }>({
+    updateProfile: builder.mutation<
+      UserResponse,
+      { name?: string; totalBalanceCurrency?: string }
+    >({
       query: (body) => ({ url: "/auth/profile", method: "PUT", body }),
     }),
     requestEmailChange: builder.mutation<void, { email: string }>({
       query: (body) => ({ url: "/auth/change-email", method: "POST", body }),
     }),
     verifyEmail: builder.mutation<void, { token: string }>({
-      query: ({ token }) => ({ url: `/auth/verify-email?token=${token}`, method: "GET" }),
+      query: ({ token }) => ({
+        url: `/auth/verify-email?token=${token}`,
+        method: "GET",
+      }),
     }),
     confirmEmailChange: builder.mutation<void, { token: string }>({
-      query: ({ token }) => ({ url: `/auth/confirm-email-change?token=${token}`, method: "GET" }),
+      query: ({ token }) => ({
+        url: `/auth/confirm-email-change?token=${token}`,
+        method: "GET",
+      }),
     }),
     getSessions: builder.query<Session[], void>({
       query: () => "/auth/sessions",
@@ -53,7 +62,10 @@ export const authApi = api.injectEndpoints({
       query: (id) => ({ url: `/auth/sessions/${id}`, method: "DELETE" }),
       invalidatesTags: ["Session"],
     }),
-    changePassword: builder.mutation<void, { oldPassword: string; newPassword: string }>({
+    changePassword: builder.mutation<
+      void,
+      { oldPassword: string; newPassword: string }
+    >({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
     }),
     deleteUser: builder.mutation<void, { password: string }>({
