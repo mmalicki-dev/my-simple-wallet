@@ -25,6 +25,8 @@ const unwrap = (result: Awaited<ReturnType<typeof rawBaseQuery>>) => {
   return result;
 };
 
+let refreshPromise: Promise<boolean> | null = null;
+
 const baseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -33,38 +35,36 @@ const baseQuery: BaseQueryFn<
   let result = unwrap(await rawBaseQuery(args, queryApi, extra));
 
   if (result.error?.status === 401) {
-    const { refreshToken, deviceID } = await SecureTokenService.getTokens();
+    refreshPromise ??= (async () => {
+      try {
+        const { refreshToken, deviceID } = await SecureTokenService.getTokens();
+        if (!refreshToken || !deviceID) return false;
 
-    if (refreshToken && deviceID) {
-      const refreshResult = await rawBaseQuery(
-        {
-          url: "/mobile/auth/refresh",
-          body: { refreshToken, deviceID },
-          method: "POST",
-        },
-        queryApi,
-        extra,
-      );
-
-      if (refreshResult.data) {
-        await SecureTokenService.saveTokens(
-          (refreshResult.data as { data: { refreshToken: string } }).data
-            .refreshToken,
-          (refreshResult.data as { data: { deviceID: string } }).data.deviceID,
+        const refreshResult = await rawBaseQuery(
+          { url: "/mobile/auth/refresh", method: "POST", body: { refreshToken, deviceID } },
+          queryApi,
+          extra,
         );
-        const accessToken = (
-          refreshResult.data as { data: { accessToken: string } }
-        ).data.accessToken;
-        const user = (queryApi.getState() as RootState).auth.user!;
-        queryApi.dispatch(setCredentials({ user, accessToken }));
-        result = unwrap(await rawBaseQuery(args, queryApi, extra));
-      } else {
+
+        if (refreshResult.data) {
+          const d = (refreshResult.data as { data: { accessToken: string; refreshToken: string; deviceID: string; user: RootState["auth"]["user"] } }).data;
+          await SecureTokenService.saveTokens(d.refreshToken, d.deviceID);
+          queryApi.dispatch(setCredentials({ user: d.user!, accessToken: d.accessToken }));
+          return true;
+        }
+
         await SecureTokenService.clearTokens();
         queryApi.dispatch(logout());
-        queryApi.dispatch(api.util.resetApiState());
+        return false;
+      } finally {
+        refreshPromise = null;
       }
+    })();
+
+    const refreshed = await refreshPromise;
+    if (refreshed) {
+      result = unwrap(await rawBaseQuery(args, queryApi, extra));
     } else {
-      queryApi.dispatch(logout());
       queryApi.dispatch(api.util.resetApiState());
     }
   }
