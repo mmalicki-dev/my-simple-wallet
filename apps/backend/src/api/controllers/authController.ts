@@ -25,6 +25,7 @@ import {
   CURRENCIES,
 } from "../../../../../packages/shared/dist/index.js";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
+import { rotateRefreshToken } from "../../services/authService.js";
 
 function parseDuration(duration: string): number {
   const units: Record<string, number> = {
@@ -306,15 +307,15 @@ export const confirmEmailChange: RequestHandler = asyncHandler(
 );
 
 export const refresh: RequestHandler = asyncHandler(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const deviceID = req.cookies.deviceID;
+  const currentRefreshToken = req.cookies.refreshToken;
+  const currentDeviceID = req.cookies.deviceID;
 
-  if (!refreshToken || typeof refreshToken !== "string")
+  if (!currentRefreshToken || typeof currentRefreshToken !== "string")
     throw new AppError("Refresh token required", 400);
 
   let payload: { userId: string };
   try {
-    payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as {
+    payload = jwt.verify(currentRefreshToken, env.JWT_REFRESH_SECRET) as {
       userId: string;
     };
   } catch {
@@ -324,36 +325,13 @@ export const refresh: RequestHandler = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(payload.userId);
   if (!user) throw new AppError("User not found", 404);
 
-  const stored = user.refreshTokens.find(
-    (t) =>
-      t.token === refreshToken &&
-      t.expiresAt > new Date() &&
-      t.deviceID === deviceID,
-  );
-  if (!stored) throw new AppError("Invalid or expired refresh token", 401);
+  const { accessToken, refreshToken } = await rotateRefreshToken({
+    user,
+    currentRefreshToken,
+    currentDeviceID,
+  });
 
-  const accessToken = jwt.sign(
-    { userId: user._id, email: user.email },
-    env.JWT_ACCESS_SECRET,
-    { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"] },
-  );
-
-  const newRefreshToken = jwt.sign(
-    { userId: user._id, email: user.email },
-    env.JWT_REFRESH_SECRET,
-    {
-      expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
-    },
-  );
-
-  const expiresAt = new Date(
-    Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
-  );
-
-  stored.token = newRefreshToken;
-  stored.expiresAt = expiresAt;
-  await user.save();
-  res.cookie("refreshToken", newRefreshToken, {
+  res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: env.NODE_ENV === "production",
     sameSite: "strict",
