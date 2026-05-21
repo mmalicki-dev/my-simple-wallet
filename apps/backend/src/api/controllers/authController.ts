@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import { randomBytes, randomUUID } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import mongoose from "mongoose";
 import {
   UserModel,
@@ -25,19 +25,11 @@ import {
   CURRENCIES,
 } from "../../../../../packages/shared/dist/index.js";
 import { DEFAULT_CATEGORIES } from "../../config/defaultCategories.js";
-import { rotateRefreshToken } from "../../services/authService.js";
-
-function parseDuration(duration: string): number {
-  const units: Record<string, number> = {
-    s: 1000,
-    m: 60000,
-    h: 3600000,
-    d: 86400000,
-  };
-  const match = /^(\d+)([smhd])$/.exec(duration);
-  if (!match) throw new Error(`Invalid duration: ${duration}`);
-  return Number(match[1]) * units[match[2]];
-}
+import {
+  createTokens,
+  rotateRefreshToken,
+  saveRefreshToken,
+} from "../../services/authService.js";
 
 export const register: RequestHandler = asyncHandler(async (req, res) => {
   const result = validate(registerSchema, req.body);
@@ -101,27 +93,15 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  if (result.data.rememberMe) {
-    const refreshToken = jwt.sign(
-      { userId: user._id, email: user.email },
-      env.JWT_REFRESH_SECRET,
-      {
-        expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
-      },
-    );
+  const userAgent = req.headers["user-agent"] ?? "unknown";
 
-    const expiresAt = new Date(
-      Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN),
-    );
-    const deviceID = req.cookies.deviceID ?? randomUUID();
-    const userAgent = req.headers["user-agent"] ?? "unknown";
-    user.refreshTokens = [
-      ...user.refreshTokens.filter(
-        (t) => t.expiresAt > new Date() && t.deviceID !== deviceID,
-      ),
-      { token: refreshToken, expiresAt, deviceID, userAgent },
-    ];
-    await user.save();
+  if (result.data.rememberMe) {
+    const { accessToken, refreshToken, deviceID } = createTokens({
+      user,
+      withRefresh: true,
+      existingDeviceID: req.cookies.deviceID,
+    });
+    await saveRefreshToken({ user, refreshToken, deviceID, userAgent });
     res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -134,16 +114,22 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
         maxAge: 400 * 24 * 60 * 60 * 1000,
         sameSite: "strict",
       });
+    return ok(
+      res,
+      {
+        accessToken,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          totalBalanceCurrency: user.totalBalanceCurrency,
+        },
+      },
+      "Logged in successfully",
+    );
   }
 
-  const accessToken = jwt.sign(
-    { userId: user._id, email: user.email },
-    env.JWT_ACCESS_SECRET,
-    {
-      expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"],
-    },
-  );
-
+  const { accessToken } = createTokens({ user });
   ok(
     res,
     {

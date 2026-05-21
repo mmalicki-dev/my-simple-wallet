@@ -67,27 +67,37 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  const { accessToken, refreshToken, deviceID } = createTokens({
-    user,
-    withRefresh: result.data?.rememberMe ?? false,
-    existingDeviceID: req.body.deviceID ?? undefined,
-  });
   const userAgent = req.headers["user-agent"] ?? "unknown";
 
-  result.data.rememberMe &&
-    (await saveRefreshToken({
+  if (result.data.rememberMe) {
+    const { accessToken, refreshToken, deviceID } = createTokens({
       user,
-      refreshToken,
-      deviceID,
-      userAgent,
-    }));
+      withRefresh: true,
+      existingDeviceID: req.body.deviceID,
+    });
+    await saveRefreshToken({ user, refreshToken, deviceID, userAgent });
+    return ok(
+      res,
+      {
+        accessToken,
+        refreshToken,
+        deviceID,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          totalBalanceCurrency: user.totalBalanceCurrency,
+        },
+      },
+      "Logged in successfully",
+    );
+  }
 
+  const { accessToken } = createTokens({ user });
   ok(
     res,
     {
       accessToken,
-      refreshToken,
-      deviceID,
       user: {
         id: user._id,
         email: user.email,

@@ -10,10 +10,14 @@ interface ICreateTokens {
   existingDeviceID?: string;
 }
 
-interface ReturnValues {
+interface TokensWithRefresh {
   accessToken: string;
   refreshToken: string;
   deviceID: string;
+}
+
+interface TokensWithoutRefresh {
+  accessToken: string;
 }
 
 interface ISaveRefreshToken {
@@ -41,14 +45,17 @@ function parseDuration(duration: string): number {
   return Number(match[1]) * units[match[2]];
 }
 
-export const createTokens = ({
+export function createTokens(
+  params: ICreateTokens & { withRefresh: true },
+): TokensWithRefresh;
+export function createTokens(
+  params: ICreateTokens & { withRefresh?: false },
+): TokensWithoutRefresh;
+export function createTokens({
   user,
   withRefresh,
   existingDeviceID,
-}: ICreateTokens): ReturnValues => {
-  let refreshToken = "";
-  let deviceID = "";
-
+}: ICreateTokens): TokensWithRefresh | TokensWithoutRefresh {
   const accessToken = jwt.sign(
     { userId: user._id, email: user.email },
     env.JWT_ACCESS_SECRET,
@@ -56,18 +63,17 @@ export const createTokens = ({
   );
 
   if (withRefresh) {
-    refreshToken = jwt.sign(
+    const refreshToken = jwt.sign(
       { userId: user._id, email: user.email },
       env.JWT_REFRESH_SECRET,
-      {
-        expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"],
-      },
+      { expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"] },
     );
-    deviceID = existingDeviceID ?? randomUUID();
+    const deviceID = existingDeviceID ?? randomUUID();
+    return { accessToken, refreshToken, deviceID };
   }
 
-  return { accessToken, refreshToken, deviceID };
-};
+  return { accessToken };
+}
 
 export const saveRefreshToken = async ({
   user,
@@ -91,7 +97,7 @@ export const rotateRefreshToken = async ({
   user,
   currentRefreshToken,
   currentDeviceID,
-}: IRotateRefreshToken): Promise<ReturnValues> => {
+}: IRotateRefreshToken): Promise<TokensWithRefresh> => {
   const stored = user.refreshTokens.find(
     (t) =>
       t.token === currentRefreshToken &&
