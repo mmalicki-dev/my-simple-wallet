@@ -16,13 +16,15 @@ export const authApi = api.injectEndpoints({
     login: builder.mutation<MobileLoginResponse, LoginRequest>({
       query: (body) => ({ url: "/mobile/auth/login", method: "POST", body }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
-        dispatch(
-          setCredentials({ user: data.user, accessToken: data.accessToken }),
-        );
-        if (data.refreshToken && data.deviceID) {
-          await SecureTokenService.saveTokens(data.refreshToken, data.deviceID);
-        }
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            setCredentials({ user: data.user, accessToken: data.accessToken }),
+          );
+          if (data.refreshToken && data.deviceID) {
+            await SecureTokenService.saveTokens(data.refreshToken, data.deviceID);
+          }
+        } catch {}
       },
     }),
     getMe: builder.query<UserResponse, void>({
@@ -51,6 +53,7 @@ export const authApi = api.injectEndpoints({
         });
         await SecureTokenService.clearTokens();
         dispatch(logout());
+        dispatch(api.util.resetApiState());
         return result.error ? { error: result.error } : { data: undefined };
       },
     }),
