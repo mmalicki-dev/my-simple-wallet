@@ -1,36 +1,41 @@
-import type { User } from './user.js'
+import type { User } from "./user.js";
 
-export type { User as UserResponse }
+export type { User as UserResponse };
 
 export interface Session {
-  id: string
-  deviceID: string
-  userAgent: string
-  expiresAt: string
+  id: string;
+  deviceID: string;
+  userAgent: string;
+  expiresAt: string;
 }
 
 export interface LoginResponse {
-  accessToken: string
-  user: User
+  accessToken: string;
+  user: User;
+}
+
+export interface MobileLoginResponse extends LoginResponse {
+  refreshToken: string;
+  deviceID: string;
 }
 
 export interface RegisterRequest {
-  email: string
-  password: string
-  name: string
+  email: string;
+  password: string;
+  name: string;
 }
 
 export interface LoginRequest {
-  email: string
-  password: string
-  rememberMe?: boolean
+  email: string;
+  password: string;
+  rememberMe?: boolean;
 }
 
 export interface ResetPassRequest {
-  token: string
-  password: string
+  token: string;
+  password: string;
 }
 
 export interface ForgotPassRequest {
-  email: string
+  email: string;
 }

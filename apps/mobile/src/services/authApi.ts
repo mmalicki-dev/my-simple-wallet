@@ -1,18 +1,29 @@
 import { api } from "@/redux/api";
+import { logout, setCredentials } from "@/redux/slices/authSlice";
 import type {
   UserResponse,
-  LoginResponse,
   RegisterRequest,
   ResetPassRequest,
   ForgotPassRequest,
   LoginRequest,
   Session,
+  MobileLoginResponse,
 } from "shared";
+import { SecureTokenService } from "./secureStorage";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<MobileLoginResponse, LoginRequest>({
       query: (body) => ({ url: "/mobile/auth/login", method: "POST", body }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        dispatch(
+          setCredentials({ user: data.user, accessToken: data.accessToken }),
+        );
+        if (data.refreshToken && data.deviceID) {
+          await SecureTokenService.saveTokens(data.refreshToken, data.deviceID);
+        }
+      },
     }),
     getMe: builder.query<UserResponse, void>({
       query: () => "/auth/me",
@@ -31,7 +42,17 @@ export const authApi = api.injectEndpoints({
       }),
     }),
     logout: builder.mutation<void, void>({
-      query: () => ({ url: "/mobile/auth/logout", method: "POST" }),
+      queryFn: async (_, { dispatch }, __, baseQuery) => {
+        const { refreshToken, deviceID } = await SecureTokenService.getTokens();
+        const result = await baseQuery({
+          url: "/mobile/auth/logout",
+          method: "POST",
+          body: { refreshToken, deviceID },
+        });
+        await SecureTokenService.clearTokens();
+        dispatch(logout());
+        return result.error ? { error: result.error } : { data: undefined };
+      },
     }),
     updateProfile: builder.mutation<
       UserResponse,

@@ -1,10 +1,10 @@
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from "react-native-mmkv";
 
-const storage = new MMKV()
+const storage = createMMKV();
 
 export const StorageService = {
   getString: (key: string): string | undefined => storage.getString(key),
   setString: (key: string, value: string): void => storage.set(key, value),
-  delete: (key: string): void => storage.delete(key),
+  delete: (key: string): void => { storage.remove(key) },
   clear: (): void => storage.clearAll(),
-}
+};
