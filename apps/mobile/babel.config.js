@@ -10,6 +10,7 @@ export default function babelConfig(api) {
           alias: { "@": "./src" },
         },
       ],
+      "react-native-reanimated/plugin",
     ],
   };
 }

@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "@/hooks";
 import { SecureTokenService } from "@/services/secureStorage";
 import { setCredentials } from "@/redux/slices/authSlice";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function AppInitializer({ children }: Readonly<{ children: React.ReactNode }>) {
   const dispatch = useAppDispatch();
@@ -50,16 +51,18 @@ function AppInitializer({ children }: Readonly<{ children: React.ReactNode }>) {
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <AppInitializer>
-        <LanguageProvider>
-          <ThemeProvider>
-            <NavigationContainer>
-              <RootNavigator />
-            </NavigationContainer>
-          </ThemeProvider>
-        </LanguageProvider>
-      </AppInitializer>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <AppInitializer>
+          <LanguageProvider>
+            <ThemeProvider>
+              <NavigationContainer>
+                <RootNavigator />
+              </NavigationContainer>
+            </ThemeProvider>
+          </LanguageProvider>
+        </AppInitializer>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
