@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { GlassWrapper } from "@/components/templates/GlassWrapper/GlassWrapper";
 import { AuthTabs } from "@/components/atoms/AuthTabs/AuthTabs";
 import { AuthForm } from "@/components/molecules/AuthForm/AuthForm";
@@ -13,7 +13,7 @@ const AuthScreen = () => {
   const [mode, setMode] = useState<Mode>("login");
 
   return (
-    <ScreenLayout>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.content}>
         <View style={styles.controls}>
           <ThemeToggle />
@@ -24,7 +24,7 @@ const AuthScreen = () => {
           <AuthForm mode={mode} />
         </GlassWrapper>
       </View>
-    </ScreenLayout>
+    </SafeAreaView>
   );
 };
 
