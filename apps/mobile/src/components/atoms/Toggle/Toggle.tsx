@@ -34,13 +34,14 @@ export const Toggle = ({ options, value, onChange }: ToggleProps) => {
             onPress={() => onChange(opt.value)}
             activeOpacity={0.7}
           >
-            {opt.icon ? (
+            {opt.icon && (
               <Icon
                 name={opt.icon}
                 size={16}
                 color={active ? colors.text : colors.textMuted}
               />
-            ) : (
+            )}
+            {!!opt.label && (
               <Text
                 style={[
                   styles.label,
@@ -63,9 +64,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   btn: {
-    flex: 1,
     paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     alignItems: "center",
     borderBottomWidth: 2,
   },

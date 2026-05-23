@@ -2,8 +2,8 @@ import { Toggle } from "@/components/atoms/Toggle/Toggle";
 import { useTheme } from "@/hooks";
 
 const OPTIONS = [
-  { value: "light", label: "light", icon: "sun" as const },
-  { value: "dark", label: "dark", icon: "moon" as const },
+  { value: "light", label: "", icon: "sun" as const },
+  { value: "dark", label: "", icon: "moon" as const },
 ];
 
 export const ThemeToggle = () => {
