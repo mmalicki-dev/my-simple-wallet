@@ -1,10 +1,13 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { useColors } from '@/hooks';
-import { alpha } from '@/theme/colors';
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { useColors } from "@/hooks";
+import { alpha } from "@/theme/colors";
+import { Icon } from "@/components/atoms/Icon/Icon";
+import type { IconName } from "shared";
 
 interface ToggleOption {
   value: string;
   label: string;
+  icon?: IconName;
 }
 
 interface ToggleProps {
@@ -25,15 +28,28 @@ export const Toggle = ({ options, value, onChange }: ToggleProps) => {
             key={opt.value}
             style={[
               styles.btn,
-              { borderBottomColor: active ? colors.neon : 'transparent' },
+              { borderBottomColor: active ? colors.neon : "transparent" },
               active && { backgroundColor: alpha(colors.neon, 0.08) },
             ]}
             onPress={() => onChange(opt.value)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.label, { color: active ? colors.text : colors.textMuted }]}>
-              {opt.label}
-            </Text>
+            {opt.icon ? (
+              <Icon
+                name={opt.icon}
+                size={16}
+                color={active ? colors.text : colors.textMuted}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.label,
+                  { color: active ? colors.text : colors.textMuted },
+                ]}
+              >
+                {opt.label}
+              </Text>
+            )}
           </TouchableOpacity>
         );
       })}
@@ -43,20 +59,20 @@ export const Toggle = ({ options, value, onChange }: ToggleProps) => {
 
 const styles = StyleSheet.create({
   toggle: {
-    flexDirection: 'row',
-    overflow: 'hidden',
+    flexDirection: "row",
+    overflow: "hidden",
   },
   btn: {
     flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 8,
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomWidth: 2,
   },
   label: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: "700",
     letterSpacing: 1.2,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
 });
