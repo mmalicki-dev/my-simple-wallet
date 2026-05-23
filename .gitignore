@@ -5,5 +5,7 @@ build/
 .env.local
 *.log
 .DS_Store
+.expo/
+.idea/
 .claude/
 memory/
