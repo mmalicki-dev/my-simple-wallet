@@ -24,6 +24,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [secondPassword, setSecondPassword] = useState("");
   const [name, setName] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -39,9 +40,16 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     try {
       if (mode === "login") {
         const result = await login({ email, password, rememberMe }).unwrap();
-        dispatch(setCredentials({ user: result.user, accessToken: result.accessToken }));
+        dispatch(
+          setCredentials({
+            user: result.user,
+            accessToken: result.accessToken,
+          }),
+        );
         navigate(`/${lang}/home`, { replace: true });
       } else {
+        if (password !== secondPassword)
+          return setServerError("Password doesn't match");
         await register({ email, password, name }).unwrap();
         setRegistered(true);
       }
@@ -55,7 +63,9 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       <div className={styles.success}>
         <p className={styles.successTitle}>{auth.checkEmailTitle}</p>
         <p className={styles.successMessage}>{auth.checkEmailMessage}</p>
-        <Link to={`/${lang}/auth/login`} className={styles.successLink}>{auth.goToSignIn}</Link>
+        <Link to={`/${lang}/auth/login`} className={styles.successLink}>
+          {auth.goToSignIn}
+        </Link>
       </div>
     );
   }
@@ -88,6 +98,16 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         minLength={8}
         autoComplete={mode === "login" ? "current-password" : "new-password"}
       />
+      {mode === "register" && (
+        <PasswordInput
+          placeholder={common.password}
+          value={secondPassword}
+          onChange={(e) => setSecondPassword(e.target.value)}
+          required
+          minLength={8}
+          autoComplete={"new-password"}
+        />
+      )}
       {mode === "login" && (
         <Checkbox
           id="rememberMe"
