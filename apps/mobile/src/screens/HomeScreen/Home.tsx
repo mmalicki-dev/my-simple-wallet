@@ -1,9 +1,9 @@
 import { RootStackParamList } from "@/navigation";
 import { useLogoutMutation } from "@/services";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
@@ -17,14 +17,12 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text style={styles.title}>Home Screen</Text>
-        <Pressable onPress={handleLogout}>
-          <Text>Logout</Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
+    <ScreenLayout>
+      <Text style={styles.title}>Home Screen</Text>
+      <Pressable onPress={handleLogout}>
+        <Text>Logout</Text>
+      </Pressable>
+    </ScreenLayout>
   );
 };
 
