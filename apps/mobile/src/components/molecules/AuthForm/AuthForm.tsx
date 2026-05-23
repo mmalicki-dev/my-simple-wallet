@@ -34,7 +34,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     try {
       setError(null);
       await login({ email, password, rememberMe }).unwrap();
-      navigation.replace("Home");
+      navigation.replace("Tabs");
     } catch (e) {
       console.error("LOGIN ERROR", e);
       setError("Invalid email or password.");

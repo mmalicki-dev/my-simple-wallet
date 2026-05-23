@@ -1,23 +1,19 @@
 import { View, StyleSheet } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BackgroundGrid } from "@/components/atoms/BackgroundGrid/BackgroundGrid";
-import { useColors } from "@/hooks";
+import { useColors, useAppSelector } from "@/hooks";
 import AuthScreen from "../screens/AuthScreen/Auth";
-import HomeScreen from "../screens/HomeScreen/Home";
-import ChartsScreen from "../screens/ChartsScreen/Charts";
-import UserScreen from "../screens/UserScreen/User";
 import ProfileScreen from "../screens/ProfileScreen/Profile";
 import AccountsScreen from "../screens/AccountsScreen/Accounts";
 import CategoriesScreen from "../screens/CategoriesScreen/Categories";
 import RecurringScreen from "../screens/RecurringScreen/Recurring";
 import VerifyEmailScreen from "../screens/VerifyEmailScreen/VerifyEmail";
 import ConfirmEmailChangeScreen from "../screens/ConfirmEmailChangeScreen/ConfirmEmailChange";
+import { TabNavigator } from "@/components/organisms/TabNavigator/TabNavigator";
 
 export type RootStackParamList = {
   Auth: undefined;
-  Home: undefined;
-  Charts: undefined;
-  User: undefined;
+  Tabs: undefined;
   Profile: undefined;
   Accounts: undefined;
   Categories: undefined;
@@ -30,21 +26,20 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Navigator() {
   const colors = useColors();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <BackgroundGrid />
       <Stack.Navigator
-        initialRouteName="Auth"
+        initialRouteName={isAuthenticated ? "Tabs" : "Auth"}
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: "transparent" },
         }}
       >
         <Stack.Screen name="Auth" component={AuthScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Charts" component={ChartsScreen} />
-        <Stack.Screen name="User" component={UserScreen} />
+        <Stack.Screen name="Tabs" component={TabNavigator} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Accounts" component={AccountsScreen} />
         <Stack.Screen name="Categories" component={CategoriesScreen} />
@@ -57,7 +52,5 @@ export default function Navigator() {
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
+  root: { flex: 1 },
 });

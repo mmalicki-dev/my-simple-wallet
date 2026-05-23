@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Icon } from "@/components/atoms/Icon/Icon";
 import { NavItem } from "@/components/molecules/NavItem/NavItem";
@@ -11,25 +11,25 @@ import { logout } from "@/redux/slices/authSlice";
 import { api } from "@/redux/api";
 import type { RootStackParamList } from "@/navigation";
 
-type NavProp = NativeStackNavigationProp<RootStackParamList>;
-
 const FAB_SIZE = 52;
 
-export const Navigation = () => {
+export const Navigation = ({ state, navigation, insets }: BottomTabBarProps) => {
   const colors = useColors();
-  const navigation = useNavigation<NavProp>();
-  const route = useRoute();
   const dispatch = useAppDispatch();
   const [logoutMutation] = useLogoutMutation();
   const [fabActive, setFabActive] = useState(false);
 
-  const go = (screen: keyof RootStackParamList) => navigation.navigate(screen);
+  const activeRouteName = state.routes[state.index]?.name ?? "";
+
+  const goTo = (routeName: string) => navigation.navigate(routeName);
 
   const handleLogout = async () => {
     await logoutMutation().catch(() => {});
     dispatch(logout());
     dispatch(api.util.resetApiState());
-    navigation.reset({ index: 0, routes: [{ name: "Auth" }] });
+    const parentNav =
+      navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
+    parentNav?.reset({ index: 0, routes: [{ name: "Auth" }] });
   };
 
   return (
@@ -37,6 +37,7 @@ export const Navigation = () => {
       style={[
         styles.nav,
         {
+          paddingBottom: insets.bottom,
           borderTopColor: colors.neon,
           backgroundColor: alpha(colors.neon, 0.18),
           shadowColor: colors.neon,
@@ -46,14 +47,14 @@ export const Navigation = () => {
       <NavItem
         icon="dashboard"
         label="Home"
-        active={route.name === "Home"}
-        onPress={() => go("Home")}
+        active={activeRouteName === "Home"}
+        onPress={() => goTo("Home")}
       />
       <NavItem
         icon="chart-bar-2"
         label="Charts"
-        active={route.name === "Charts"}
-        onPress={() => go("Charts")}
+        active={activeRouteName === "Charts"}
+        onPress={() => goTo("Charts")}
       />
 
       <View style={styles.fabSlot}>
@@ -77,8 +78,8 @@ export const Navigation = () => {
       <NavItem
         icon="user-id"
         label="User"
-        active={route.name === "User"}
-        onPress={() => go("User")}
+        active={activeRouteName === "User"}
+        onPress={() => goTo("User")}
       />
       <NavItem icon="logout" label="Logout" active={false} onPress={handleLogout} />
     </View>
