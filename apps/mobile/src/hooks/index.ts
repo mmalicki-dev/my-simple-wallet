@@ -1,4 +1,5 @@
 export * from './useStore'
+export * from './useColors'
 export * from './useTheme'
 export * from './useLanguage'
 export * from './useTotalBalance'

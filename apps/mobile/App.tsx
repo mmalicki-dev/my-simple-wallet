@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { store } from "./src/redux/store";
 import { LanguageProvider } from "./src/context/Language";
 import { ThemeProvider } from "./src/context/Theme";
-import RootNavigator from "./src/navigation";
+import Navigator from "./src/navigation/Navigator";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "@/hooks";
 import { SecureTokenService } from "@/services/secureStorage";
@@ -57,7 +57,7 @@ export default function App() {
           <LanguageProvider>
             <ThemeProvider>
               <NavigationContainer>
-                <RootNavigator />
+                <Navigator />
               </NavigationContainer>
             </ThemeProvider>
           </LanguageProvider>
