@@ -34,21 +34,25 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
   const handleLogin = async () => {
     try {
+      setError(null);
       await login({ email, password, rememberMe }).unwrap();
       navigation.replace("Home");
-    } catch {
+    } catch (e) {
+      console.error("LOGIN ERROR", e);
       setError("Invalid email or password");
     }
   };
 
   const handleRegister = async () => {
     try {
+      setError(null);
       if (password !== secondPassword)
         return setError("Passwords dont' match.");
       await register({ email, password, name }).unwrap();
       setRegistered(true);
-    } catch {
-      setError("REgistration failed. Please, try again.");
+    } catch (e) {
+      console.error("REGISTER ERROR", e);
+      setError("Registration failed. Please, try again.");
     }
   };
 
@@ -66,11 +70,23 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
   return (
     <View>
-      <TextInput onChangeText={setEmail} value={email} />
+      <TextInput
+        onChangeText={setEmail}
+        value={email}
+        placeholder="example@gmail.com"
+      />
       {mode === "register" && <TextInput onChangeText={setName} value={name} />}
-      <TextInput onChangeText={setPassword} value={password} />
+      <TextInput
+        onChangeText={setPassword}
+        value={password}
+        placeholder="Type password"
+      />
       {mode === "register" && (
-        <TextInput onChangeText={setSecondPassword} value={secondPassword} />
+        <TextInput
+          onChangeText={setSecondPassword}
+          value={secondPassword}
+          placeholder="Repeat password"
+        />
       )}
       {mode === "login" && (
         <Pressable onPress={() => setRememberMe((s) => !s)}>

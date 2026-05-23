@@ -10,7 +10,7 @@ import { logout, setCredentials } from "./slices/authSlice";
 import { SecureTokenService } from "@/services/secureStorage";
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000"}/api`,
+  baseUrl: `${process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:5000"}/api`,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -41,15 +41,30 @@ const baseQuery: BaseQueryFn<
         if (!refreshToken || !deviceID) return false;
 
         const refreshResult = await rawBaseQuery(
-          { url: "/mobile/auth/refresh", method: "POST", body: { refreshToken, deviceID } },
+          {
+            url: "/mobile/auth/refresh",
+            method: "POST",
+            body: { refreshToken, deviceID },
+          },
           queryApi,
           extra,
         );
 
         if (refreshResult.data) {
-          const d = (refreshResult.data as { data: { accessToken: string; refreshToken: string; deviceID: string; user: RootState["auth"]["user"] } }).data;
+          const d = (
+            refreshResult.data as {
+              data: {
+                accessToken: string;
+                refreshToken: string;
+                deviceID: string;
+                user: RootState["auth"]["user"];
+              };
+            }
+          ).data;
           await SecureTokenService.saveTokens(d.refreshToken, d.deviceID);
-          queryApi.dispatch(setCredentials({ user: d.user!, accessToken: d.accessToken }));
+          queryApi.dispatch(
+            setCredentials({ user: d.user!, accessToken: d.accessToken }),
+          );
           return true;
         }
 

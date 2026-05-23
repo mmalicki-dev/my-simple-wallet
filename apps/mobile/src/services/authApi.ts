@@ -43,7 +43,7 @@ export const authApi = api.injectEndpoints({
         body: { password },
       }),
     }),
-    logout: builder.mutation<void, void>({
+    logout: builder.mutation<null, void>({
       queryFn: async (_, { dispatch }, __, baseQuery) => {
         const { refreshToken, deviceID } = await SecureTokenService.getTokens();
         const result = await baseQuery({
@@ -54,7 +54,7 @@ export const authApi = api.injectEndpoints({
         await SecureTokenService.clearTokens();
         dispatch(logout());
         dispatch(api.util.resetApiState());
-        return result.error ? { error: result.error } : { data: undefined };
+        return result.error ? { error: result.error } : { data: null };
       },
     }),
     updateProfile: builder.mutation<
