@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useLoginMutation, useRegisterMutation } from '@/services';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/navigation';
-import { FormInput } from '@/components/atoms/FormInput/FormInput';
-import { NeonButton } from '@/components/atoms/NeonButton/NeonButton';
-import { useColors } from '@/hooks';
+import { useEffect, useState } from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
+import { useLoginMutation, useRegisterMutation } from "@/services";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { FormInput } from "@/components/atoms/FormInput/FormInput";
+import { NeonButton } from "@/components/atoms/NeonButton/NeonButton";
+import { useColors } from "@/hooks";
+import { RootStackParamList } from "@/navigation/Navigator";
 
-type Mode = 'login' | 'register';
-type NavProp = NativeStackNavigationProp<RootStackParamList, 'Auth'>;
+type Mode = "login" | "register";
+type NavProp = NativeStackNavigationProp<RootStackParamList, "Auth">;
 
 interface AuthFormProps {
   mode: Mode;
@@ -20,10 +20,10 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const colors = useColors();
 
   const [registered, setRegistered] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [secondPassword, setSecondPassword] = useState('');
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [secondPassword, setSecondPassword] = useState("");
+  const [name, setName] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,22 +34,23 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     try {
       setError(null);
       await login({ email, password, rememberMe }).unwrap();
-      navigation.replace('Home');
+      navigation.replace("Home");
     } catch (e) {
-      console.error('LOGIN ERROR', e);
-      setError('Invalid email or password.');
+      console.error("LOGIN ERROR", e);
+      setError("Invalid email or password.");
     }
   };
 
   const handleRegister = async () => {
     try {
       setError(null);
-      if (password !== secondPassword) return setError("Passwords don't match.");
+      if (password !== secondPassword)
+        return setError("Passwords don't match.");
       await register({ email, password, name }).unwrap();
       setRegistered(true);
     } catch (e) {
-      console.error('REGISTER ERROR', e);
-      setError('Registration failed. Please try again.');
+      console.error("REGISTER ERROR", e);
+      setError("Registration failed. Please try again.");
     }
   };
 
@@ -61,7 +62,9 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   if (registered)
     return (
       <View style={styles.success}>
-        <Text style={[styles.successTitle, { color: colors.text }]}>Check your email</Text>
+        <Text style={[styles.successTitle, { color: colors.text }]}>
+          Check your email
+        </Text>
         <Text style={[styles.successMessage, { color: colors.textMuted }]}>
           We sent a verification link to {email}.
         </Text>
@@ -78,7 +81,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      {mode === 'register' && (
+      {mode === "register" && (
         <FormInput
           label="Name"
           value={name}
@@ -93,7 +96,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         placeholder="Password"
         secureTextEntry
       />
-      {mode === 'register' && (
+      {mode === "register" && (
         <FormInput
           label="Confirm password"
           value={secondPassword}
@@ -102,17 +105,32 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           secureTextEntry
         />
       )}
-      {mode === 'login' && (
-        <Pressable style={styles.rememberMe} onPress={() => setRememberMe((s) => !s)}>
-          <View style={[styles.checkbox, { borderColor: rememberMe ? colors.neon : colors.border, backgroundColor: rememberMe ? colors.neon : 'transparent' }]} />
-          <Text style={[styles.rememberMeText, { color: colors.textMuted }]}>Remember me</Text>
+      {mode === "login" && (
+        <Pressable
+          style={styles.rememberMe}
+          onPress={() => setRememberMe((s) => !s)}
+        >
+          <View
+            style={[
+              styles.checkbox,
+              {
+                borderColor: rememberMe ? colors.neon : colors.border,
+                backgroundColor: rememberMe ? colors.neon : "transparent",
+              },
+            ]}
+          />
+          <Text style={[styles.rememberMeText, { color: colors.textMuted }]}>
+            Remember me
+          </Text>
         </Pressable>
       )}
-      {!!error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
+      {!!error && (
+        <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>
+      )}
       <NeonButton
-        label={mode === 'login' ? 'Login' : 'Register'}
+        label={mode === "login" ? "Login" : "Register"}
         loading={isLoginLoading || isRegisterLoading}
-        onPress={mode === 'login' ? handleLogin : handleRegister}
+        onPress={mode === "login" ? handleLogin : handleRegister}
       />
     </View>
   );
@@ -123,8 +141,8 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   rememberMe: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   checkbox: {
@@ -145,7 +163,7 @@ const styles = StyleSheet.create({
   },
   successTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   successMessage: {
     fontSize: 13,
