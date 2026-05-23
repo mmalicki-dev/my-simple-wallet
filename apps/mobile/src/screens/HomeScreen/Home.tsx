@@ -1,39 +1,21 @@
-import { RootStackParamList } from "@/navigation";
-import { useLogoutMutation } from "@/services";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Text, StyleSheet, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, StyleSheet } from "react-native";
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
-
-type NavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
+import { useColors } from "@/hooks";
 
 const HomeScreen = () => {
-  const navigation = useNavigation<NavProp>();
-
-  const [logout] = useLogoutMutation();
-  const handleLogout = () => {
-    logout();
-    navigation.replace("Auth");
-  };
-
+  const colors = useColors();
   return (
     <ScreenLayout>
-      <Text style={styles.title}>Home Screen</Text>
-      <Pressable onPress={handleLogout}>
-        <Text>Logout</Text>
-      </Pressable>
+      <View style={styles.content}>
+        <Text style={[styles.title, { color: colors.text }]}>Home</Text>
+      </View>
     </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
+  content: { flex: 1, alignItems: "center", justifyContent: "center" },
+  title: { fontSize: 24, fontWeight: "700" },
 });
 
 export default HomeScreen;
