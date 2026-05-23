@@ -12,7 +12,8 @@
     "build:frontend": "pnpm --filter shared build && pnpm --filter frontend build",
     "build:backend": "pnpm --filter shared build && pnpm --filter backend build",
     "build:all": "pnpm --filter './apps/*' build",
-    "start:backend": "pnpm --filter backend start"
+    "start:backend": "pnpm --filter backend start",
+    "generate:icons": "node scripts/generate-icons.mjs"
   },
   "devDependencies": {
     "typescript": "^6.0.3"
