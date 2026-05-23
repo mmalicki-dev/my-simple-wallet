@@ -13,7 +13,11 @@ import type { RootStackParamList } from "@/navigation";
 
 const FAB_SIZE = 52;
 
-export const Navigation = ({ state, navigation, insets }: BottomTabBarProps) => {
+export const Navigation = ({
+  state,
+  navigation,
+  insets,
+}: BottomTabBarProps) => {
   const colors = useColors();
   const dispatch = useAppDispatch();
   const [logoutMutation] = useLogoutMutation();
@@ -81,7 +85,12 @@ export const Navigation = ({ state, navigation, insets }: BottomTabBarProps) => 
         active={activeRouteName === "User"}
         onPress={() => goTo("User")}
       />
-      <NavItem icon="logout" label="Logout" active={false} onPress={handleLogout} />
+      <NavItem
+        icon="logout"
+        label="Logout"
+        active={false}
+        onPress={handleLogout}
+      />
     </View>
   );
 };
@@ -97,7 +106,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -6 },
     shadowOpacity: 0.35,
     shadowRadius: 12,
-    elevation: 8,
   },
   fabSlot: {
     flex: 1,
