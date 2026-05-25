@@ -1,21 +1,26 @@
-import { View, Text, StyleSheet } from "react-native";
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
-import { useColors } from "@/hooks";
+import { TotalBalance } from "@/components/molecules/TotalBalance/TotalBalance";
+import { useGetAccountsQuery } from "@/services";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
 
 const HomeScreen = () => {
-  const colors = useColors();
+  const { data: accounts = [], isLoading } = useGetAccountsQuery();
+  const totalBalanceCurrency = useSelector(
+    (state: RootState) => state.auth.user?.totalBalanceCurrency,
+  );
+
   return (
     <ScreenLayout>
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>Home</Text>
-      </View>
+      <HudPanel label="Total Balance">
+        <TotalBalance
+          accounts={accounts}
+          baseCurrency={totalBalanceCurrency ?? "NOK"}
+        />
+      </HudPanel>
     </ScreenLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  content: { flex: 1, alignItems: "center", justifyContent: "center" },
-  title: { fontSize: 24, fontWeight: "700" },
-});
 
 export default HomeScreen;

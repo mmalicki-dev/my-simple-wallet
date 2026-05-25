@@ -14,7 +14,7 @@ export const ScreenLayout = ({ children }: ScreenLayoutProps) => {
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <BackgroundGrid />
       <SafeAreaView style={styles.safe} edges={["top"]}>
-        {children}
+        <View style={styles.content}>{children}</View>
       </SafeAreaView>
     </View>
   );
@@ -23,4 +23,11 @@ export const ScreenLayout = ({ children }: ScreenLayoutProps) => {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   safe: { flex: 1 },
+  content: {
+    flex: 1,
+    alignItems: "stretch",
+    padding: 16,
+    paddingTop: 28,
+    gap: 24,
+  },
 });

@@ -2,16 +2,18 @@ import { type ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
 import { useColors } from "@/hooks";
 import { alpha } from "@/theme/colors";
+import { PanelLabel } from "@/components/atoms/PanelLabel/PanelLabel";
 
 interface HudPanelProps {
   children: ReactNode;
+  label: string;
   style?: object;
 }
 
 const CORNER = 14;
 const BORDER = 2;
 
-export const HudPanel = ({ children, style }: HudPanelProps) => {
+export const HudPanel = ({ children, style, label }: HudPanelProps) => {
   const colors = useColors();
   return (
     <View
@@ -24,6 +26,7 @@ export const HudPanel = ({ children, style }: HudPanelProps) => {
         style,
       ]}
     >
+      <PanelLabel label={label} />
       <View style={[styles.corner, styles.tl, { borderColor: colors.neon }]} />
       <View style={[styles.corner, styles.tr, { borderColor: colors.neon }]} />
       <View style={[styles.corner, styles.bl, { borderColor: colors.neon }]} />
