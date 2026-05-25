@@ -4,7 +4,6 @@ import { useGetAccountsQuery } from "@/services";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
-import { Text } from "react-native";
 import { AccountBlock } from "@/components/organisms/AccountBlock/AccountBlock";
 import { RecurringPaymentBlock } from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
 import { useRecurringPayments } from "@/hooks";
@@ -20,13 +19,6 @@ const HomeScreen = () => {
   const totalBalanceCurrency = useSelector(
     (state: RootState) => state.auth.user?.totalBalanceCurrency,
   );
-
-  if (isLoadingA || isLoadingRP)
-    return (
-      <ScreenLayout>
-        <Text>Loading</Text>
-      </ScreenLayout>
-    );
 
   return (
     <ScreenLayout>
