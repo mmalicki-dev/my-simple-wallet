@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
 import { Text } from "react-native";
+import { AccountBlock } from "@/components/organisms/AccountBlock/AccountBlock";
 
 const HomeScreen = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
@@ -26,6 +27,9 @@ const HomeScreen = () => {
           accounts={accounts}
           baseCurrency={totalBalanceCurrency ?? "NOK"}
         />
+      </HudPanel>
+      <HudPanel label="Your Accounts">
+        <AccountBlock />
       </HudPanel>
     </ScreenLayout>
   );

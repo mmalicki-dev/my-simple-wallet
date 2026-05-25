@@ -9,6 +9,8 @@ export const palette = {
     danger: "#c62828",
     success: "#2e7d32",
     primary: "#3949ab",
+    accountDebit: "#9e9e9e",
+    accountCredit: "#b45309",
   },
   dark: {
     neon: "#bc13fe",
@@ -20,6 +22,8 @@ export const palette = {
     danger: "#ef5350",
     success: "#66bb6a",
     primary: "#7986cb",
+    accountDebit: "#71717a",
+    accountCredit: "#d97706",
   },
 } as const;
 

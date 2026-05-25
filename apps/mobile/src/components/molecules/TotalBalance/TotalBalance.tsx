@@ -33,10 +33,7 @@ export const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
         </Text>
       )}
       {!isLoading && !isError && total !== null && (
-        <ActionPanel
-          onEdit={() => navigation.navigate("Profile")}
-          withBorderBottom
-        >
+        <ActionPanel onEdit={() => navigation.navigate("Profile")}>
           <Amount
             value={total}
             currency={baseCurrency}

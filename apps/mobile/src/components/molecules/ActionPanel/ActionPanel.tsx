@@ -7,6 +7,7 @@ import { useColors } from "@/hooks";
 interface ActionPanelProps {
   children: ReactNode;
   withBorderBottom?: boolean;
+  onPress?: () => void;
   onViewMore?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -17,14 +18,20 @@ export const ActionPanel = ({
   onViewMore,
   onEdit,
   onDelete,
+  onPress,
   withBorderBottom = false,
 }: ActionPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const colors = useColors();
+  const toggle = () => setIsOpen((v) => !v);
 
   return (
     <View style={styles.wrapper}>
-      <Pressable style={styles.content} onPress={() => setIsOpen((v) => !v)}>
+      <Pressable
+        style={styles.content}
+        onPress={onPress ?? toggle}
+        onLongPress={onPress ? toggle : undefined}
+      >
         <Svg style={styles.borderRight} width={2}>
           <Defs>
             <LinearGradient id="vgrad" x1="0" y1="0" x2="0" y2="1">

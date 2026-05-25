@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     padding: 16,
     paddingTop: 28,
-    gap: 24,
+    gap: 30,
   },
 });
