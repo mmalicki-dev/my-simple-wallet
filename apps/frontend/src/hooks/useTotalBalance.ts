@@ -1,5 +1,5 @@
 import type { Currency } from 'shared'
-import type { Account } from '@/types'
+import type { Account } from 'shared'
 import { useGetExchangeRatesQuery } from '@/services/exchangeRateApi'
 
 interface UseTotalBalanceResult {

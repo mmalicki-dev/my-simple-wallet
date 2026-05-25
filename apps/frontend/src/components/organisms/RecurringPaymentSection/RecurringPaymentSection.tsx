@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import type { RecurringPayment, RecurringPaymentType } from '@/types'
+import type { RecurringPayment, RecurringPaymentType } from 'shared'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
 import RecurringPaymentForm from '@/components/organisms/RecurringPaymentForm/RecurringPaymentForm'

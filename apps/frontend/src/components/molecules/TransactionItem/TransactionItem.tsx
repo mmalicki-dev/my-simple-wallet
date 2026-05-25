@@ -1,4 +1,4 @@
-import type { Category, Transaction } from '@/types'
+import type { Category, Transaction } from 'shared'
 import type { CategoryIconName, Currency } from 'shared'
 import Amount from '@/components/atoms/Amount/Amount'
 import Icon from '@/components/atoms/Icon/Icon'

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import type { Account } from '@/types'
+import type { Account } from 'shared'
 import UserSectionList from '@/components/organisms/UserSectionList/UserSectionList'
 import UserSectionItem from '@/components/molecules/UserSectionItem/UserSectionItem'
 import AccountForm from '@/components/organisms/AccountForm/AccountForm'
