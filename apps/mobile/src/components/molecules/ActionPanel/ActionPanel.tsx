@@ -46,7 +46,10 @@ export const ActionPanel = ({
     <View style={styles.wrapper}>
       <Pressable
         style={styles.content}
-        onPress={() => { onPress?.(); open(); }}
+        onPress={() => {
+          onPress?.();
+          open();
+        }}
       >
         <Svg style={styles.borderRight} width={2}>
           <Defs>
@@ -88,6 +91,7 @@ const styles = StyleSheet.create({
   borderBottom: {
     position: "absolute",
     bottom: 0,
+    left: 0,
     right: 0,
   },
   borderRight: {

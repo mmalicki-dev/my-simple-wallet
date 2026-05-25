@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { View, Text, Pressable, Animated, StyleSheet } from "react-native";
-import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
+import { Text, Pressable, Animated, StyleSheet } from "react-native";
 import { Icon } from "@/components/atoms/Icon/Icon";
 import { useColors } from "@/hooks";
 import { alpha } from "@/theme/colors";
@@ -73,18 +72,13 @@ export const QuickActions = ({
     <Animated.View
       style={[
         styles.panel,
-        { maxWidth, backgroundColor: alpha(colors.primary, 0.06) },
+        {
+          maxWidth,
+          borderBottomColor: colors.primary,
+          backgroundColor: alpha(colors.primary, 0.06),
+        },
       ]}
     >
-      <Svg width="100%" style={styles.borderBottom} height={2}>
-        <Defs>
-          <LinearGradient id="hgrad" x1="0" y1="0" x2="1" y2="0">
-            <Stop offset="0" stopColor={colors.primary} stopOpacity="1" />
-            <Stop offset="1" stopColor={colors.primary} stopOpacity="0" />
-          </LinearGradient>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="2" fill="url(#hgrad)" />
-      </Svg>
       {actions.map((action) => (
         <Pressable
           key={action.label}
@@ -123,12 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     overflow: "hidden",
-  },
-  borderBottom: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
+    borderBottomWidth: 2,
   },
   btn: {
     width: 48,

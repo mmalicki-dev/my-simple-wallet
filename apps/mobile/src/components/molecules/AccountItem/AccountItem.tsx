@@ -23,7 +23,8 @@ export const AccountItem = ({
   onDelete,
 }: AccountItemProps) => {
   const colors = useColors();
-  const typeColor = account.type === "credit" ? colors.accountCredit : colors.accountDebit;
+  const typeColor =
+    account.type === "credit" ? colors.accountCredit : colors.accountDebit;
 
   return (
     <ActionPanel
@@ -36,21 +37,35 @@ export const AccountItem = ({
       {isSelected && (
         <Svg style={StyleSheet.absoluteFill}>
           <Defs>
-            <LinearGradient id={`sel-${account._id}`} x1="0" y1="0" x2="1" y2="0">
+            <LinearGradient
+              id={`sel-${account._id}`}
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
               <Stop offset="0" stopColor={colors.neon} stopOpacity="0.18" />
               <Stop offset="1" stopColor={colors.neon} stopOpacity="0" />
             </LinearGradient>
           </Defs>
-          <Rect x="0" y="0" width="100%" height="100%" fill={`url(#sel-${account._id})`} />
+          <Rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            fill={`url(#sel-${account._id})`}
+          />
         </Svg>
       )}
       <View style={styles.content}>
         <View style={styles.info}>
-          <Text style={[styles.name, { color: colors.text }]}>{account.name}</Text>
+          <Text style={[styles.name, { color: colors.text }]}>
+            {account.name}
+          </Text>
           <Amount
             value={account.balance}
             currency={account.currency}
-            style={[styles.balance, { color: colors.neon }]}
+            style={[styles.balance, { color: colors.primary }]}
           />
         </View>
         <Text style={[styles.type, { color: typeColor }]}>
