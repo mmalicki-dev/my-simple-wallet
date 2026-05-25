@@ -7,6 +7,7 @@ import { Amount } from "@/components/atoms/Amount/Amount";
 import { useColors } from "@/hooks";
 import type { RootStackParamList } from "@/navigation";
 import { ActionPanel } from "../ActionPanel/ActionPanel";
+import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -22,11 +23,7 @@ export const TotalBalance = ({ accounts, baseCurrency }: TotalBalanceProps) => {
 
   return (
     <>
-      {isLoading && (
-        <Text style={[styles.muted, { color: colors.textMuted }]}>
-          Loading…
-        </Text>
-      )}
+      {isLoading && <SkeletonLoader />}
       {isError && (
         <Text style={[styles.error, { color: colors.danger }]}>
           Could not load rates

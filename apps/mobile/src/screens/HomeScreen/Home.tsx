@@ -1,22 +1,27 @@
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 import { TotalBalance } from "@/components/molecules/TotalBalance/TotalBalance";
-import { useGetAccountsQuery, useGetRecurringPaymentsQuery } from "@/services";
+import { useGetAccountsQuery } from "@/services";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
 import { Text } from "react-native";
 import { AccountBlock } from "@/components/organisms/AccountBlock/AccountBlock";
 import { RecurringPaymentBlock } from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
+import { useRecurringPayments } from "@/hooks";
+import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 
 const HomeScreen = () => {
   const { data: accounts = [], isLoading: isLoadingA } = useGetAccountsQuery();
-  const { data: recurringPayments, isLoading: isLoadingRP } =
-    useGetRecurringPaymentsQuery();
+  const {
+    loans,
+    subscriptions,
+    isLoading: isLoadingRP,
+  } = useRecurringPayments();
   const totalBalanceCurrency = useSelector(
     (state: RootState) => state.auth.user?.totalBalanceCurrency,
   );
 
-  if (isLoadingA)
+  if (isLoadingA || isLoadingRP)
     return (
       <ScreenLayout>
         <Text>Loading</Text>
@@ -32,21 +37,17 @@ const HomeScreen = () => {
         />
       </HudPanel>
       <HudPanel label="Your Accounts">
-        <AccountBlock />
+        {isLoadingA && <SkeletonLoader />}
+        {!isLoadingA && <AccountBlock />}
       </HudPanel>
       <HudPanel label="Your Loans">
-        <RecurringPaymentBlock
-          type="loan"
-          payments={recurringPayments?.filter((rp) => rp.type === "loan") ?? []}
-        />
+        <RecurringPaymentBlock type="loan" payments={loans} />
       </HudPanel>
       <HudPanel label="Your Subscriptions">
-        <RecurringPaymentBlock
-          type="loan"
-          payments={
-            recurringPayments?.filter((rp) => rp.type === "subscription") ?? []
-          }
-        />
+        {isLoadingRP && <SkeletonLoader />}
+        {!isLoadingRP && (
+          <RecurringPaymentBlock type="loan" payments={subscriptions} />
+        )}
       </HudPanel>
     </ScreenLayout>
   );
