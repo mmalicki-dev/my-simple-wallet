@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { View, Pressable, StyleSheet } from "react-native";
+import { useState, useEffect, useRef, type ReactNode } from "react";
+import { View, Pressable, StyleSheet, DeviceEventEmitter } from "react-native";
 import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 import { QuickActions } from "@/components/molecules/QuickActions/QuickActions";
 import { useColors } from "@/hooks";
@@ -13,6 +13,9 @@ interface ActionPanelProps {
   onDelete?: () => void;
 }
 
+const EVENT = "actionpanel:open";
+let counter = 0;
+
 export const ActionPanel = ({
   children,
   onViewMore,
@@ -22,15 +25,28 @@ export const ActionPanel = ({
   withBorderBottom = false,
 }: ActionPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const id = useRef(++counter).current;
   const colors = useColors();
-  const toggle = () => setIsOpen((v) => !v);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener(EVENT, (openedId: number) => {
+      if (openedId !== id) setIsOpen(false);
+    });
+    return () => sub.remove();
+  }, [id]);
+
+  const open = () => {
+    setIsOpen((v) => {
+      if (!v) DeviceEventEmitter.emit(EVENT, id);
+      return !v;
+    });
+  };
 
   return (
     <View style={styles.wrapper}>
       <Pressable
         style={styles.content}
-        onPress={onPress ?? toggle}
-        onLongPress={onPress ? toggle : undefined}
+        onPress={() => { onPress?.(); open(); }}
       >
         <Svg style={styles.borderRight} width={2}>
           <Defs>

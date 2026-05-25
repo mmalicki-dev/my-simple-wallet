@@ -66,7 +66,7 @@ export const QuickActions = ({
 
   const maxWidth = width.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, actions.length * 64],
+    outputRange: [0, actions.length * 48],
   });
 
   return (
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   btn: {
-    width: 64,
+    width: 48,
     alignItems: "center",
     justifyContent: "center",
     gap: 3,

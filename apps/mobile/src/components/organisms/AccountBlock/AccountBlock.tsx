@@ -48,6 +48,7 @@ export const AccountBlock = ({
           account={account}
           isSelected={selectedAccountId === account._id}
           onSelect={() => onSelectAccount?.(account._id)}
+          onViewMore={() => navigation.navigate("Accounts")}
           onEdit={() => navigation.navigate("Accounts")}
         />
       ))}
