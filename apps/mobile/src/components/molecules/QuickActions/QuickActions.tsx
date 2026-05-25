@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { View, Text, Pressable, Animated, StyleSheet } from "react-native";
+import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 import { Icon } from "@/components/atoms/Icon/Icon";
 import { useColors } from "@/hooks";
 import { alpha } from "@/theme/colors";
@@ -19,7 +20,12 @@ interface QuickActionsProps {
   onDelete?: () => void;
 }
 
-export const QuickActions = ({ isOpen, onViewMore, onEdit, onDelete }: QuickActionsProps) => {
+export const QuickActions = ({
+  isOpen,
+  onViewMore,
+  onEdit,
+  onDelete,
+}: QuickActionsProps) => {
   const colors = useColors();
   const width = useRef(new Animated.Value(0)).current;
 
@@ -32,32 +38,64 @@ export const QuickActions = ({ isOpen, onViewMore, onEdit, onDelete }: QuickActi
   }, [isOpen, width]);
 
   const actions: Action[] = [
-    ...(onViewMore ? [{ icon: "list-arrow-down" as IconName, label: "Txns", onPress: onViewMore }] : []),
-    ...(onEdit ? [{ icon: "pen-edit-round" as IconName, label: "Edit", onPress: onEdit }] : []),
-    ...(onDelete ? [{ icon: "trash-bin" as IconName, label: "Delete", onPress: onDelete, danger: true }] : []),
+    ...(onViewMore
+      ? [
+          {
+            icon: "list-arrow-down" as IconName,
+            label: "Txns",
+            onPress: onViewMore,
+          },
+        ]
+      : []),
+    ...(onEdit
+      ? [{ icon: "pen-edit-round" as IconName, label: "Edit", onPress: onEdit }]
+      : []),
+    ...(onDelete
+      ? [
+          {
+            icon: "trash-bin" as IconName,
+            label: "Delete",
+            onPress: onDelete,
+            danger: true,
+          },
+        ]
+      : []),
   ];
 
   if (actions.length === 0) return null;
 
-  const maxWidth = width.interpolate({ inputRange: [0, 1], outputRange: [0, actions.length * 64] });
+  const maxWidth = width.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, actions.length * 64],
+  });
 
   return (
     <Animated.View
       style={[
         styles.panel,
-        {
-          maxWidth,
-          borderBottomColor: colors.neon,
-          backgroundColor: alpha(colors.neon, 0.06),
-        },
+        { maxWidth, backgroundColor: alpha(colors.primary, 0.06) },
       ]}
     >
+      <Svg width="100%" style={styles.borderBottom} height={2}>
+        <Defs>
+          <LinearGradient id="hgrad" x1="0" y1="0" x2="1" y2="0">
+            <Stop offset="0" stopColor={colors.primary} stopOpacity="1" />
+            <Stop offset="1" stopColor={colors.primary} stopOpacity="0" />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="2" fill="url(#hgrad)" />
+      </Svg>
       {actions.map((action) => (
         <Pressable
           key={action.label}
           style={({ pressed }) => [
             styles.btn,
-            pressed && { backgroundColor: alpha(action.danger ? colors.danger : colors.neon, 0.12) },
+            pressed && {
+              backgroundColor: alpha(
+                action.danger ? colors.danger : colors.neon,
+                0.12,
+              ),
+            },
           ]}
           onPress={action.onPress}
         >
@@ -66,7 +104,12 @@ export const QuickActions = ({ isOpen, onViewMore, onEdit, onDelete }: QuickActi
             size={16}
             color={action.danger ? colors.danger : colors.neon}
           />
-          <Text style={[styles.label, { color: action.danger ? colors.danger : colors.neon }]}>
+          <Text
+            style={[
+              styles.label,
+              { color: action.danger ? colors.danger : colors.neon },
+            ]}
+          >
             {action.label.toUpperCase()}
           </Text>
         </Pressable>
@@ -80,7 +123,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     overflow: "hidden",
-    borderBottomWidth: 2,
+  },
+  borderBottom: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   btn: {
     width: 64,

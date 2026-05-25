@@ -8,6 +8,7 @@ export const palette = {
     border: "#e4e4e7",
     danger: "#c62828",
     success: "#2e7d32",
+    primary: "#3949ab",
   },
   dark: {
     neon: "#bc13fe",
@@ -18,6 +19,7 @@ export const palette = {
     border: "#27272a",
     danger: "#ef5350",
     success: "#66bb6a",
+    primary: "#7986cb",
   },
 } as const;
 
