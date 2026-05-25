@@ -1,10 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { Account, Currency } from "shared";
 import { useTotalBalance } from "@/hooks/useTotalBalance";
 import { Amount } from "@/components/atoms/Amount/Amount";
-import { Icon } from "@/components/atoms/Icon/Icon";
 import { useColors } from "@/hooks";
 import type { RootStackParamList } from "@/navigation";
 import { ActionPanel } from "../ActionPanel/ActionPanel";
