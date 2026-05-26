@@ -1,14 +1,14 @@
 import { RequestHandler } from "express";
-import { asyncHandler, AppError, ok } from "../../lib";
-import env from "../../config/env";
+import { asyncHandler, AppError, ok } from "../../lib/index.js";
+import env from "../../config/env.js";
 import jwt from "jsonwebtoken";
-import { UserModel } from "../../models";
+import { UserModel } from "../../models/index.js";
 import {
   createTokens,
   rotateRefreshToken,
   saveRefreshToken,
-} from "../../services/authService";
-import { validate } from "../validators/authValidator";
+} from "../../services/authService.js";
+import { validate } from "../validators/authValidator.js";
 import { loginSchema } from "shared";
 
 export const refresh: RequestHandler = asyncHandler(async (req, res) => {

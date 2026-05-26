@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 import env from "../config/env.js";
 import { AppError } from "../lib/index.js";
 

@@ -1,4 +1,4 @@
-import { login, refresh, logout } from "../controllers/mobileAuthController";
+import { login, refresh, logout } from "../controllers/mobileAuthController.js";
 import { Router } from "express";
 
 const router = Router();
