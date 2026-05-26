@@ -20,7 +20,7 @@
     "expo-checkbox": "~55.0.4",
     "expo-dev-client": "~55.0.35",
     "expo-localization": "~55.0.15",
-    "expo-navigation-bar": "^56.0.3",
+    "expo-navigation-bar": "~55.0.0",
     "expo-secure-store": "^55.0.14",
     "expo-status-bar": "~55.0.6",
     "moti": "^0.30.0",
