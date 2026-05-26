@@ -4,13 +4,8 @@
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "default",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "platforms": ["ios", "android"],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -22,7 +17,14 @@
     },
     "plugins": [
       "@react-native-community/datetimepicker",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-navigation-bar",
+        {
+          "enforceContrast": true,
+          "hidden": true
+        }
+      ]
     ],
     "extra": {
       "eas": {
