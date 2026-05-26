@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import { IUser } from "../models/User";
 import env from "../config/env.js";
-import { AppError } from "../lib";
+import { AppError } from "../lib/index.js";
 
 interface ICreateTokens {
   user: IUser;
