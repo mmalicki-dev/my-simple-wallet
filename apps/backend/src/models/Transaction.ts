@@ -61,14 +61,12 @@ const TransactionSchema = new Schema<ITransaction>(
   { timestamps: true },
 );
 
-TransactionSchema.pre("save", async function (next) {
-  if (!this.isNew || this.status === "scheduled") return next();
+TransactionSchema.pre("save", async function () {
+  if (!this.isNew || this.status === "scheduled") return;
 
   const Account = mongoose.model("Account");
   const delta = this.type === "income" ? this.amount : -this.amount;
   await Account.findByIdAndUpdate(this.account, { $inc: { balance: delta } });
-
-  next();
 });
 
 export default mongoose.model<ITransaction>("Transaction", TransactionSchema);
