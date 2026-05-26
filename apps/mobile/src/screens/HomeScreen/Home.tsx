@@ -32,15 +32,20 @@ const HomeScreen = () => {
         {isLoadingA && <SkeletonLoader />}
         {!isLoadingA && <AccountBlock />}
       </HudPanel>
-      <HudPanel label="Your Loans">
-        <RecurringPaymentBlock type="loan" payments={loans} />
-      </HudPanel>
-      <HudPanel label="Your Subscriptions">
-        {isLoadingRP && <SkeletonLoader />}
-        {!isLoadingRP && (
-          <RecurringPaymentBlock type="loan" payments={subscriptions} />
-        )}
-      </HudPanel>
+      {(isLoadingRP || loans.length > 0) && (
+        <HudPanel label="Your Loans">
+          {isLoadingRP && <SkeletonLoader />}
+          {!isLoadingRP && <RecurringPaymentBlock type="loan" payments={loans} />}
+        </HudPanel>
+      )}
+      {(isLoadingRP || subscriptions.length > 0) && (
+        <HudPanel label="Your Subscriptions">
+          {isLoadingRP && <SkeletonLoader />}
+          {!isLoadingRP && (
+            <RecurringPaymentBlock type="subscription" payments={subscriptions} />
+          )}
+        </HudPanel>
+      )}
     </ScreenLayout>
   );
 };
