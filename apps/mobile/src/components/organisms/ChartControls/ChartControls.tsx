@@ -133,6 +133,7 @@ const ChartControls = ({
       <ChartControlsItem label="Chart">
         {CHART_TYPES.map(({ value, icon, label }) => {
           const disabled = !allowedCharts.includes(value);
+          const iconColor = !disabled && chartType === value ? colors.neon : colors.textMuted;
           return (
             <ChartOption
               key={value}
@@ -143,13 +144,7 @@ const ChartControls = ({
               <Icon
                 name={icon}
                 size={16}
-                color={
-                  disabled
-                    ? colors.textMuted
-                    : chartType === value
-                      ? colors.neon
-                      : colors.textMuted
-                }
+                color={iconColor}
               />
               <Text
                 style={[
