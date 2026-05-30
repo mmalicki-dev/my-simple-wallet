@@ -20,7 +20,7 @@ export const TabNavigator = () => (
     tabBar={tabBar}
     screenOptions={{
       headerShown: false,
-      sceneContainerStyle: { backgroundColor: "transparent" },
+      sceneStyle: { backgroundColor: "transparent" },
     }}
   >
     <Tab.Screen name="Home" component={HomeScreen} />
