@@ -7,6 +7,7 @@ import type { Currency } from "shared";
 import type { RootState } from "@/redux/store";
 import { setCredentials } from "@/redux/slices/authSlice";
 import { FormInput } from "@/components/atoms/FormInput/FormInput";
+import PasswordInput from "@/components/molecules/PasswordInput/PasswordInput";
 import { NeonButton } from "@/components/atoms/NeonButton/NeonButton";
 import { ThemeToggle } from "@/components/atoms/ThemeToggle/ThemeToggle";
 import { LanguageToggle } from "@/components/atoms/LanguageToggle/LanguageToggle";
@@ -95,12 +96,13 @@ const ProfileSection = () => {
             loading={isSavingName}
           />
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <FormInput
-            label="Current Email"
-            value={user?.email ?? ""}
-            editable={false}
-            style={{ opacity: 0.5 }}
-          />
+          <View style={{ opacity: 0.5 }}>
+            <FormInput
+              label="Current Email"
+              value={user?.email ?? ""}
+              editable={false}
+            />
+          </View>
           <FormInput
             label="New Email"
             value={newEmail}
@@ -145,9 +147,7 @@ const ProfileSection = () => {
             >
               <Picker
                 selectedValue={totalBalanceCurrency}
-                onValueChange={(val) =>
-                  setTotalBalanceCurrency(val as Currency)
-                }
+                onValueChange={setTotalBalanceCurrency}
                 style={[styles.picker, { color: colors.text }]}
                 dropdownIconColor={colors.textMuted}
               >
@@ -171,26 +171,20 @@ const ProfileSection = () => {
 
       <UserSectionList title="Security">
         <View style={styles.block}>
-          <FormInput
+          <PasswordInput
             label="Current Password"
             value={currentPassword}
             onChangeText={setCurrentPassword}
-            secureTextEntry
-            placeholder="••••••••"
           />
-          <FormInput
+          <PasswordInput
             label="New Password"
             value={newPassword}
             onChangeText={setNewPassword}
-            secureTextEntry
-            placeholder="••••••••"
           />
-          <FormInput
+          <PasswordInput
             label="Confirm New Password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            secureTextEntry
-            placeholder="••••••••"
           />
           {!!passwordError && (
             <Text style={[styles.error, { color: colors.danger }]}>

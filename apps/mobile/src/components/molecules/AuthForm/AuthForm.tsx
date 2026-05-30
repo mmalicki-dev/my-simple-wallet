@@ -4,6 +4,7 @@ import { useLoginMutation, useRegisterMutation } from "@/services";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FormInput } from "@/components/atoms/FormInput/FormInput";
+import PasswordInput from "@/components/molecules/PasswordInput/PasswordInput";
 import { NeonButton } from "@/components/atoms/NeonButton/NeonButton";
 import { useColors } from "@/hooks";
 import { RootStackParamList } from "@/navigation/Navigator";
@@ -89,20 +90,16 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           placeholder="Your name"
         />
       )}
-      <FormInput
+      <PasswordInput
         label="Password"
         value={password}
         onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
       />
       {mode === "register" && (
-        <FormInput
+        <PasswordInput
           label="Confirm password"
           value={secondPassword}
           onChangeText={setSecondPassword}
-          placeholder="Repeat password"
-          secureTextEntry
         />
       )}
       {mode === "login" && (

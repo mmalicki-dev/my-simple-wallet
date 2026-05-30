@@ -147,7 +147,7 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
 
 const styles = StyleSheet.create({
   form: { gap: 20 },
-  field: { gap: 8 },
+  field: { gap: 6 },
   fieldLabel: sectionLabel,
   colourRow: {
     flexDirection: "row",
