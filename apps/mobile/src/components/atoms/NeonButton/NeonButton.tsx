@@ -15,14 +15,26 @@ export const NeonButton = ({ label, loading, variant = 'primary', style, ...prop
 
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: alpha(color, 0.18) }, style]}
+      style={[styles.button, { backgroundColor: alpha(color, 0.18), borderColor: alpha(color, 0.25) }, style]}
       activeOpacity={0.7}
       {...props}
     >
       {loading ? (
         <ActivityIndicator color={color} size="small" />
       ) : (
-        <Text style={[styles.label, { color }]}>{label}</Text>
+        <Text
+          style={[
+            styles.label,
+            {
+              color,
+              textShadowColor: alpha(color, 0.7),
+              textShadowOffset: { width: 0, height: 0 },
+              textShadowRadius: 6,
+            },
+          ]}
+        >
+          {label}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -34,6 +46,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
   },
   label: {
     fontSize: 13,

@@ -8,7 +8,7 @@ interface FormInputProps extends TextInputProps {
   label: string;
 }
 
-export const FormInput = ({ label, ...props }: FormInputProps) => {
+export const FormInput = ({ label, style, ...props }: FormInputProps) => {
   const colors = useColors();
   const [focused, setFocused] = useState(false);
 
@@ -24,6 +24,7 @@ export const FormInput = ({ label, ...props }: FormInputProps) => {
             borderBottomColor: focused ? colors.neon : colors.border,
             borderLeftColor: focused ? colors.neon : 'transparent',
           },
+          style,
         ]}
         placeholderTextColor={colors.textMuted}
         onFocus={() => setFocused(true)}

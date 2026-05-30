@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 import { Toggle } from "@/components/atoms/Toggle/Toggle";
 import ProfileSection from "@/components/organisms/ProfileSection/ProfileSection";
@@ -20,12 +20,20 @@ const UserScreen = () => {
   return (
     <ScreenLayout>
       <Toggle options={TABS} value={tab} onChange={setTab} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {tab === "profile" && <ProfileSection />}
-        {tab === "accounts" && <AccountSection />}
-        {tab === "categories" && <CategorySection />}
-        {tab === "recurring" && <RecurringSection />}
-      </ScrollView>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {tab === "profile" && <ProfileSection />}
+          {tab === "accounts" && <AccountSection />}
+          {tab === "categories" && <CategorySection />}
+          {tab === "recurring" && <RecurringSection />}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ScreenLayout>
   );
 };

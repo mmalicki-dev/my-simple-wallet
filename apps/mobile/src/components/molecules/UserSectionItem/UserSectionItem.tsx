@@ -21,14 +21,17 @@ const UserSectionItem = ({
   return (
     <ActionPanel withBorderBottom onEdit={onEdit} onDelete={onDelete}>
       <View style={styles.item}>
-        {indicator && (
+        {!!indicator && (
           <View style={[styles.indicator, { backgroundColor: indicator }]} />
         )}
         <View style={styles.content}>
-          <Text style={[styles.label, { color: colors.text }]} numberOfLines={1}>
+          <Text
+            style={[styles.label, { color: colors.text }]}
+            numberOfLines={1}
+          >
             {label}
           </Text>
-          {subtitle && (
+          {!!subtitle && (
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
               {subtitle}
             </Text>
