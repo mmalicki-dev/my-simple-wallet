@@ -3,6 +3,7 @@ import { View, Text, Pressable, Modal, Platform, StyleSheet } from "react-native
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useColors } from "@/hooks";
 import { isoDate } from "@/screens/ChartsScreen/chartBuilders";
+import { sectionLabel } from "@/styles/typography";
 
 interface DatePickerFieldProps {
   label: string;
@@ -91,12 +92,7 @@ const DatePickerField = ({
 
 const styles = StyleSheet.create({
   dateField: { flex: 1, gap: 6 },
-  dateFieldLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    textTransform: "uppercase",
-    letterSpacing: 1.2,
-  },
+  dateFieldLabel: sectionLabel,
   dateButton: {
     paddingHorizontal: 10,
     paddingVertical: 6,

@@ -1,4 +1,4 @@
-import { View, Platform } from "react-native";
+import { Platform } from "react-native";
 import { CartesianChart, Line, Bar } from "victory-native";
 import { matchFont } from "@shopify/react-native-skia";
 import { useColors } from "@/hooks";
@@ -8,8 +8,9 @@ import {
   buildBalanceBar,
   fmtMoney,
 } from "@/screens/ChartsScreen/chartBuilders";
-import { CHART_HEIGHT, type ChartType } from "@/screens/ChartsScreen/chartTypes";
+import { type ChartType } from "@/screens/ChartsScreen/chartTypes";
 import EmptyChart from "@/components/atoms/EmptyChart/EmptyChart";
+import ChartContainer from "@/components/atoms/ChartContainer/ChartContainer";
 
 const axisFont = matchFont({
   fontFamily: Platform.select({ ios: "Helvetica", default: "sans-serif" }),
@@ -37,7 +38,7 @@ const BalanceChart = ({
     if (data.length < 2) return <EmptyChart message="Not enough data" />;
     const dates = data.map((d) => d.date);
     return (
-      <View style={{ height: CHART_HEIGHT }}>
+      <ChartContainer>
         <CartesianChart
           data={data}
           xKey="x"
@@ -61,7 +62,7 @@ const BalanceChart = ({
             />
           )}
         </CartesianChart>
-      </View>
+      </ChartContainer>
     );
   }
 
@@ -69,7 +70,7 @@ const BalanceChart = ({
   if (data.length === 0) return <EmptyChart message="Not enough data" />;
   const months = data.map((d) => d.month);
   return (
-    <View style={{ height: CHART_HEIGHT }}>
+    <ChartContainer>
       <CartesianChart
         data={data}
         xKey="x"
@@ -95,7 +96,7 @@ const BalanceChart = ({
           />
         )}
       </CartesianChart>
-    </View>
+    </ChartContainer>
   );
 };
 

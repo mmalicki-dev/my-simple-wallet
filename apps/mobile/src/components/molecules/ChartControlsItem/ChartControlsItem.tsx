@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useColors } from "@/hooks";
+import { sectionLabel } from "@/styles/typography";
 
 interface ChartControlsItemProps {
   label: string;
@@ -20,12 +21,7 @@ const ChartControlsItem = ({ label, children }: ChartControlsItemProps) => {
 
 const styles = StyleSheet.create({
   controlsItem: { gap: 6 },
-  controlsItemLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    textTransform: "uppercase",
-    letterSpacing: 1.2,
-  },
+  controlsItemLabel: sectionLabel,
   controlsItemOptions: { gap: 2 },
 });
 

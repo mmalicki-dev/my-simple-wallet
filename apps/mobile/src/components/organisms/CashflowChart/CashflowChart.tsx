@@ -1,60 +1,28 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { CartesianChart, Line, PolarChart, Pie } from "victory-native";
 import { useColors } from "@/hooks";
 import type { Transaction } from "shared";
-import {
-  buildCashflow,
-  round2,
-} from "@/screens/ChartsScreen/chartBuilders";
-import {
-  CHART_HEIGHT,
-  type ChartType,
-} from "@/screens/ChartsScreen/chartTypes";
+import { buildCashflow, round2 } from "@/screens/ChartsScreen/chartBuilders";
+import { CHART_HEIGHT, type ChartType } from "@/screens/ChartsScreen/chartTypes";
 import EmptyChart from "@/components/atoms/EmptyChart/EmptyChart";
-
-const CashflowLegend = () => {
-  const colors = useColors();
-  return (
-    <View style={styles.legend}>
-      <View style={styles.legendItem}>
-        <View style={[styles.legendDot, { backgroundColor: colors.success }]} />
-        <Text style={[styles.legendText, { color: colors.textMuted }]}>
-          Income
-        </Text>
-      </View>
-      <View style={styles.legendItem}>
-        <View style={[styles.legendDot, { backgroundColor: colors.danger }]} />
-        <Text style={[styles.legendText, { color: colors.textMuted }]}>
-          Expenses
-        </Text>
-      </View>
-    </View>
-  );
-};
+import ChartContainer from "@/components/atoms/ChartContainer/ChartContainer";
+import ChartLegend from "@/components/molecules/ChartLegend/ChartLegend";
 
 const CashflowBarChart = ({
   data,
-  height,
 }: {
   data: { x: number; income: number; expenses: number }[];
-  height: number;
 }) => {
   const colors = useColors();
   const maxVal = Math.max(...data.flatMap((d) => [d.income, d.expenses]), 1);
   return (
     <View
-      style={{ height, flexDirection: "row", alignItems: "flex-end", gap: 4 }}
+      style={{ height: CHART_HEIGHT, flexDirection: "row", alignItems: "flex-end", gap: 4 }}
     >
       {data.map((item) => (
         <View
           key={item.x}
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            height: "100%",
-            alignItems: "flex-end",
-            gap: 1,
-          }}
+          style={{ flex: 1, flexDirection: "row", height: "100%", alignItems: "flex-end", gap: 1 }}
         >
           <View style={{ flex: 1, height: "100%", justifyContent: "flex-end" }}>
             <View
@@ -91,12 +59,19 @@ const CashflowChart = ({
   const data = buildCashflow(posted);
   if (data.length === 0) return <EmptyChart message="Not enough data" />;
 
-  const legend = <CashflowLegend />;
+  const legend = (
+    <ChartLegend
+      items={[
+        { label: "Income", color: colors.success },
+        { label: "Expenses", color: colors.danger },
+      ]}
+    />
+  );
 
   if (chartType === "bar") {
     return (
       <>
-        <CashflowBarChart data={data} height={CHART_HEIGHT} />
+        <CashflowBarChart data={data} />
         {legend}
       </>
     );
@@ -105,7 +80,7 @@ const CashflowChart = ({
   if (chartType === "line") {
     return (
       <>
-        <View style={{ height: CHART_HEIGHT }}>
+        <ChartContainer>
           <CartesianChart data={data} xKey="x" yKeys={["income", "expenses"]}>
             {({ points }) => (
               <>
@@ -124,7 +99,7 @@ const CashflowChart = ({
               </>
             )}
           </CartesianChart>
-        </View>
+        </ChartContainer>
         {legend}
       </>
     );
@@ -138,7 +113,7 @@ const CashflowChart = ({
   ];
   return (
     <>
-      <View style={{ height: CHART_HEIGHT }}>
+      <ChartContainer>
         <PolarChart
           data={pieData}
           labelKey="label"
@@ -147,22 +122,10 @@ const CashflowChart = ({
         >
           <Pie.Chart innerRadius="50%" />
         </PolarChart>
-      </View>
+      </ChartContainer>
       {legend}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  legend: {
-    flexDirection: "row",
-    gap: 16,
-    justifyContent: "center",
-    marginTop: 8,
-  },
-  legendItem: { flexDirection: "row", gap: 6, alignItems: "center" },
-  legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { fontSize: 12 },
-});
 
 export default CashflowChart;
