@@ -24,7 +24,7 @@ type FormProps = {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => void;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleSubmit: () => Promise<void>;
   inputsArray?: TextProps[];
   textareasArray?: TextareaProps[];
   selectsArray?: SelectProps[];
@@ -43,7 +43,7 @@ const Form = (props: FormProps) => {
     children,
   } = props;
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
       {header}
       {inputsArray?.map((e) => (
         <FormInput

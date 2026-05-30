@@ -33,8 +33,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setServerError(null);
 
     try {
@@ -71,7 +70,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
       {mode === "register" && (
         <Input
           type="text"

@@ -44,8 +44,7 @@ const AccountForm = ({ account, onClose }: AccountFormProps) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const effectiveIsDefault = isCredit ? false : isDefault;
     if (account) {
       await updateAccount({

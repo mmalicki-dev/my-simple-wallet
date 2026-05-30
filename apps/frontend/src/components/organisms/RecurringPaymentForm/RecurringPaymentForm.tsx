@@ -76,8 +76,7 @@ const RecurringPaymentForm = ({
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const body = {
       name: form.name,
       type: form.type,

@@ -23,8 +23,7 @@ const UserPreferencesBlock = () => {
   );
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     const updated = await updateProfile({ totalBalanceCurrency }).unwrap();
     dispatch(setCredentials({ user: updated, accessToken: accessToken! }));
   };
@@ -35,7 +34,7 @@ const UserPreferencesBlock = () => {
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
-      <form onSubmit={handleSave}>
+      <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
         <FormField label="Total Balance Currency" htmlFor="totalBalanceCurrency">
           <SelectOption
             id="totalBalanceCurrency"

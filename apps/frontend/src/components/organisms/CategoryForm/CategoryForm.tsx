@@ -33,8 +33,7 @@ const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (category) {
       await updateCategory({
         id: category._id,

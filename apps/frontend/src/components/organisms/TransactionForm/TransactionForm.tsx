@@ -77,8 +77,7 @@ const TransactionForm = ({
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const body = {
       amount: Number.parseFloat(form.amount),
       type: form.type,

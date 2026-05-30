@@ -25,14 +25,12 @@ const UserInfoBlock = () => {
   const [requestEmailChange, { isLoading: isSendingEmail }] =
     useRequestEmailChangeMutation();
 
-  const handleSaveName = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveName = async () => {
     const updated = await updateProfile({ name }).unwrap();
     dispatch(setCredentials({ user: updated, accessToken: accessToken! }));
   };
 
-  const handleEmailChange = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEmailChange = async () => {
     await requestEmailChange({ email: newEmail }).unwrap();
     setEmailSent(true);
     setNewEmail("");
@@ -40,7 +38,7 @@ const UserInfoBlock = () => {
 
   return (
     <UserBlockWrapper title="User Info">
-      <form onSubmit={handleSaveName}>
+      <form onSubmit={(e) => { e.preventDefault(); handleSaveName(); }}>
         <FormField label="Name" htmlFor="name">
           <Input
             id="name"
@@ -57,7 +55,7 @@ const UserInfoBlock = () => {
       <FormField label="Current Email" htmlFor="currentEmail">
         <Input id="currentEmail" value={user?.email ?? ""} disabled />
       </FormField>
-      <form onSubmit={handleEmailChange}>
+      <form onSubmit={(e) => { e.preventDefault(); handleEmailChange(); }}>
         <FormField label="New Email" htmlFor="newEmail">
           <Input
             id="newEmail"
