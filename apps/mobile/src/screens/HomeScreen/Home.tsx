@@ -15,7 +15,6 @@ import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader
 import ChartView from "@/components/organisms/ChartView/ChartView";
 import { useMemo } from "react";
 import { Text } from "react-native";
-import { useBreakpoint } from "@/hooks/useBreakpoint";
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 

@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
 import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader";
@@ -19,7 +18,7 @@ import {
   type DataType,
   type ChartType,
 } from "./chartTypes";
-import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { ChartsRightPanel } from "./RightPanel";
 
 const ChartsScreen = () => {
   const [period, setPeriod] = useState<Period>("month");
@@ -77,25 +76,17 @@ const ChartsScreen = () => {
     });
   };
 
-  const RightPanel = () => {
-    return (
-      <HudPanel label={DATA_LABELS[dataType]}>
-        {isLoading ? (
-          <SkeletonLoader />
-        ) : (
-          <ChartView
-            transactions={filteredTransactions}
-            categories={categories}
-            dataType={dataType}
-            chartType={chartType}
-          />
-        )}
-      </HudPanel>
-    );
-  };
-
   return (
-    <ScreenLayout sidebar={<RightPanel />}>
+    <ScreenLayout
+      sidebar={
+        <ChartsRightPanel
+          dataType={dataType}
+          isLoading={isLoading}
+          transactions={filteredTransactions}
+          chartType={chartType}
+        />
+      }
+    >
       <HudPanel label="Controls">
         <ChartControls
           accounts={accounts}
