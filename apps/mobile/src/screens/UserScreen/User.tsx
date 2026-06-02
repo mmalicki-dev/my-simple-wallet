@@ -18,7 +18,7 @@ const UserScreen = () => {
   const [tab, setTab] = useState("profile");
 
   return (
-    <ScreenLayout>
+    <ScreenLayout style={{ flex: 1 }}>
       <Toggle options={TABS} value={tab} onChange={setTab} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
