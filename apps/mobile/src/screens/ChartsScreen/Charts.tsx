@@ -1,9 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 import { HudPanel } from "@/components/templates/HudPanel/HudPanel";
-import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader";
 import ChartControls from "@/components/organisms/ChartControls/ChartControls";
-import ChartView from "@/components/organisms/ChartView/ChartView";
 import {
   useGetTransactionsQuery,
   useGetCategoriesQuery,
@@ -13,12 +11,11 @@ import type { Currency } from "shared";
 import { getRange, isoDate, todayIso } from "./chartBuilders";
 import {
   COMPATIBLE,
-  DATA_LABELS,
   type Period,
   type DataType,
   type ChartType,
 } from "./chartTypes";
-import { ChartsRightPanel } from "./RightPanel";
+import { ChartsRightPanel } from "./ChartsRightPanel";
 
 const ChartsScreen = () => {
   const [period, setPeriod] = useState<Period>("month");

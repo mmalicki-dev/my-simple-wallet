@@ -15,6 +15,7 @@ import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader
 import ChartView from "@/components/organisms/ChartView/ChartView";
 import { useMemo } from "react";
 import { Text } from "react-native";
+import { HomeRightPanel } from "./HomeRightPanel";
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
@@ -52,42 +53,12 @@ const HomeScreen = () => {
     [txData],
   );
 
-  const HomeRightPanel = () => {
-    return (
-      <>
-        <HudPanel label="Recent Transactions">
-          {txLoading ? (
-            <SkeletonLoader />
-          ) : (
-            <Text>
-              {/* <TransactionList
-              transactions={allTransactions}
-              currency={currency}
-              isLoading={false}
-            /> */}
-              Here will be TransactionList
-            </Text>
-          )}
-        </HudPanel>
-
-        <HudPanel label="Cashflow — This Month">
-          {txLoading || categoriesLoading ? (
-            <SkeletonLoader />
-          ) : (
-            <ChartView
-              transactions={allTransactions}
-              categories={categories}
-              dataType="cashflow"
-              chartType="bar"
-            />
-          )}
-        </HudPanel>
-      </>
-    );
-  };
-
   return (
-    <ScreenLayout sidebar={<HomeRightPanel />}>
+    <ScreenLayout
+      sidebar={
+        <HomeRightPanel transactions={allTransactions} isLoading={txLoading} />
+      }
+    >
       <HudPanel label="Total Balance">
         <TotalBalance
           accounts={accounts}
