@@ -19,6 +19,7 @@ import {
   type DataType,
   type ChartType,
 } from "./chartTypes";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 
 const ChartsScreen = () => {
   const [period, setPeriod] = useState<Period>("month");
@@ -76,55 +77,48 @@ const ChartsScreen = () => {
     });
   };
 
-  return (
-    <ScreenLayout>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <HudPanel label="Controls">
-          <ChartControls
-            accounts={accounts}
-            accountsLoading={accountsLoading}
-            selectedAccountIds={selectedAccountIds}
-            toggleAccount={toggleAccount}
-            availableCurrencies={availableCurrencies}
-            currency={currency}
-            setCurrency={setCurrency}
+  const RightPanel = () => {
+    return (
+      <HudPanel label={DATA_LABELS[dataType]}>
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : (
+          <ChartView
+            transactions={filteredTransactions}
+            categories={categories}
             dataType={dataType}
-            onDataTypeChange={handleDataTypeChange}
             chartType={chartType}
-            setChartType={setChartType}
-            period={period}
-            setPeriod={setPeriod}
-            customFrom={customFrom}
-            setCustomFrom={setCustomFrom}
-            customTo={customTo}
-            setCustomTo={setCustomTo}
           />
-        </HudPanel>
+        )}
+      </HudPanel>
+    );
+  };
 
-        <HudPanel label={DATA_LABELS[dataType]}>
-          {isLoading ? (
-            <SkeletonLoader />
-          ) : (
-            <ChartView
-              transactions={filteredTransactions}
-              categories={categories}
-              dataType={dataType}
-              chartType={chartType}
-            />
-          )}
-        </HudPanel>
-      </ScrollView>
+  return (
+    <ScreenLayout sidebar={<RightPanel />}>
+      <HudPanel label="Controls">
+        <ChartControls
+          accounts={accounts}
+          accountsLoading={accountsLoading}
+          selectedAccountIds={selectedAccountIds}
+          toggleAccount={toggleAccount}
+          availableCurrencies={availableCurrencies}
+          currency={currency}
+          setCurrency={setCurrency}
+          dataType={dataType}
+          onDataTypeChange={handleDataTypeChange}
+          chartType={chartType}
+          setChartType={setChartType}
+          period={period}
+          setPeriod={setPeriod}
+          customFrom={customFrom}
+          setCustomFrom={setCustomFrom}
+          customTo={customTo}
+          setCustomTo={setCustomTo}
+        />
+      </HudPanel>
     </ScreenLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  scroll: { flex: 1 },
-  scrollContent: { gap: 20, paddingBottom: 24 },
-});
 
 export default ChartsScreen;
