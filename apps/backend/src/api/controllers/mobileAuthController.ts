@@ -67,7 +67,10 @@ export const login: RequestHandler = asyncHandler(async (req, res) => {
   if (!user.isVerified)
     throw new AppError("Please verify your email before logging in", 403);
 
-  const userAgent = req.headers["user-agent"] ?? "unknown";
+  const userAgent =
+    (req.headers["x-device-info"] as string) ??
+    req.headers["user-agent"] ??
+    "unknown";
 
   if (result.data.rememberMe) {
     const { accessToken, refreshToken, deviceID } = createTokens({

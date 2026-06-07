@@ -8,12 +8,14 @@ import type {
 import type { RootState } from "./store";
 import { logout, setCredentials } from "./slices/authSlice";
 import { SecureTokenService } from "@/services/secureStorage";
+import { getDeviceInfo } from "@/utils/device";
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: `${process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:5000"}/api`,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) headers.set("Authorization", `Bearer ${token}`);
+    headers.set("X-Device-Info", getDeviceInfo());
     return headers;
   },
 });

@@ -1,11 +1,11 @@
 import type { Transaction, Category } from "shared";
 import type { Period } from "./chartTypes";
+import { isoDate } from "@/utils/date";
 
+export { isoDate };
 export const round2 = (n: number) => Math.round(n * 100) / 100;
 
 const monthKey = (date: string) => date.slice(0, 7);
-
-export const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
 export const todayIso = () => isoDate(new Date());
 

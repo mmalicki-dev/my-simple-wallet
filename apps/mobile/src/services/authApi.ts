@@ -14,7 +14,17 @@ import { SecureTokenService } from "./secureStorage";
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<MobileLoginResponse, LoginRequest>({
-      query: (body) => ({ url: "/mobile/auth/login", method: "POST", body }),
+      queryFn: async (body, _, __, baseQuery) => {
+        const { deviceID } = await SecureTokenService.getTokens();
+        const result = await baseQuery({
+          url: "/mobile/auth/login",
+          method: "POST",
+          body: deviceID ? { ...body, deviceID } : body,
+        });
+        return result.error
+          ? { error: result.error }
+          : { data: result.data as MobileLoginResponse };
+      },
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

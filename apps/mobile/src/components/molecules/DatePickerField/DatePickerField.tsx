@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Text, Pressable, Modal, Platform, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useColors } from "@/hooks";
-import { isoDate } from "@/screens/ChartsScreen/chartBuilders";
+import { isoDate } from "@/utils/date";
 import { sectionLabel } from "@/styles/typography";
 
 interface DatePickerFieldProps {
