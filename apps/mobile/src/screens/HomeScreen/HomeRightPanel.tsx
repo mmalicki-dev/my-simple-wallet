@@ -5,14 +5,6 @@ import ChartView from "@/components/organisms/ChartView/ChartView";
 import { Transaction } from "shared";
 import { useGetCategoriesQuery } from "@/services";
 
-const isoDate = (d: Date) => d.toISOString().slice(0, 10);
-
-const currentMonthRange = () => {
-  const today = new Date();
-  const from = new Date(today.getFullYear(), today.getMonth(), 1);
-  return { from: isoDate(from), to: isoDate(today) };
-};
-
 interface RightPanelProps {
   isLoading: boolean;
   transactions: Transaction[];

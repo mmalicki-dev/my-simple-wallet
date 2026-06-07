@@ -2,7 +2,6 @@ import { ScreenLayout } from "@/components/templates/ScreenLayout/ScreenLayout";
 import { TotalBalance } from "@/components/molecules/TotalBalance/TotalBalance";
 import {
   useGetAccountsQuery,
-  useGetCategoriesQuery,
   useGetTransactionsQuery,
 } from "@/services";
 import { useSelector } from "react-redux";
@@ -12,18 +11,9 @@ import { AccountBlock } from "@/components/organisms/AccountBlock/AccountBlock";
 import { RecurringPaymentBlock } from "@/components/organisms/RecurringPaymentBlock/RecurringPaymentBlock";
 import { useRecurringPayments } from "@/hooks";
 import { SkeletonLoader } from "@/components/atoms/SkeletonLoader/SkeletonLoader";
-import ChartView from "@/components/organisms/ChartView/ChartView";
 import { useMemo } from "react";
-import { Text } from "react-native";
 import { HomeRightPanel } from "./HomeRightPanel";
-
-const isoDate = (d: Date) => d.toISOString().slice(0, 10);
-
-const currentMonthRange = () => {
-  const today = new Date();
-  const from = new Date(today.getFullYear(), today.getMonth(), 1);
-  return { from: isoDate(from), to: isoDate(today) };
-};
+import { currentMonthRange } from "@/utils/date";
 
 const HomeScreen = () => {
   const { from, to } = currentMonthRange();
@@ -37,8 +27,6 @@ const HomeScreen = () => {
     subscriptions,
     isLoading: isLoadingRP,
   } = useRecurringPayments();
-  const { data: categories = [], isLoading: categoriesLoading } =
-    useGetCategoriesQuery();
   const totalBalanceCurrency = useSelector(
     (state: RootState) => state.auth.user?.totalBalanceCurrency,
   );
