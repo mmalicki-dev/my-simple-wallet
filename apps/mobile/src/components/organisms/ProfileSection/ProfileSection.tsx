@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, Modal, Pressable, Alert } from "react-native";
+import { View, Text, StyleSheet, Modal, Pressable } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
 import { CURRENCIES } from "shared";
@@ -63,7 +63,10 @@ const DeviceRow = ({ session }: { session: Session }) => {
       ]}
     >
       <View style={styles.deviceInfo}>
-        <Text style={[styles.deviceName, { color: colors.text }]} numberOfLines={1}>
+        <Text
+          style={[styles.deviceName, { color: colors.text }]}
+          numberOfLines={1}
+        >
           {parseUserAgent(session.userAgent)}
         </Text>
         <Text style={[styles.deviceExpiry, { color: colors.textMuted }]}>
@@ -100,7 +103,8 @@ const ProfileSection = () => {
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
 
-  const { data: sessions, isLoading: isLoadingSessions } = useGetSessionsQuery();
+  const { data: sessions, isLoading: isLoadingSessions } =
+    useGetSessionsQuery();
 
   const [updateProfile, { isLoading: isSavingName }] =
     useUpdateProfileMutation();
@@ -237,10 +241,7 @@ const ProfileSection = () => {
               </Picker>
             </View>
           </View>
-          <NeonButton
-            label="Save"
-            onPress={handleSavePreferences}
-          />
+          <NeonButton label="Save" onPress={handleSavePreferences} />
         </View>
       </UserSectionList>
 
@@ -322,12 +323,15 @@ const ProfileSection = () => {
           style={styles.modalOverlay}
           onPress={() => setShowDeleteModal(false)}
         >
-          <Pressable style={[styles.modalCard, { backgroundColor: colors.surface }]}>
+          <Pressable
+            style={[styles.modalCard, { backgroundColor: colors.surface }]}
+          >
             <Text style={[styles.modalTitle, { color: colors.text }]}>
               Delete Account
             </Text>
             <Text style={[styles.modalBody, { color: colors.textMuted }]}>
-              This action is permanent and cannot be undone. Enter your password to confirm.
+              This action is permanent and cannot be undone. Enter your password
+              to confirm.
             </Text>
             <PasswordInput
               label="Password"
