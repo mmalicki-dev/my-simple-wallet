@@ -14,6 +14,7 @@ import { LanguageToggle } from "@/components/atoms/LanguageToggle/LanguageToggle
 import UserSectionList from "@/components/organisms/UserSectionList/UserSectionList";
 import { useColors } from "@/hooks";
 import { alpha } from "@/theme/colors";
+import { parseUserAgent, formatSessionExpiry } from "@/utils/device";
 import {
   useUpdateProfileMutation,
   useRequestEmailChangeMutation,
@@ -24,30 +25,6 @@ import {
 } from "@/services/authApi";
 import { sectionLabel } from "@/styles/typography";
 
-function parseUserAgent(ua: string): string {
-  if (!ua || ua === "unknown") return "Unknown device";
-  let browser = "Unknown browser";
-  if (/Edg\//.test(ua)) browser = "Edge";
-  else if (/OPR\//.test(ua)) browser = "Opera";
-  else if (/Chrome\//.test(ua)) browser = "Chrome";
-  else if (/Firefox\//.test(ua)) browser = "Firefox";
-  else if (/Safari\//.test(ua)) browser = "Safari";
-  let os = "Unknown OS";
-  if (/Windows NT/.test(ua)) os = "Windows";
-  else if (/Mac OS X/.test(ua)) os = "macOS";
-  else if (/Android/.test(ua)) os = "Android";
-  else if (/iPhone|iPad/.test(ua)) os = "iOS";
-  else if (/Linux/.test(ua)) os = "Linux";
-  return `${browser} on ${os}`;
-}
-
-function formatExpiry(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
 
 const DeviceRow = ({ session }: { session: Session }) => {
   const colors = useColors();
@@ -70,7 +47,7 @@ const DeviceRow = ({ session }: { session: Session }) => {
           {parseUserAgent(session.userAgent)}
         </Text>
         <Text style={[styles.deviceExpiry, { color: colors.textMuted }]}>
-          Expires {formatExpiry(session.expiresAt)}
+          Expires {formatSessionExpiry(session.expiresAt)}
         </Text>
       </View>
       <NeonButton

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import type { Category } from "shared";
+import { useSectionState } from "@/hooks";
 import BottomSheet from "@/components/templates/BottomSheet/BottomSheet";
 import UserSectionList from "@/components/organisms/UserSectionList/UserSectionList";
 import UserSectionItem from "@/components/molecules/UserSectionItem/UserSectionItem";
@@ -9,8 +9,7 @@ import { useGetCategoriesQuery } from "@/services/categoryApi";
 
 const CategorySection = () => {
   const { data: categories = [], isLoading } = useGetCategoriesQuery();
-  const [selected, setSelected] = useState<Category | null>(null);
-  const [isAdding, setIsAdding] = useState(false);
+  const { selected, setSelected, isAdding, setIsAdding } = useSectionState<Category>();
 
   const income = categories.filter((c) => c.type === "income");
   const expense = categories.filter((c) => c.type === "expense");

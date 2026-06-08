@@ -1,5 +1,5 @@
-import { useState } from "react";
 import type { Account } from "shared";
+import { useSectionState } from "@/hooks";
 import BottomSheet from "@/components/templates/BottomSheet/BottomSheet";
 import UserSectionList from "@/components/organisms/UserSectionList/UserSectionList";
 import UserSectionItem from "@/components/molecules/UserSectionItem/UserSectionItem";
@@ -9,8 +9,7 @@ import { useGetAccountsQuery } from "@/services/accountApi";
 
 const AccountSection = () => {
   const { data: accounts = [], isLoading } = useGetAccountsQuery();
-  const [selected, setSelected] = useState<Account | null>(null);
-  const [isAdding, setIsAdding] = useState(false);
+  const { selected, setSelected, isAdding, setIsAdding } = useSectionState<Account>();
 
   if (isLoading) return <SkeletonLoader />;
 
