@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Modal, Pressable, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
 import { CURRENCIES } from "shared";
@@ -18,7 +18,7 @@ import {
   useUpdateProfileMutation,
   useRequestEmailChangeMutation,
   useChangePasswordMutation,
-  useLogoutMutation,
+  useDeleteUserMutation,
   useGetSessionsQuery,
   useDeleteSessionMutation,
 } from "@/services/authApi";
@@ -108,7 +108,11 @@ const ProfileSection = () => {
     useRequestEmailChangeMutation();
   const [changePassword, { isLoading: isChangingPassword }] =
     useChangePasswordMutation();
-  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
   const handleSaveName = async () => {
     const updated = await updateProfile({ name }).unwrap();
@@ -124,6 +128,15 @@ const ProfileSection = () => {
   const handleSavePreferences = async () => {
     const updated = await updateProfile({ totalBalanceCurrency }).unwrap();
     dispatch(setCredentials({ user: updated, accessToken: token! }));
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteError("");
+    try {
+      await deleteUser({ password: deletePassword }).unwrap();
+    } catch (err: any) {
+      setDeleteError(err?.data?.message ?? "Something went wrong");
+    }
   };
 
   const handleChangePassword = async () => {
@@ -289,12 +302,60 @@ const ProfileSection = () => {
       </UserSectionList>
 
       <NeonButton
-        label="Logout"
+        label="Delete Account"
         variant="danger"
-        onPress={() => logout()}
-        loading={isLoggingOut}
-        style={styles.logoutBtn}
+        onPress={() => {
+          setDeletePassword("");
+          setDeleteError("");
+          setShowDeleteModal(true);
+        }}
+        style={styles.deleteBtn}
       />
+
+      <Modal
+        visible={showDeleteModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowDeleteModal(false)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setShowDeleteModal(false)}
+        >
+          <Pressable style={[styles.modalCard, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              Delete Account
+            </Text>
+            <Text style={[styles.modalBody, { color: colors.textMuted }]}>
+              This action is permanent and cannot be undone. Enter your password to confirm.
+            </Text>
+            <PasswordInput
+              label="Password"
+              value={deletePassword}
+              onChangeText={setDeletePassword}
+            />
+            {!!deleteError && (
+              <Text style={[styles.error, { color: colors.danger }]}>
+                {deleteError}
+              </Text>
+            )}
+            <View style={styles.modalActions}>
+              <NeonButton
+                label="Cancel"
+                onPress={() => setShowDeleteModal(false)}
+                style={styles.modalBtn}
+              />
+              <NeonButton
+                label="Delete"
+                variant="danger"
+                onPress={handleDeleteAccount}
+                loading={isDeletingUser}
+                style={styles.modalBtn}
+              />
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
@@ -319,7 +380,6 @@ const styles = StyleSheet.create({
   picker: { height: 48 },
   error: { fontSize: 13 },
   success: { fontSize: 13 },
-  logoutBtn: { marginTop: 8 },
   deviceList: { gap: 8 },
   deviceRow: {
     flexDirection: "row",
@@ -335,6 +395,24 @@ const styles = StyleSheet.create({
   deviceExpiry: { fontSize: 11 },
   deviceEmpty: { fontSize: 13 },
   revokeBtn: { paddingVertical: 8, paddingHorizontal: 14 },
+  deleteBtn: { marginTop: 8 },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 24,
+  },
+  modalCard: {
+    width: "100%",
+    borderRadius: 8,
+    padding: 20,
+    gap: 16,
+  },
+  modalTitle: { fontSize: 18, fontWeight: "700" },
+  modalBody: { fontSize: 14, lineHeight: 20 },
+  modalActions: { flexDirection: "row", gap: 12 },
+  modalBtn: { flex: 1 },
 });
 
 export default ProfileSection;
