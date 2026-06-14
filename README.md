@@ -1,4 +1,4 @@
-# My Simple Wallet
+# Ultimate Wallet
 
 A full stack personal finance management application
 built with React, Node.js and TypeScript.
@@ -43,8 +43,7 @@ Vitest · Supertest
 
 ## Live Demo
 
-[wallet.mm-tech-dev.no](https://my-simple-wallet.mm-tech-dev.no)
-*(coming soon — currently hosted on [Railway](https://newfrontend-production-884d.up.railway.app/en/))*
+[wallet.mm-tech-dev.no](https://wallet.mm-tech-dev.no)
 
 ## Coming Soon
 
