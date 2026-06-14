@@ -43,7 +43,7 @@ Vitest · Supertest
 
 ## Live Demo
 
-[my-simple-wallet.mm-tech-dev.no](https://my-simple-wallet.mm-tech-dev.no)
+[wallet.mm-tech-dev.no](https://my-simple-wallet.mm-tech-dev.no)
 *(coming soon — currently hosted on [Railway](https://newfrontend-production-884d.up.railway.app/en/))*
 
 ## Coming Soon
